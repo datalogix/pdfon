@@ -50,6 +50,11 @@ export class LibraryPlugin extends Plugin {
 
     this.on('book', ({ book }) => {
       if (book) {
+        this.on('documentload', () => {
+          this.dispatch('interactionload', { interactions: book.interactions })
+          this.dispatch('resourceload', { resources: book.resources })
+        })
+
         this.viewer.openDocument(book.src)
       }
 

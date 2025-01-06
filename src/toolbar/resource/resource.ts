@@ -16,12 +16,6 @@ export class Resource extends ToolbarActionToggle {
   }
 
   protected init() {
-    this.on('book', ({ book }) => {
-      this.on('documentload', () => {
-        this.dispatch('resourceload', { resources: book?.resources })
-      })
-    })
-
     this.on('documentdestroy', () => {
       this.resources = []
       this.toggle()

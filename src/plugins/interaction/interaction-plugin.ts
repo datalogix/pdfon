@@ -13,12 +13,6 @@ export class InteractionPlugin extends Plugin {
     this.viewer.addLayerBuilder(InteractionLayerBuilder)
     this._interactionService = new InteractionService()
 
-    this.on('book', ({ book }) => {
-      this.on('documentload', () => {
-        this.dispatch('interactionload', { interactions: book?.interactions })
-      })
-    })
-
     this.on('documentdestroy', () => this._interactionService?.destroy())
 
     this.on('interactionload', ({ interactions }) => {
