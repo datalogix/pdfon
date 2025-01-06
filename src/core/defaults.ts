@@ -95,7 +95,6 @@ export const DEFAULT_TOOLBAR_ITEMS = new Map<string, toolbar.ToolbarItemType>([
 ])
 
 export const DEFAULT_OPTIONS = {
-  container: 'app',
   toolbarOptions: {
     toolbar: DEFAULT_TOOLBAR,
   },

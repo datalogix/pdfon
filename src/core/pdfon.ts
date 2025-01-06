@@ -1,6 +1,7 @@
 import { Dispatcher, EventBus } from '@/bus'
 import type { PluginType } from '@/plugins'
 import { Toolbar, ToolbarOptions, type ToolbarItemType } from '@/toolbar'
+import { createElement } from '@/utils'
 import { Viewer, type ViewerType, type ViewerOptions } from '@/viewer'
 import { DEFAULT_PLUGINS, DEFAULT_TOOLBAR_ITEMS, DEFAULT_OPTIONS } from './defaults'
 
@@ -74,12 +75,12 @@ export class Pdfon extends Dispatcher {
       ...options,
     }
 
-    const container = opts.container instanceof HTMLDivElement
+    let container = opts.container instanceof HTMLDivElement
       ? opts.container
-      : document.getElementById(opts.container) as HTMLDivElement
+      : document.getElementById(opts.container)
 
     if (!container) {
-      throw new Error(`Container element "${opts.container}" not found.`)
+      container = document.body.appendChild(createElement('div'))
     }
 
     container.classList.add('pdfon')
