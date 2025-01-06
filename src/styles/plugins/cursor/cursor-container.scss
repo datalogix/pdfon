@@ -1,0 +1,22 @@
+.grab {
+  @apply cursor-grab!;
+
+  *:not(input):not(textarea):not(button):not(select):not(:link) {
+    @apply cursor-inherit!;
+  }
+
+  &:active {
+    @apply cursor-grabbing!;
+  }
+}
+
+.grabbing-overlay {
+  @apply
+    fixed
+    block
+    inset-0
+    hidden
+    z-50000
+    bg-black/0
+  ;
+}

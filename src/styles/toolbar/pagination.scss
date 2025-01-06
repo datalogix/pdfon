@@ -1,0 +1,69 @@
+.toolbar-item-firstpage > button:before {
+  @apply i-ph:caret-line-up;
+}
+
+.toolbar-item-previouspage > button:before {
+  @apply i-ph:caret-up;
+}
+
+.toolbar-item-nextpage > button:before {
+  @apply i-ph:caret-down;
+}
+
+.toolbar-item-lastpage > button:before {
+  @apply i-ph:caret-line-down;
+}
+
+.toolbar-item-currentpage > button:before {
+  @apply i-ph:eye;
+}
+
+.toolbar-item-inputpage {
+  @apply
+    px-2
+    flex
+    items-center
+    justify-center
+    gap-2
+    text-gray-700
+  ;
+
+  input {
+    @apply
+      appearance-none
+      bg-white
+      border
+      text-center
+      text-base
+      py-1.5
+      px-2
+      border
+      rounded
+      w-16
+    ;
+
+    &::-webkit-outer-spin-button,
+    &::-webkit-inner-spin-button {
+      @apply
+        appearance-none
+        m-0
+      ;
+    }
+  }
+
+  span {
+    @apply
+      mr-2
+      text-sm
+    ;
+  }
+}
+
+.toolbar-item-paginator {
+  @apply
+     flex
+     items-center
+     justify-center
+     divide-x
+  ;
+}

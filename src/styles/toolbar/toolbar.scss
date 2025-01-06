@@ -1,0 +1,10 @@
+.toolbar {
+  @apply
+    flex
+    justify-between
+    w-full
+    bg-gray-50
+    cursor-default
+    select-none
+  ;
+}

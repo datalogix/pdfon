@@ -1,0 +1,72 @@
+.interaction-modal {
+  @apply
+    w-full
+  ;
+
+  &:has(audio) {
+    @apply
+      max-w-72!
+      md:max-w-sm!
+    ;
+  }
+
+  &:has(img),
+  &:has(video) {
+    @apply
+      max-w-72!
+      md:max-w-lg!
+    ;
+  }
+
+  &:has(iframe) {
+    @apply
+      max-w-90%!
+      h-90%!
+    ;
+
+    .modal-content {
+      @apply
+        h-98%
+      ;
+    }
+  }
+
+  .modal-content {
+    @apply
+      p-2!
+    ;
+  }
+
+  audio {
+    @apply
+      w-full
+    ;
+  }
+
+  img,
+  video {
+    @apply
+      rounded
+      w-full
+      h-full
+    ;
+  }
+
+  img {
+    @apply
+      mx-auto
+    ;
+  }
+
+  iframe {
+    @apply
+      mx-auto
+      w-full
+      h-full
+    ;
+  }
+
+  .modal-content > div {
+    @apply p-4 whitespace-pre-line;
+  }
+}

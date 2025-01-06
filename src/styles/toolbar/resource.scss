@@ -1,0 +1,108 @@
+.toolbar-item-resource > button:before {
+  @apply i-ph:squares-four;
+}
+
+.resource-modal {
+  .modal-content {
+    @apply max-h-140;
+
+    ul {
+      li {
+        @apply relative pl-8;
+
+        &:before {
+          content: "";
+          @apply
+            absolute
+            left-2.5
+            top-0
+            bottom-0
+            w-px
+            border-l
+            border-dotted
+            border-gray-500
+          ;
+        }
+
+        &:last-child::before {
+          @apply h-4;
+        }
+
+        &:after {
+          content: "";
+          @apply
+            absolute
+            left-2.5
+            top-4
+            w-5
+            h-1
+            border-t
+            border-dotted
+            border-gray-500
+          ;
+        }
+
+        a {
+          &:before {
+            @apply i-ph:file;
+          }
+
+          &.txt:before {
+            @apply i-ph:file-text;
+          }
+
+          &.pdf:before {
+            @apply i-ph:file-pdf;
+          }
+
+          &.doc:before {
+            @apply i-ph:file-doc;
+          }
+
+          &.xls:before {
+            @apply i-ph:file-xls;
+          }
+
+          &.ppt:before {
+            @apply i-ph:file-ppt;
+          }
+
+          &.zip:before {
+            @apply i-ph:file-zip;
+          }
+
+          &:hover {
+            @apply
+              font-semibold
+              italic
+            ;
+          }
+        }
+
+        span {
+          &:before {
+            @apply i-ph:folder-open;
+          }
+        }
+
+        a, span {
+          @apply
+            py-2
+            flex
+            items-center
+            gap-2
+          ;
+
+          &:before {
+            content: '';
+
+            @apply
+              w-6!
+              h-6!
+            ;
+          }
+        }
+      }
+    }
+  }
+}

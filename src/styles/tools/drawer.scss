@@ -1,0 +1,110 @@
+.drawer {
+  @apply select-none;
+
+  .drawer-container {
+    @apply
+      overflow-auto
+      absolute
+      border
+      bg-white
+      flex
+      flex-col
+      transition
+      w-full
+      h-full
+      z-10001
+    ;
+  }
+
+  &.drawer-top {
+    .drawer-container {
+      @apply
+        left-0
+        top-0
+        h-48
+        rounded-b
+        -translate-y-full
+        shadow-[rgba(0,0,0,0.1)_0px_4px_4px_0px]
+      ;
+    }
+
+    &.drawer-opened .drawer-container {
+      @apply translate-y-0;
+    }
+  }
+
+  &.drawer-bottom {
+    .drawer-container {
+      @apply
+        left-0
+        bottom-0
+        h-48
+        rounded-t
+        translate-y-full
+        shadow-[rgba(0,0,0,0.1)_0px_-4px_4px_0px]
+      ;
+    }
+
+    &.drawer-opened .drawer-container {
+      @apply translate-y-0;
+    }
+  }
+
+  &.drawer-left {
+    .drawer-container {
+      @apply
+        left-0
+        top-0
+        w-60
+        rounded-r
+        -translate-x-full
+        shadow-[rgba(0,0,0,0.1)_4px_0px_4px_0px]
+      ;
+    }
+
+    &.drawer-opened .drawer-container {
+      @apply translate-x-0;
+    }
+  }
+
+  &.drawer-right {
+    .drawer-container {
+      @apply
+        right-0
+        top-0
+        w-60
+        rounded-l
+        translate-x-full
+        shadow-[rgba(0,0,0,0.1)_-4px_0px_4px_0px]
+      ;
+    }
+
+    &.drawer-opened .drawer-container {
+      @apply translate-x-0;
+    }
+  }
+
+  .drawer-backdrop {
+    @apply z-10000 absolute inset-0 hidden;
+
+    &.drawer-backdrop-blur {
+      @apply backdrop-blur;
+    }
+
+    &.drawer-backdrop-overlay {
+      @apply bg-black/30;
+    }
+
+    &.drawer-backdrop-invisible {
+      @apply bg-transparent;
+    }
+
+    &.drawer-backdrop-click {
+      @apply cursor-pointer;
+    }
+  }
+
+  &.drawer-opened .drawer-backdrop {
+    @apply block;
+  }
+}

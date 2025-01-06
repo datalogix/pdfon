@@ -1,0 +1,154 @@
+.interaction-layer {
+  transform-origin: 0 0;
+
+  @apply
+    absolute
+    inset-0
+    pointer-events-none
+  ;
+
+  .interaction {
+    width: calc(1.5rem * var(--scale-factor));
+    height: calc(1.5rem * var(--scale-factor));
+
+    @apply
+      pointer-events-auto
+      z-10
+      absolute
+      bg-white
+      border
+      border-gray-500
+      text-gray-500
+      flex
+      items-center
+      justify-center
+      rounded-full
+      shadow
+      transition
+      duration-300
+      hover:scale-120
+    ;
+
+    &:before {
+      content: '';
+      font-size: calc(1rem * var(--scale-factor));
+
+      @apply
+        block
+        w-full
+        relative
+      ;
+    }
+
+    &.interaction-image {
+      &:before {
+        @apply i-ph:image;
+      }
+    }
+
+    &.interaction-audio {
+      &:before {
+        @apply i-ph:speaker-high;
+      }
+    }
+
+    &.interaction-video {
+      &:before {
+        @apply i-ph:video;
+      }
+    }
+
+    &.interaction-link {
+      &:before {
+        @apply i-ph:link;
+      }
+    }
+
+    &.interaction-question {
+      &:before {
+        @apply i-majesticons:hand-pointer-event-line;
+      }
+    }
+
+    &.interaction-iframe {
+      &:before {
+        @apply i-material-symbols-light:iframe-outline;
+      }
+    }
+
+    &.interaction-text {
+      &:before {
+        @apply i-ph:text;
+      }
+    }
+
+    &.interaction-uncompleted {
+      .interaction-animation {
+        &:before {
+          @apply
+            animate-ping
+            bg-blue-500
+            opacity-75
+          ;
+        }
+
+        &:after {
+          @apply
+            bg-blue-500
+          ;
+        }
+      }
+    }
+
+    &.interaction-completed {
+      .interaction-animation {
+        &:before {
+          @apply
+            bg-green-500
+          ;
+        }
+
+        &:after {
+          /*@apply bg-white i-ph:check;*/
+        }
+      }
+    }
+
+    .interaction-animation {
+      width: calc(0.7rem * var(--scale-factor));
+      height: calc(0.7rem * var(--scale-factor));
+      top: calc(-0.2rem * var(--scale-factor));
+      right: calc(-0.2rem * var(--scale-factor));
+
+      @apply
+        absolute
+        flex
+        items-center
+        justify-center
+      ;
+
+      &:before {
+        content: '';
+
+        @apply
+          absolute
+          inline-flex
+          h-full w-full
+          rounded-full
+        ;
+      }
+
+      &:after {
+        content: '';
+        width: calc(0.7rem * var(--scale-factor));
+        height: calc(0.7rem * var(--scale-factor));
+
+        @apply
+          relative
+          inline-flex
+          rounded-full
+        ;
+      }
+    }
+  }
+}

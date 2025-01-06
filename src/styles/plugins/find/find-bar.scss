@@ -1,0 +1,129 @@
+.findbar {
+  @apply
+    hidden
+    bg-white
+    rounded
+    p-2
+    absolute
+    top-10
+    left-10
+    z-30000
+    h-auto
+    text-sm
+    text-left
+    cursor-default
+    shadow-lg
+    max-w-85
+    space-y-2
+  ;
+
+  &.findbar-open {
+    @apply
+      block
+    ;
+  }
+
+  .find-field-container {
+    @apply
+      flex
+      items-center
+      gap-1
+    ;
+
+    .find-field {
+      @apply
+        block
+        border-2
+        rounded
+        w-60
+        px-2
+        py-1
+      ;
+
+      &[data-status='not-found'] {
+        @apply bg-red-100;
+      }
+    }
+
+    .find-previous,
+    .find-next {
+      @apply
+        w-8
+        h-8
+        bg-gray-100
+        rounded
+        flex
+        items-center
+        justify-center
+        transition
+      ;
+
+      > span {
+        @apply sr-only;
+      }
+
+      &:hover {
+        @apply bg-gray-200;
+      }
+
+      &:before {
+        content: '';
+      }
+    }
+
+    .find-previous {
+      &:before {
+        @apply
+          i-ph:arrow-left
+        ;
+      }
+    }
+
+    .find-next {
+      &:before {
+        @apply
+          i-ph:arrow-right
+        ;
+      }
+    }
+  }
+
+  .find-options-container {
+    .find-checkbox {
+      @apply
+        select-none
+        flex-inline
+        items-center
+        text-xs
+        rounded
+        bg-gray-100
+        p-2
+        m-px
+        cursor-pointer
+        has-[:checked]:bg-gray-300
+      ;
+
+      input {
+        @apply hidden;
+      }
+    }
+  }
+
+  .find-message-container {
+    @apply text-sm flex flex-col gap-1;
+
+    *:empty {
+      @apply hidden;
+    }
+
+    .find-results {
+      @apply text-left;
+    }
+
+    .find-msg {
+      &[data-status='not-found'] {
+        @apply font-bold;
+      }
+    }
+  }
+}

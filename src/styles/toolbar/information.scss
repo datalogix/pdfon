@@ -1,0 +1,38 @@
+.toolbar-item-information > button:before {
+  @apply i-ph:info;
+}
+
+.information-modal {
+  @apply max-w-2xl;
+
+  .modal-content {
+    @apply max-h-140;
+  }
+}
+
+.information {
+  @apply divide-y gap-6;
+
+  .item {
+    @apply
+      space-y-2
+      p-4
+    ;
+
+    .header {
+      @apply
+        flex
+        justify-between
+        flex-wrap
+      ;
+
+      .name {
+        @apply font-semibold shrink-0;
+      }
+
+      .value {
+        @apply text-sm whitespace-pre-line;
+      }
+    }
+  }
+}

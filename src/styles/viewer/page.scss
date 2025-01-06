@@ -1,0 +1,76 @@
+.viewer-container {
+  .page {
+    direction: ltr;
+    width: 816px;
+    height: 1056px;
+
+    @apply
+      relative
+      overflow-visible
+      bg-white
+      bg-clip-content
+      border-solid
+      border-16
+      border-transparent
+      mx-auto
+    ;
+
+    @media screen and (forced-colors: active) {
+      @apply
+        border-1
+        border-[CanvasText]
+      ;
+    }
+
+    &.loading-icon::after {
+      content: '';
+      top: calc(50% - 3.5rem / 2);
+      left: calc(50% - 3.5rem / 2);
+      transition-property: display;
+
+      @apply
+        i-ph:spinner
+        text-gray-500
+        absolute
+        w-14
+        h-14
+        animate-spin
+        contain-strict
+        z-5
+        hidden
+        delay-500
+      ;
+    }
+
+    &.loading::after {
+      @apply block;
+    }
+
+    &:not(.loading)::after {
+      @apply
+        hidden
+        transition-property-none
+      ;
+    }
+  }
+
+  .page-dummy {
+    height: var(--viewer-container-height);
+
+    @apply
+      relative
+      w-0
+    ;
+  }
+
+  &.remove-page-borders {
+    @apply ms-0 me-0;
+
+    .page {
+      @apply
+        mx-auto
+        border-none
+      ;
+    }
+  }
+}

@@ -1,0 +1,84 @@
+.bookmark-sidebar {
+  > ul {
+    @apply
+      divide-y
+    ;
+
+    >li {
+      @apply
+        flex
+      ;
+    }
+
+    .bookmark {
+      @apply
+        flex
+        gap-2
+        transition
+        w-full
+        px-6
+        py-4
+        hover:bg-gray-50
+      ;
+
+      .bookmark-content {
+        @apply
+          flex-1
+          flex
+          flex-col
+          text-left
+          text-sm
+          transition
+          hover:scale-110
+        ;
+
+        .bookmark-page {
+          &:before {
+            content: '';
+
+            @apply
+              i-ph:bookmark
+              w-6
+              h-4
+            ;
+          }
+
+          @apply
+            font-semibold
+            flex
+            items-center
+            gap-2
+          ;
+        }
+
+        .bookmark-title {
+          @apply mt-1;
+        }
+      }
+
+      .bookmark-delete {
+        @apply
+          text-red
+          hover:bg-red-100
+          w-8
+          h-8
+          rounded-full
+          flex
+          items-center
+          justify-center
+          transition
+        ;
+
+        &:before {
+          content: '';
+
+          @apply
+            i-ph:trash
+            w-4
+            h-4
+          ;
+        }
+      }
+    }
+  }
+}

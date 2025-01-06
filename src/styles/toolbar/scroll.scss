@@ -1,0 +1,15 @@
+.toolbar-item-scrollhorizontal > button:before {
+  @apply i-carbon:carousel-horizontal;
+}
+
+.toolbar-item-scrollwrapped > button:before {
+  @apply i-carbon:arrange-horizontal;
+}
+
+.toolbar-item-scrollvertical > button:before {
+  @apply i-carbon:carousel-vertical;
+}
+
+.toolbar-item-scrollpage > button:before {
+  @apply i-carbon:auto-scroll;
+}

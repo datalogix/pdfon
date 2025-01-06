@@ -1,0 +1,58 @@
+.toolbar-action {
+  @apply
+    flex
+    items-center
+    justify-center
+    block
+    w-10
+    h-10
+  ;
+
+  > button {
+    @apply
+      h-full
+      w-full
+      transition
+      outline-none
+      flex
+      items-center
+      justify-center
+      bg-transparent
+      text-gray-700
+      hover:bg-gray-100
+      hover:text-gray-900
+      disabled:cursor-not-allowed
+      disabled:opacity-50
+      disabled:text-gray-500!
+      disabled:bg-gray-100!
+    ;
+
+    > span {
+      @apply sr-only;
+    }
+
+    &:before {
+      content: '';
+
+      @apply
+        block
+        text-lg
+        text-gray-700
+      ;
+    }
+
+    &.active {
+      @apply
+        bg-gray-100
+        text-gray-900
+        shadow-inner
+      ;
+
+      &:before {
+        @apply
+          scale-90
+        ;
+      }
+    }
+  }
+}

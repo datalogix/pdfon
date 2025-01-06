@@ -1,0 +1,57 @@
+.toolbar-item-menu {
+  > button:before {
+    @apply i-ph:list;
+  }
+
+  .toolbar-menu {
+    @apply
+      overflow-x-hidden
+      overflow-y-auto
+      h-screen
+      invisible
+      fixed
+      border
+      rounded
+      bg-white
+      flex
+      flex-col
+      transition
+      right-0
+      top-10
+      translate-x-full
+      w-80
+      divide-y-2
+      shadow-[rgba(0,0,0,0.1)_0px_6px_4px_4px]
+    ;
+
+    .toolbar-menu-group {
+      @apply py-2;
+
+      &:last-child {
+        @apply pb-10;
+      }
+    }
+
+    .toolbar-action {
+      @apply w-full;
+
+        > button {
+          @apply gap-3 justify-start px-4;
+
+        > span {
+          @apply not-sr-only;
+        }
+      }
+    }
+  }
+
+  &.toolbar-menu-open {
+    .toolbar-menu {
+      @apply
+        z-100002
+        visible
+        translate-x-0
+      ;
+    }
+  }
+}

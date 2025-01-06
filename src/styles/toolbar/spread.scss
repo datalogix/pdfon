@@ -1,0 +1,11 @@
+.toolbar-item-spreadeven > button:before {
+  @apply i-carbon:page-number;
+}
+
+.toolbar-item-spreadnone > button:before {
+  @apply i-ph:book;
+}
+
+.toolbar-item-spreadodd > button:before {
+  @apply i-ph:book-open;
+}

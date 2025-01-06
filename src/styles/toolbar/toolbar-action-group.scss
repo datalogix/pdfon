@@ -1,0 +1,60 @@
+.toolbar-action-group {
+  @apply
+    relative
+  ;
+
+  > button {
+    &:after {
+      content: '';
+
+      @apply
+        i-ph:caret-down
+        block
+        text-xs
+        ml-1
+      ;
+    }
+  }
+
+  > .toolbar-menu {
+    @apply
+      invisible
+      absolute
+      border
+      border-t-none
+      rounded
+      rounded-t-none
+      shadow
+      bg-white
+      top-10
+      left--0.2
+      flex
+      flex-col
+      transition
+      -translate-y-full
+    ;
+  }
+
+  &.toolbar-menu-open {
+    > button {
+      @apply
+        bg-white
+        shadow
+        z-1
+      ;
+
+      &:after {
+        @apply
+          i-ph:caret-up
+        ;
+      }
+    }
+
+    > .toolbar-menu {
+      @apply
+        visible
+        translate-y-0
+      ;
+    }
+  }
+}

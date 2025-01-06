@@ -1,0 +1,231 @@
+{
+  "page": {
+    "title": "Pagina {{ page }}"
+  },
+  "error": {
+    "loading": "Ocorreu um erro ao carregar o PDF.",
+    "invalid-file": "Arquivo PDF corrompido ou inválido.",
+    "missing-file": "Arquivo PDF ausente.",
+    "unexpected-response": "Resposta inesperada do servidor.",
+    "rendering": "Ocorreu um erro ao renderizar a página."
+  },
+  "toolbar": {
+    "menu": {
+      "label": "Ferramentas",
+      "title": "Ferramentas"
+    },
+    "spreadeven": {
+      "label": "Estender pares",
+      "title": "Agrupar páginas começando em páginas com números pares"
+    },
+    "spreadodd": {
+      "label": "Estender ímpares",
+      "title": "Agrupar páginas começando em páginas com números ímpares"
+    },
+    "spreadnone": {
+      "label": "Não estender",
+      "title": "Não reagrupar páginas"
+    },
+    "scrollpage": {
+      "label": "Rolagem de página",
+      "title": "Usar rolagem de página"
+    },
+    "scrollvertical": {
+      "label": "Deslocamento vertical",
+      "title": "Usar deslocamento vertical"
+    },
+    "scrollhorizontal": {
+      "label": "Deslocamento horizontal",
+      "title": "Usar deslocamento horizontal"
+    },
+    "scrollwrapped": {
+      "label": "Deslocamento contido",
+      "title": "Usar deslocamento contido"
+    },
+    "rotatecw": {
+      "label": "Girar no sentido horário",
+      "title": "Girar no sentido horário"
+    },
+    "rotateccw": {
+      "label": "Girar no sentido anti-horário",
+      "title": "Girar no sentido anti-horário"
+    },
+    "cursorselect": {
+      "label": "Ferramenta de deslocamento",
+      "title": "Ativar a ferramenta de seleção de texto"
+    },
+    "cursorhand": {
+      "label": "Ferramenta de seleção de texto",
+      "title": "Ativar ferramenta de deslocamento"
+    },
+    "currentpage": {
+      "label": "Pagina atual",
+      "title": "ágina atual (ver URL da página atual)"
+    },
+    "firstpage": {
+      "label": "Ir para a primeira página",
+      "title": "Ir para a primeira página"
+    },
+    "lastpage": {
+      "label": "Ir para a última página",
+      "title": "Ir para a última página"
+    },
+    "previouspage": {
+      "label": "Anterior",
+      "title": "Página anterior"
+    },
+    "nextpage": {
+      "label": "Próxima",
+      "title": "Próxima página"
+    },
+    "inputpage": {
+      "title": "Página",
+      "of-pages": "de {{ pagesCount }}"
+    },
+    "zoomout": {
+      "label": "Reduzir",
+      "title": "Reduzir"
+    },
+    "zoomin": {
+      "label": "Ampliar",
+      "title": "Ampliar"
+    },
+    "zoomselect": {
+      "title": "Zoom",
+      "options": {
+        "width": "Largura da página",
+        "fit": "Ajustar à janela",
+        "auto": "Zoom automático",
+        "actual": "Tamanho real",
+        "percent": "{{ value }}%"
+      }
+    },
+    "presentation": {
+      "label": "Modo de apresentação",
+      "title": "Mudar para o modo de apresentação"
+    },
+    "open": {
+      "label": "Abrir",
+      "title": "Abrir"
+    },
+    "download": {
+      "label": "Baixar",
+      "title": "Baixar"
+    },
+    "print": {
+      "label": "Imprimir",
+      "title": "Imprimir"
+    },
+    "find": {
+      "label": "Procurar",
+      "title": "Procurar no documento"
+    },
+    "sidebar": {
+      "label": "Exibir/ocultar painel",
+      "title": "Exibir/ocultar painel lateral"
+    },
+    "information": {
+      "label": "Informações",
+      "title": "Informações"
+    },
+    "library": {
+      "label": "Biblioteca",
+      "title": "Biblioteca"
+    },
+    "resource": {
+      "label": "Recursos",
+      "title": "Recursos"
+    }
+  },
+  "sidebar": {
+    "thumbnail": {
+      "label": "Miniaturas",
+      "title": "Mostrar miniaturas"
+    },
+    "bookmark": {
+      "label": "Marcadores de páginas",
+      "title": "Mostrar marcadores de páginas"
+    },
+    "interaction": {
+      "label": "Interações",
+      "title": "Interações"
+    }
+  },
+  "find": {
+    "field": {
+      "title": "Procurar",
+      "placeholder": "Faça sua pesquisa..."
+    },
+    "previous": {
+      "title": "Procurar a ocorrência anterior da frase",
+      "label": "Anterior"
+    },
+    "next": {
+      "title": "Procurar a próxima ocorrência da frase",
+      "label": "Próxima"
+    },
+    "highlight-all": "Destacar tudo",
+    "case-sensitive": "Diferenciar maiúsculas/minúsculas",
+    "entire-word": "Palavras completas",
+    "match-diacritics": "Considerar acentuação",
+    "reached": {
+      "top": "Início do documento alcançado, continuando do fim",
+      "bottom": "Fim do documento alcançado, continuando do início"
+    },
+    "match": {
+      "count-limit_one": "Mais de {{ count }} ocorrência",
+      "count-limit_other": "Mais de {{ count }} ocorrências",
+      "count_one": "{{ current }} de {{ count }} ocorrência",
+      "count_other": "{{ current }} de {{ count }} ocorrências"
+    },
+    "not-found": "Não encontrado"
+  },
+  "thumbnail": {
+    "title": "Pagina {{ page }}",
+    "image": "Miniatura da página {{ page }}"
+  },
+  "print": {
+    "progress-message": "Preparando documento para impressão…",
+    "progress-percent": "{{ progress }} %",
+    "progress-close-button": "Cancelar",
+    "not-supported": "A impressão não é totalmente suportada neste navegador.",
+    "not-ready": "O PDF não está totalmente carregado para impressão."
+  },
+  "notify": {
+    "error": "Erro",
+    "warn": "Aviso",
+    "info": "Informação"
+  },
+  "bookmark": {
+    "page": "Página {{ page }}",
+    "add-message": "Marcar página {{ page }}",
+    "delete-confirm": "Deseja realmente remover esse marcador ?"
+  },
+  "information": {
+    "title": "Informações"
+  },
+  "library": {
+    "title": "Biblioteca",
+    "book": {
+      "name": "Nome do livro",
+      "sku": "SKU",
+      "isbn": "ISBN",
+      "pages": "Número de páginas",
+      "author": "Autor",
+      "description": "Descrição",
+      "interactions": "Interações"
+    }
+  },
+  "interaction": {
+    "title": "Interações",
+    "progress": "{{ value }} de {{ total }}",
+    "filter": "Apenas não finalizadas",
+    "page": "Página {{ page }}"
+  },
+  "resource": {
+    "title": "Recursos"
+  },
+  "open": {
+    "description": "Arraste e solte o PDF"
+  }
+}

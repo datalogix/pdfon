@@ -1,0 +1,47 @@
+.bookmark-layer {
+  transform-origin: 0 0;
+
+  @apply
+    absolute
+    inset-0
+    pointer-events-none
+  ;
+
+  .bookmark {
+    width: calc(1.5rem * var(--scale-factor));
+    height: calc(1.5rem * var(--scale-factor));
+
+    @apply
+      pointer-events-auto
+      top-10
+      right-0
+      translate-x-[80%]
+      absolute
+      transition
+      hover:translate-x-[95%]
+      hover:scale-110
+      flex items-center justify-center
+      text-gray-500
+      rotate-90
+      z-0
+    ;
+
+    &:before {
+      content: '';
+
+      @apply
+        i-ph:bookmark
+        w-full
+        h-full
+      ;
+    }
+
+    &.selected {
+      @apply
+        text-blue-500
+        scale-110
+        translate-x-[95%]
+      ;
+    }
+  }
+}

@@ -1,0 +1,53 @@
+.presentation-mode {
+  transition-timing-function: unset;
+
+  @apply
+    duration-0
+  ;
+
+  &:fullscreen {
+    @apply
+      top-0
+      bg-black
+      w-full
+      h-full
+      overflow-hidden
+      cursor-none
+      select-none
+    ;
+
+    section:not([data-internal-link]) {
+      @apply pointer-events-none;
+    }
+
+    .interaction-layer,
+    .bookmark-layer {
+      @apply hidden;
+    }
+
+    .textLayer span {
+      @apply cursor-none;
+    }
+  }
+
+  .viewer-container {
+    .page {
+      @apply
+        mx-auto
+        border-2
+        border-solid
+        border-transparent
+      ;
+    }
+  }
+
+  .spread {
+    @apply m-0;
+  }
+
+  &.presentation-mode-controls {
+    > *, .textLayer span {
+      @apply cursor-default;
+    }
+  }
+}

@@ -1,0 +1,12 @@
+
+.pdfon {
+  @apply
+    relative
+    overflow-hidden
+    outline-none
+    w-full
+    h-screen
+    flex
+    flex-col
+  ;
+}

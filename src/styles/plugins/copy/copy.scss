@@ -1,0 +1,15 @@
+
+.copy-all {
+  @apply cursor-wait;
+}
+
+#hiddenCopyElement {
+  @apply
+    absolute
+    top-0
+    left-0
+    w-0
+    h-0
+    hidden
+  ;
+}

@@ -1,0 +1,7 @@
+.toolbar-item-cursorhand > button:before {
+  @apply i-ph:hand;
+}
+
+.toolbar-item-cursorselect > button:before {
+  @apply i-ph:cursor;
+}

@@ -1,0 +1,103 @@
+.hidden,
+[hidden] {
+  @apply hidden!;
+}
+
+.viewer {
+  scrollbar-color: auto auto;
+
+  @apply
+    flex-1
+    bg-gray-200
+    overflow-hidden
+    outline-none
+    relative
+  ;
+
+  @media screen and (prefers-reduced-motion: reduce) {
+    @apply duration-0;
+  }
+
+  .viewer-container {
+    --scale-factor: 1;
+    --viewer-container-height: 0;
+    --hcm-highlight-filter: none;
+    --hcm-highlight-selected-filter: none;
+
+    @apply
+      relative
+      w-full
+      h-full
+      overflow-auto
+      outline-none
+      duration-200
+      transition-ease
+    ;
+
+    * {
+      @apply box-content;
+    }
+
+    @media screen and (forced-colors: active) {
+      --hcm-highlight-filter: invert(100%);
+    }
+
+    &.noUserSelect {
+      @apply select-none;
+    }
+
+    &:is(.scroll-horizontal, .scroll-wrapped),
+    .spread {
+      @apply
+        text-center
+        ms-1
+        me-1
+      ;
+
+      :is(.page, .page-dummy, .spread) {
+        @apply
+          inline-block
+          align-middle
+        ;
+      }
+
+      .spread {
+        @apply
+          ms-0
+          me-0
+        ;
+      }
+
+      .page {
+        @apply
+          -ms-1
+          -me-1
+        ;
+
+        @media screen and (forced-colors: active) {
+          @apply
+            ms-1
+            me-1
+          ;
+        }
+      }
+    }
+
+    &.scroll-horizontal,
+    .spread {
+      @apply whitespace-nowrap;
+    }
+  }
+}
+
+[data-main-rotation="90"] {
+  transform: rotate(90deg) translateY(-100%);
+}
+
+[data-main-rotation="180"] {
+  transform: rotate(180deg) translate(-100%, -100%);
+}
+
+[data-main-rotation="270"] {
+  transform: rotate(270deg) translateX(-100%);
+}

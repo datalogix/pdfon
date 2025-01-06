@@ -1,0 +1,48 @@
+.open-file {
+  @apply hidden;
+}
+
+.open-dropzone {
+  @apply
+    absolute
+    z-100000
+    inset-0
+    transition
+    bg-gray-700/50
+    flex
+    items-center
+    justify-center
+    text-gray-500
+  ;
+
+  span {
+    &:before {
+      content: '';
+
+      @apply
+        i-mdi:cloud-upload-outline w-32 h-32
+      ;
+    }
+
+    @apply
+      flex
+      flex-col
+      items-center
+      bg-white
+      rounded-lg
+      px-16
+      py-8
+      text-center
+      text-2xl
+    ;
+  }
+
+  &.open-dragover {
+    @apply
+      opacity-100
+      scale-110
+      flex!
+      text-gray-700
+    ;
+  }
+}

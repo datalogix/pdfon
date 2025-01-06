@@ -1,0 +1,71 @@
+.toolbar-item-sidebar > button:before {
+  @apply i-ph:sidebar;
+}
+
+.sidebar {
+  @apply
+    flex
+    flex-col
+    w-full
+    h-full
+    select-none
+  ;
+
+  .sidebar-menu {
+    @apply
+      flex
+      divide-x
+      border-b
+      bg-gray-50
+      shadow
+    ;
+
+    .sidebar-item {
+      @apply
+        w-10
+        h-10
+        flex
+        text-gray-700
+        items-center
+        justify-center
+        overflow-hidden
+        transition
+        hover:bg-gray-100
+        hover:text-gray-900
+      ;
+
+      &.selected {
+        @apply
+          bg-gray-100
+          text-gray-900
+          shadow-inner
+        ;
+      }
+
+      > span{
+        @apply hidden;
+      }
+
+      &:before {
+        content: '';
+
+        @apply text-lg;
+      }
+    }
+  }
+
+  .sidebar-content {
+    @apply
+      flex-1
+      overflow-auto
+      transition
+      relative
+    ;
+  }
+}
+
+.sidebar-drawer .drawer-container {
+  @apply top-10!;
+
+  height: calc(100vh - 2.5rem) !important;
+}

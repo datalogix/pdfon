@@ -1,0 +1,16 @@
+export const DEFAULT_CACHE_SIZE = 10
+export const DEFAULT_SCALE_VALUE = 'auto'
+export const DEFAULT_SCALE = 1.0
+export const DEFAULT_SCALE_DELTA = 1.1
+export const MIN_SCALE = 0.1
+export const MAX_SCALE = 10.0
+export const MAX_AUTO_SCALE = 1.25
+export const SCROLLBAR_PADDING = 40
+export const VERTICAL_PADDING = 5
+export const FORCE_PAGES_LOADED_TIMEOUT = 10000
+export const FORCE_SCROLL_MODE_PAGE = 10000
+export const FORCE_LAZY_PAGE_INIT = 5000
+export const PAUSE_EAGER_PAGE_INIT = 250
+export const WAIT_LOAD_DOCUMENT = 250
+export const ZOOM_DELAY = 400
+export const MAX_CANVAS_PIXELS = /Android|webOS|iPhone|iPad|iPod|Opera Mini/i.test(navigator.userAgent) ? 5242880 : 2 ** 25
