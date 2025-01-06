@@ -89,7 +89,7 @@ export class DocumentPropertiesManager extends Manager {
     this._documentType = documentType
     if (documentFilename?.trim()) this._documentFilename = documentFilename
 
-    if (!isEmbedded() && this.documentTitle) {
+    if ((this.options.enableTitleUpdate ?? true) && !isEmbedded() && this.documentTitle) {
       document.title = this.documentTitle
       this.dispatch('documenttitleupdated', { title: this.documentTitle })
     }

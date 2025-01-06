@@ -21,6 +21,7 @@ export type ViewerOptions = {
   enablePrintAutoRotate?: boolean
   enableHWA?: boolean
   pageColors?: PageColors
+  enableTitleUpdate?: boolean
 }
 
 export type ViewerType = Viewer &
