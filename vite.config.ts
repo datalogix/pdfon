@@ -24,6 +24,7 @@ export default defineConfig({
     }),
   ],
   build: {
+    copyPublicDir: false,
     cssCodeSplit: true,
     lib: {
       entry: resolve(__dirname, 'src/index.ts'),
