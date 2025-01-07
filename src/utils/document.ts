@@ -2,15 +2,16 @@ import { AnnotationEditorType, AnnotationMode, GlobalWorkerOptions, PageViewport
 import { ScrollMode, SidebarTypes, SpreadMode, TextLayerMode } from '@/enums'
 import { PageColors } from '@/viewer'
 
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+import workerSrc from 'pdfjs-dist/build/pdf.worker?url'
+
 export function defineWorker() {
   if (GlobalWorkerOptions.workerSrc) {
     return
   }
 
-  GlobalWorkerOptions.workerSrc = new URL(
-    'pdfjs-dist/build/pdf.worker.min.mjs',
-    import.meta.url,
-  ).toString()
+  GlobalWorkerOptions.workerSrc = workerSrc
 }
 
 export function updateLayerDimensions(
