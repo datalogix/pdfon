@@ -77,7 +77,7 @@ export class Pdfon extends Dispatcher {
 
     let container = opts.container instanceof HTMLDivElement
       ? opts.container
-      : document.getElementById(opts.container)
+      : (opts.container ? document.getElementById(opts.container) : null)
 
     if (!container) {
       container = document.body.appendChild(createElement('div'))
