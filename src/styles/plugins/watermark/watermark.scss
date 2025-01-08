@@ -1,0 +1,11 @@
+.watermark {
+  @apply
+    absolute
+    inset-0
+    w-full
+    h-full
+    bg-no-repeat
+    bg-contain
+    bg-center
+  ;
+}

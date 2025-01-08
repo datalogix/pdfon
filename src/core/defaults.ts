@@ -19,6 +19,7 @@ export const DEFAULT_PLUGINS: plugins.PluginType[] = [
   plugins.ScriptingPlugin,
   plugins.StoragePlugin,
   plugins.ThumbnailPlugin,
+  plugins.WatermarkPlugin,
   plugins.ZoomPlugin,
 ]
 

@@ -16,6 +16,7 @@ export * from './resolution'
 export * from './scripting'
 export * from './storage'
 export * from './thumbnail'
+export * from './watermark'
 export * from './zoom'
 
 export * from './plugin'
