@@ -1,6 +1,6 @@
 import { Dispatcher, EventBus } from '@/bus'
 import type { PluginType } from '@/plugins'
-import { Toolbar, ToolbarOptions, type ToolbarItemType } from '@/toolbar'
+import { Toolbar, type ToolbarOptions, type ToolbarItemType } from '@/toolbar'
 import { createElement } from '@/utils'
 import { Viewer, type ViewerType, type ViewerOptions } from '@/viewer'
 import { DEFAULT_PLUGINS, DEFAULT_TOOLBAR_ITEMS, DEFAULT_OPTIONS } from './defaults'
@@ -9,6 +9,7 @@ export type PdfonOptions = {
   container: string | HTMLDivElement
   toolbarOptions?: ToolbarOptions
   viewerOptions?: ViewerOptions
+  plugins?: Record<string, any>
 }
 
 export class Pdfon extends Dispatcher {
@@ -38,12 +39,15 @@ export class Pdfon extends Dispatcher {
     })
   }
 
-  protected resolvePlugins() {
-    return this.plugins.map(plugin => typeof plugin === 'function' ? new plugin() : plugin)
+  protected resolvePlugins(params?: Record<string, any>) {
+    return this.plugins.map(plugin => typeof plugin === 'function'
+      ? new plugin(params?.[plugin.name.toLowerCase().replace('plugin', '')])
+      : plugin,
+    )
   }
 
-  protected async initializePlugins(toolbar: Toolbar, viewer: ViewerType) {
-    const plugins = this.resolvePlugins()
+  protected async initializePlugins(toolbar: Toolbar, viewer: ViewerType, params?: Record<string, any>) {
+    const plugins = this.resolvePlugins(params)
 
     for (const plugin of plugins) {
       plugin.setToolbar(toolbar)
@@ -96,7 +100,7 @@ export class Pdfon extends Dispatcher {
     container.appendChild(toolbar.render())
     container.appendChild(viewer.render())
 
-    await this.initializePlugins(toolbar, viewer)
+    await this.initializePlugins(toolbar, viewer, opts.plugins)
     await this.initializeToolbar(toolbar)
 
     return viewer

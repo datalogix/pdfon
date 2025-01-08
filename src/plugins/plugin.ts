@@ -6,12 +6,16 @@ export {
   ToolbarItemType,
 }
 
-export type PluginType = (Plugin | (new () => Plugin))
+export type PluginType = (Plugin | (new (params?: any) => Plugin))
 
-export abstract class Plugin extends Dispatcher {
+export abstract class Plugin<T = any> extends Dispatcher {
   private _toolbar?: Toolbar
   private _viewer?: ViewerType
   protected abortController?: AbortController
+
+  constructor(readonly params?: T) {
+    super()
+  }
 
   get name() {
     return this.constructor.name.toLowerCase().replace('plugin', '')
