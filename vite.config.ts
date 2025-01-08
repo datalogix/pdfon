@@ -4,6 +4,7 @@ import { transformerDirectives, presetUno, presetIcons } from 'unocss'
 import unocss from 'unocss/vite'
 import { name } from './package.json'
 import eslint from 'vite-plugin-eslint2'
+import dts from 'vite-plugin-dts'
 
 export default defineConfig({
   esbuild: {
@@ -21,6 +22,10 @@ export default defineConfig({
       transformers: [
         transformerDirectives(),
       ],
+    }),
+    dts({
+      include: ['src'],
+      insertTypesEntry: true,
     }),
   ],
   build: {
