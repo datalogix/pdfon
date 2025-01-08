@@ -65,6 +65,18 @@ export class Resource extends ToolbarActionToggle {
       return 'txt'
     }
 
+    if (path.endsWith('.gif') || path.endsWith('.png') || path.endsWith('.jpg') || path.endsWith('.jpeg')) {
+      return 'image'
+    }
+
+    if (path.endsWith('.mp3')) {
+      return 'audio'
+    }
+
+    if (path.endsWith('.mp4')) {
+      return 'video'
+    }
+
     if (path.endsWith('.pdf')) {
       return 'pdf'
     }

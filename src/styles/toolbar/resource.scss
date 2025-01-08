@@ -71,6 +71,18 @@
             @apply i-ph:file-zip;
           }
 
+          &.image:before {
+            @apply i-ph:image;
+          }
+
+          &.audio:before {
+            @apply i-ph:speaker-high;
+          }
+
+          &.video:before {
+            @apply i-ph:video;
+          }
+
           &:hover {
             @apply
               font-semibold
