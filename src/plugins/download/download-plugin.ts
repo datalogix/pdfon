@@ -2,7 +2,11 @@ import { Plugin, type ToolbarItemType } from '../plugin'
 import { DownloadManager } from './download-manager'
 import { DownloadToolbarItem } from './download-toolbar-item'
 
-export class DownloadPlugin extends Plugin {
+export type DownloadPluginParams = {
+  filename?: () => string
+}
+
+export class DownloadPlugin extends Plugin<DownloadPluginParams> {
   protected getToolbarItems() {
     return new Map<string, ToolbarItemType>([
       ['download', DownloadToolbarItem],
@@ -11,6 +15,10 @@ export class DownloadPlugin extends Plugin {
 
   readonly downloadManager = new DownloadManager()
   private saveInProgress = false
+
+  get downloadFileName() {
+    return this.params?.filename?.() || this.viewer.documentFilename
+  }
 
   async downloadOrSave() {
     this.rootContainer.classList.add('wait')
@@ -32,7 +40,7 @@ export class DownloadPlugin extends Plugin {
       // When the PDF document isn't ready, simply download using the URL.
     }
 
-    this.downloadManager.download(data, this.viewer.baseUrl, this.viewer.documentFilename)
+    this.downloadManager.download(data, this.viewer.baseUrl, this.downloadFileName)
   }
 
   async save() {
@@ -44,7 +52,7 @@ export class DownloadPlugin extends Plugin {
 
     try {
       const data = await this.pdfDocument.saveDocument()
-      this.downloadManager.download(data, this.viewer.baseUrl, this.viewer.documentFilename)
+      this.downloadManager.download(data, this.viewer.baseUrl, this.downloadFileName)
     } catch (reason: any) {
       this.logger.error('Error when saving the document', reason)
       await this.download()
