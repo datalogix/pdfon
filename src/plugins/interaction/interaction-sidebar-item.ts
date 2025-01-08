@@ -25,16 +25,22 @@ export class InteractionSidebarItem extends SidebarItem {
 
     this.on('interactionupdated', () => {
       progressBar.value = this.interactionService?.completed.length ?? 0
+      summaryValue.innerText = this.l10n.get('interaction.progress', {
+        value: progressBar.value,
+        total: progressBar.total,
+      })
     })
 
     const summary = createElement('div', 'interaction-summary')
-    summary.appendChild(createElement('span', 'interaction-summary-title', { innerText: this.l10n.get('interaction.title') }))
-    summary.appendChild(createElement('span', 'interaction-summary-value', {
+    const summaryValue = createElement('span', 'interaction-summary-value', {
       innerText: this.l10n.get('interaction.progress', {
         value: progressBar.value,
         total: progressBar.total,
       }),
-    }))
+    })
+
+    summary.appendChild(createElement('span', 'interaction-summary-title', { innerText: this.l10n.get('interaction.title') }))
+    summary.appendChild(summaryValue)
 
     const filter = createElement('label', 'interaction-filter')
     const input = createElement('input', [], { type: 'checkbox' })
