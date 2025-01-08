@@ -23,7 +23,7 @@ export class InteractionService {
     this.interactions = interactions.sort((a, b) => {
       if (a.page !== b.page) {
         return a.page - b.page
-      } else if (a.y === b.y) {
+      } else if (a.x === b.x) {
         return b.y - a.y
       } else {
         return b.x - a.x
