@@ -51,11 +51,11 @@
       "title": "Girar no sentido anti-horário"
     },
     "cursorselect": {
-      "label": "Ferramenta de deslocamento",
+      "label": "Ferramenta de seleção de texto",
       "title": "Ativar a ferramenta de seleção de texto"
     },
     "cursorhand": {
-      "label": "Ferramenta de seleção de texto",
+      "label": "Ferramenta de deslocamento",
       "title": "Ativar ferramenta de deslocamento"
     },
     "currentpage": {
