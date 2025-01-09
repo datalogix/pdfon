@@ -1,4 +1,6 @@
 import { Plugin } from '../plugin'
+import { StoragePlugin } from '../storage'
+import { Interaction } from './interaction'
 import { InteractionLayerBuilder } from './interaction-layer-builder'
 import { InteractionService } from './interaction-service'
 
@@ -9,18 +11,34 @@ export class InteractionPlugin extends Plugin {
     return this._interactionService
   }
 
+  get storage() {
+    return this.viewer.getLayerProperty<StoragePlugin>('StoragePlugin')?.storage
+  }
+
   protected init() {
     this.viewer.addLayerBuilder(InteractionLayerBuilder)
     this._interactionService = new InteractionService()
 
-    this.on('documentdestroy', () => this._interactionService?.destroy())
+    this.on('documentdestroy', () => this.interactionService?.destroy())
+    this.on('storageinitialized', () => this.dispatch('interactionload'))
 
     this.on('interactionload', ({ interactions }) => {
-      this._interactionService?.load(interactions)
-      this.dispatch('interactionloaded', { interactions })
+      const stored: Interaction[] | undefined = this.storage?.get('interactions')
+
+      if (interactions && stored) {
+        interactions = (interactions as Interaction[]).map(interaction => ({
+          ...interaction,
+          completed: interaction.completed ? interaction.completed : stored.find(i => i.id === interaction.id)?.completed,
+        }))
+      }
+
+      this.interactionService?.load(interactions ?? stored)
+      this.dispatch('interactionloaded', { interactions: this.interactionService?.all() })
     })
 
     this.on(['interactionloaded', 'interactionupdated'], () => {
+      this.storage?.set('interactions', this.interactionService?.all())
+
       this.dispatch('informationadd', {
         key: 'interactions',
         information: {
@@ -32,10 +50,10 @@ export class InteractionPlugin extends Plugin {
       })
     })
 
-    this.on('interactionselect', ({ interaction }) => {
+    this.on('interactionclick', ({ interaction }) => {
       interaction.completed = true
       this.setCurrentPage(interaction.page)
-      this._interactionService?.open(interaction)
+      this.interactionService?.open(interaction)
       this.dispatch(`interactionupdated${interaction.id}`, { interaction })
       this.dispatch('interactionupdated', { interaction })
     })
