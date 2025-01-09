@@ -1,3 +1,4 @@
+import { StoragePlugin } from '@/plugins'
 import { ToolbarActionToggle } from '@/toolbar'
 import { Modal } from '@/tools'
 import { createElement } from '@/utils'
@@ -15,15 +16,23 @@ export class Resource extends ToolbarActionToggle {
     return this.resources.length > 0
   }
 
+  get storage() {
+    return this.viewer.getLayerProperty<StoragePlugin>('StoragePlugin')?.storage
+  }
+
   protected init() {
     this.on('documentdestroy', () => {
       this.resources = []
       this.toggle()
     })
 
+    this.on('storageinitialized', () => this.dispatch('resourceload'))
+
     this.on('resourceload', ({ resources }) => {
-      this.resources = resources ?? []
+      this.resources = resources ?? this.storage?.get('resources')
+      this.storage?.set('resources', this.resources)
       this.toggle()
+      this.dispatch('resourceloaded', { resources: this.resources })
     })
   }
 
@@ -41,7 +50,7 @@ export class Resource extends ToolbarActionToggle {
 
   protected item(items: ResourceItem[]) {
     const ul = createElement('ul')
-    items.forEach((item) => {
+    items?.forEach((item) => {
       if (item.src) {
         const li = ul.appendChild(createElement('li'))
         li.appendChild(createElement('a', this.parseExtension(item.src), {
