@@ -10,12 +10,19 @@ export class StorageInitializer extends Initializer {
 
   apply({ pdfDocument, viewer, options }: InitializerParams) {
     this._storageService = new StorageService(pdfDocument.fingerprints[0])
+
     viewer.dispatch('storageinitialized', { storage: this._storageService })
+    viewer.on('documentdestroy', () => this.destroy(), { once: true })
+
     const data = Object.fromEntries(Object.entries(this._storageService.all()).filter(([_, v]) => v !== undefined))
 
     return {
       ...options,
       ...data,
     }
+  }
+
+  destroy() {
+    this._storageService = undefined
   }
 }
