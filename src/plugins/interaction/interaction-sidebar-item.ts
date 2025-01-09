@@ -78,7 +78,7 @@ export class InteractionSidebarItem extends SidebarItem {
 
         button.appendChild(content)
         button.appendChild(createElement('span', 'interaction-animation'))
-        button.addEventListener('click', () => this.dispatch('interactionselect', { interaction }))
+        button.addEventListener('click', () => this.dispatch('interactionclick', { interaction }))
 
         this.on(`interactionupdated${interaction.id}`, () => {
           button.classList.remove('interaction-uncompleted')

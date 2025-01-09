@@ -19,7 +19,7 @@ export class InteractionLayerBuilder extends LayerBuilder {
 
       button.style.top = `calc(${interaction.y}px * var(--scale-factor))`
       button.style.left = `calc(${interaction.x}px * var(--scale-factor))`
-      button.addEventListener('click', () => this.eventBus.dispatch('interactionselect', { interaction }))
+      button.addEventListener('click', () => this.eventBus.dispatch('interactionclick', { interaction }))
       button.appendChild(createElement('span', 'interaction-animation'))
 
       this.on(`interactionupdated${interaction.id}`, () => {
