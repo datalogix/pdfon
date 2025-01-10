@@ -29,7 +29,7 @@ export class Resource extends ToolbarActionToggle {
     this.on('storageinitialized', () => this.dispatch('resourceload'))
 
     this.on('resourceload', ({ resources }) => {
-      this.resources = resources ?? this.storage?.get('resources')
+      this.resources = resources ?? this.storage?.get('resources') ?? []
       this.storage?.set('resources', this.resources)
       this.toggle()
       this.dispatch('resourceloaded', { resources: this.resources })
