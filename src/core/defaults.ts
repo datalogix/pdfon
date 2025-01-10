@@ -17,6 +17,7 @@ export const DEFAULT_PLUGINS: plugins.PluginType[] = [
   plugins.ResizePlugin,
   plugins.ResolutionPlugin,
   plugins.ScriptingPlugin,
+  plugins.StatsPlugin,
   plugins.StoragePlugin,
   plugins.ThumbnailPlugin,
   plugins.WatermarkPlugin,

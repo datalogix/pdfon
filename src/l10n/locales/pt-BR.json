@@ -202,7 +202,9 @@
     "delete-confirm": "Deseja realmente remover esse marcador ?"
   },
   "information": {
-    "title": "Informações"
+    "title": "Informações",
+    "page-views": "Páginas visualizadas",
+    "usage-time": "Tempo de utilização"
   },
   "library": {
     "title": "Biblioteca",
@@ -210,7 +212,6 @@
       "name": "Nome do livro",
       "sku": "SKU",
       "isbn": "ISBN",
-      "pages": "Número de páginas",
       "author": "Autor",
       "description": "Descrição",
       "interactions": "Interações"
