@@ -4,7 +4,6 @@ export type Book = {
   name: string
   src: string
   cover?: string
-  pages?: number
   isbn?: string
   sku?: string
   author?: string

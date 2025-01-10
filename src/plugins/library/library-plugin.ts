@@ -66,7 +66,7 @@ export class LibraryPlugin extends Plugin {
     const informations = new Map<string, InformationItem>([])
 
     if (book) {
-      ['name', 'pages', 'sku', 'author', 'description'].forEach((key, index) => {
+      ['name', 'sku', 'author', 'description'].forEach((key, index) => {
         informations.set(key, {
           name: this.l10n.get(`library.book.${key}`),
           value: book[key],
