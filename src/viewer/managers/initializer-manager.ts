@@ -70,8 +70,8 @@ export class InitializerManager extends Manager {
           viewer: this.viewer as ViewerType,
           options,
         })
-      } catch {
-        //
+      } catch (reason) {
+        this.logger.error(`Unable to load initializer`, reason)
       }
     }
 
