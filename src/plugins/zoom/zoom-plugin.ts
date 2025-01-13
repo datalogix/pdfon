@@ -83,8 +83,7 @@ export class ZoomPlugin extends Plugin {
     const deltaMode = event.deltaMode
 
     let scaleFactor = Math.exp(-event.deltaY / 100)
-    const isPinchToZoom
-      = event.ctrlKey
+    const isPinchToZoom = event.ctrlKey
       && !this.isCtrlKeyDown
       && deltaMode === WheelEvent.DOM_DELTA_PIXEL
       && event.deltaX === 0
