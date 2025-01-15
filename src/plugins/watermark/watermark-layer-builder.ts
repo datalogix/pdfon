@@ -12,10 +12,14 @@ export class WatermarkLayerBuilder extends LayerBuilder {
   }
 
   init() {
-    if (!this.image) return
+    const { canvasWrapper } = this.canvasPage
+
+    if (!this.image || !canvasWrapper || canvasWrapper.querySelector('.watermark')) {
+      return
+    }
 
     const div = createElement('div', 'watermark')
     div.style.backgroundImage = `url('${this.image}')`
-    this.canvasPage.canvasWrapper?.appendChild(div)
+    canvasWrapper.appendChild(div)
   }
 }
