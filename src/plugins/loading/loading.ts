@@ -15,7 +15,7 @@ export class LoadingPlugin extends Plugin {
     })
 
     this.on('documentprogress', ({ loaded, total }) => {
-      if (this.loading) {
+      if (this.loading && total && loaded) {
         this.loading.total = total
         this.loading.value = loaded
       }
