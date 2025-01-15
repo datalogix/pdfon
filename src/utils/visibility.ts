@@ -168,14 +168,14 @@ export async function onePageRenderedOrForceFetch(
   }
 
   const hiddenCapability = Promise.withResolvers<void>()
+  const abortController = new AbortController()
 
-  function onVisibilityChange() {
+  document.addEventListener('visibilitychange', () => {
     if (document.visibilityState === 'hidden') {
       hiddenCapability.resolve()
     }
-  }
+  }, { signal: AbortSignal.any([signal, abortController.signal]) })
 
-  document.addEventListener('visibilitychange', onVisibilityChange, { signal })
   await Promise.race([onePageRenderedCapability, hiddenCapability.promise])
-  document.removeEventListener('visibilitychange', onVisibilityChange)
+  abortController.abort()
 }

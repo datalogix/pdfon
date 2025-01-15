@@ -4,7 +4,11 @@ import { FindController } from './find-controller'
 import { FindHighlighter } from './find-highlighter'
 import { FindToolbarItem } from './find-toolbar-item'
 
-export class FindPlugin extends Plugin {
+export type FindPluginParams = {
+  updateMatchesCountOnProgress?: boolean
+}
+
+export class FindPlugin extends Plugin<FindPluginParams> {
   protected getToolbarItems() {
     return new Map<string, ToolbarItemType>([
       ['find', FindToolbarItem],
@@ -14,17 +18,13 @@ export class FindPlugin extends Plugin {
   private findController?: FindController
   private findHighlighters = new Map<number, FindHighlighter>()
 
-  constructor(readonly updateMatchesCountOnProgress = true) {
-    super()
-  }
-
   protected init(): Promise<void> | void {
-    this.findController = new FindController(this.viewer, this.updateMatchesCountOnProgress)
+    this.findController = new FindController(this.viewer, this.params?.updateMatchesCountOnProgress)
 
     this.on('onepagerendered', () => this.findController?.init())
     this.on('find', params => this.findController?.find(params))
     this.on('findbarclose', () => this.findController?.close())
-    this.on('pagesdestroy', () => this.findController?.reset())
+    this.on('pagesdestroy', () => this.destroy())
 
     this.on('textlayerbuildershow', ({ source }) => this.getFindHighlighter(source)?.enable())
     this.on('textlayerbuilderhide', ({ source }) => this.getFindHighlighter(source)?.disable())
@@ -39,14 +39,14 @@ export class FindPlugin extends Plugin {
     this.on('xfalayerbuilderrender', ({ source, textDivs, items }) => {
       const findHighlighter = this.getFindHighlighter(source)
       findHighlighter?.setTextMapping(textDivs, items)
-      findHighlighter?.enable()
+      queueMicrotask(() => findHighlighter?.enable())
     })
   }
 
   protected destroy() {
-    this.findController?.reset()
-    this.findController = undefined
+    this.findHighlighters.forEach(findHighlighter => findHighlighter.disable())
     this.findHighlighters.clear()
+    this.findController?.reset()
   }
 
   protected getFindHighlighter(layerBuilder: LayerBuilder) {

@@ -7,8 +7,13 @@ import { PrintService } from './print-service'
 import { PrintToolbarItem } from './print-toolbar-item'
 
 const print = window.print
+const AutoPrintRegExp = /\bprint\s*\(/
 
-export class PrintPlugin extends Plugin {
+export type PrintPluginParams = {
+  resolution?: number
+}
+
+export class PrintPlugin extends Plugin<PrintPluginParams> {
   protected getToolbarItems() {
     return new Map<string, ToolbarItemType>([
       ['print', PrintToolbarItem],
@@ -17,10 +22,6 @@ export class PrintPlugin extends Plugin {
 
   private printService?: PrintService
   private printAnnotationStoragePromise?: Promise<PrintAnnotationStorage | undefined>
-
-  constructor(readonly resolution = 150) {
-    super()
-  }
 
   get scriptingManager() {
     return this.viewer.getLayerProperty<ScriptingPlugin>('ScriptingPlugin')?.scriptingManager
@@ -116,7 +117,7 @@ export class PrintPlugin extends Plugin {
     this.printService = new PrintService(
       this.pdfDocument,
       this.viewer.getPagesOverview(),
-      this.resolution,
+      this.params?.resolution,
       this.printAnnotationStoragePromise,
     )
 
@@ -175,7 +176,7 @@ export class PrintPlugin extends Plugin {
               continue
           }
 
-          triggerAutoPrint = (jsActions as any)[name].some((js: string) => /\bprint\s*\(/.test(js))
+          triggerAutoPrint = (jsActions as any)[name].some((js: string) => AutoPrintRegExp.test(js))
         }
       }
 

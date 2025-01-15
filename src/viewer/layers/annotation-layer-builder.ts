@@ -1,8 +1,9 @@
 import { PresentationModeState } from '@/enums'
 import { AnnotationLayer, AnnotationMode, type AnnotationLayerParameters } from '@/pdfjs'
-import { DownloadPlugin, ScriptingPlugin } from '@/plugins'
+import type { DownloadPlugin, ScriptingPlugin } from '@/plugins'
 import { LayerBuilder } from './layer-builder'
-import { TextLayerBuilder } from './text-layer-builder'
+import type { TextLayerBuilder } from './text-layer-builder'
+import type { StructTreeLayerBuilder } from './struct-tree-layer-builder'
 
 export class AnnotationLayerBuilder extends LayerBuilder {
   private _annotationLayer?: AnnotationLayer
@@ -47,12 +48,12 @@ export class AnnotationLayerBuilder extends LayerBuilder {
 
     this._annotationLayer = new AnnotationLayer({
       div,
-      accessibilityManager: this.findLayer<TextLayerBuilder>(TextLayerBuilder)?.textAccessibilityManager,
+      accessibilityManager: this.findLayer<TextLayerBuilder>('TextLayerBuilder')?.textAccessibilityManager,
       annotationCanvasMap: this.page.annotationCanvasMap,
       annotationEditorUIManager: this.layerProperties.annotationManager.annotationEditorUIManager,
       page: this.pdfPage,
       viewport: this.viewport.clone({ dontFlip: true }),
-      structTreeLayer: undefined,
+      structTreeLayer: this.findLayer<StructTreeLayerBuilder>('StructTreeLayerBuilder'),
     })
 
     await this._annotationLayer.render({

@@ -32,16 +32,45 @@
 
     .find-field {
       @apply
-        block
-        border-2
-        rounded
-        w-60
-        px-2
-        py-1
+        relative
+        flex
+        items-center
       ;
 
-      &[data-status='not-found'] {
-        @apply bg-red-100;
+      input {
+        @apply
+          block
+          border-2
+          rounded
+          w-60
+          px-2
+          py-1
+        ;
+
+        &[data-status='not-found'] {
+          @apply bg-red-100;
+        }
+
+        &[data-status='pending'] {
+          @apply bg-blue-50;
+        }
+      }
+
+      &:has([data-status='pending']):after {
+        content: '';
+      }
+
+      &:after {
+        @apply
+          absolute
+          right-0
+          mr-2
+          text-gray-500
+          w-5
+          h-5
+          animate-spin
+          i-ph-spinner
+        ;
       }
     }
 

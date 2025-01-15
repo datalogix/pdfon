@@ -8,8 +8,14 @@
 
   canvas {
     @apply
+      absolute
+      top-0
+      left-0
       m-0
       block
+      w-full
+      h-full
+      contain-content
     ;
   }
 }

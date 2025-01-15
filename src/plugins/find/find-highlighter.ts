@@ -72,8 +72,11 @@ export class FindHighlighter {
 
       for (let n = begin, end = match.end.divIndex; n <= end; n++) {
         const div = this.textDivs[n]
-        div.textContent = this.textContentItemsStr[n]
-        div.className = ''
+
+        if (div) {
+          div.textContent = this.textContentItemsStr[n]
+          div.className = ''
+        }
       }
 
       clearedUntilDivIndex = match.end.divIndex + 1
@@ -146,7 +149,14 @@ const renderMatches = (
       span.className = `${className} appended'`
       span.append(node)
       div.append(span)
-      return className.includes('selected') ? span.offsetLeft : 0
+
+      if (className.includes('selected')) {
+        const { left } = span.getClientRects()[0]
+        const parentLeft = div.getBoundingClientRect().left
+        return left - parentLeft
+      }
+
+      return 0
     }
 
     div.append(node)

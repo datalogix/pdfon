@@ -10,7 +10,11 @@ export enum CursorTool {
   HAND = 1,
 }
 
-export class CursorPlugin extends Plugin {
+export type CursorPluginParams = {
+  cursorToolOnLoad?: CursorTool
+}
+
+export class CursorPlugin extends Plugin<CursorPluginParams> {
   protected getToolbarItems() {
     return new Map<string, ToolbarItemType>([
       ['cursor-hand', CursorHand],
@@ -18,20 +22,28 @@ export class CursorPlugin extends Plugin {
     ])
   }
 
-  private active = CursorTool.SELECT
+  private active?: CursorTool
   private prevActive?: CursorTool
   private handTool?: HandTool
 
   protected init() {
+    queueMicrotask(() => {
+      this.switchTool(this.params?.cursorToolOnLoad ?? CursorTool.SELECT)
+    })
+
     this.handTool = new HandTool(this.viewerContainer)
 
     this.on('switchcursortool', (evt: { reset: boolean, tool: CursorTool }) => {
       if (!evt.reset) {
+        if (this.prevActive) {
+          return
+        }
+
         this.switchTool(evt.tool)
         return
       }
 
-      if (this.prevActive !== null) {
+      if (this.prevActive) {
         annotationEditorMode = AnnotationEditorType.NONE
         presentationModeState = PresentationModeState.NORMAL
 
@@ -43,21 +55,18 @@ export class CursorPlugin extends Plugin {
     let presentationModeState = PresentationModeState.NORMAL
 
     const disableActive = () => {
-      const prevActive = this.active
-      this.switchTool(CursorTool.SELECT)
-      this.prevActive ??= prevActive
+      this.prevActive ??= this.active
+      this.switchTool(CursorTool.SELECT, true)
     }
 
     const enableActive = () => {
-      const prevActive = this.prevActive
-
       if (
-        prevActive
+        this.prevActive
         && annotationEditorMode === AnnotationEditorType.NONE
         && presentationModeState === PresentationModeState.NORMAL
       ) {
+        this.switchTool(this.prevActive)
         this.prevActive = undefined
-        this.switchTool(prevActive)
       }
     }
 
@@ -91,13 +100,17 @@ export class CursorPlugin extends Plugin {
     return this.active
   }
 
-  switchTool(tool: CursorTool) {
-    if (this.prevActive) {
-      return
-    }
-
+  switchTool(tool: CursorTool, disabled?: boolean) {
     if (tool === this.active) {
-      return
+      if (this.prevActive) {
+        // Ensure that the `disabled`-attribute of the buttons will be updated.
+        this.dispatch('cursortoolchanged', {
+          source: this,
+          tool,
+          disabled,
+        })
+      }
+      return // The requested tool is already active.
     }
 
     const disableActiveTool = () => {
@@ -124,6 +137,6 @@ export class CursorPlugin extends Plugin {
     }
 
     this.active = tool
-    this.dispatch('cursortoolchanged', { tool })
+    this.dispatch('cursortoolchanged', { tool, disabled })
   }
 }

@@ -64,7 +64,7 @@ export class ScriptingManager extends Dispatcher {
     try {
       this.scripting = this.initScripting()
     } catch (ex) {
-      console.error(`setDocument: "${ex}".`)
+      console.error('setDocument:', ex)
 
       await this.destroyScripting()
       return
@@ -141,7 +141,7 @@ export class ScriptingManager extends Dispatcher {
 
       this.dispatch('sandboxcreated')
     } catch (ex) {
-      console.error(`setDocument: "${ex}".`)
+      console.error('setDocument:', ex)
 
       await this.destroyScripting()
       return

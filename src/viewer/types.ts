@@ -22,6 +22,7 @@ export type ViewerOptions = {
   enableHWA?: boolean
   pageColors?: PageColors
   enableTitleUpdate?: boolean
+  supportsPinchToZoom?: boolean
 }
 
 export type ViewerType = Viewer &

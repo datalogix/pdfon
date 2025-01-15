@@ -1,3 +1,4 @@
+import { OutputScale } from '@/pdfjs'
 import { createElement } from '@/utils'
 
 export function reduceImage(
@@ -82,15 +83,12 @@ export function createScaledCanvasContext(width: number, height: number, upscale
     willReadFrequently: !enableHWA,
   })
 
-  const outputScale = {
-    sx: window.devicePixelRatio || 1,
-    sy: window.devicePixelRatio || 1,
-  }
+  const outputScale = new OutputScale()
 
   canvas.width = (upscaleFactor * width * outputScale.sx) | 0
   canvas.height = (upscaleFactor * height * outputScale.sy) | 0
 
-  const transform = outputScale.sx !== 1 || outputScale.sy !== 1
+  const transform = outputScale.scaled
     ? [outputScale.sx, 0, 0, outputScale.sy, 0, 0]
     : undefined
 

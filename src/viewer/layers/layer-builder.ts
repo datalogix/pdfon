@@ -76,11 +76,11 @@ export abstract class LayerBuilder<T = any> extends Dispatcher {
     return this.page.layersPage
   }
 
-  findLayer<T>(layer: LayerBuilderType) {
+  findLayer<T>(layer: LayerBuilderType | string) {
     return this.layersPage.find<T>(layer)
   }
 
-  hasLayer(layer: LayerBuilderType) {
+  hasLayer(layer: LayerBuilderType | string) {
     return !!this.findLayer(layer)
   }
 
@@ -88,8 +88,8 @@ export abstract class LayerBuilder<T = any> extends Dispatcher {
     return true
   }
 
-  canKeep(keep = true) {
-    return keep && this.div !== undefined
+  canKeep(keep = true): boolean | HTMLDivElement | undefined {
+    return keep && this.div
   }
 
   canCancel(keep?: boolean) {
@@ -139,7 +139,7 @@ export abstract class LayerBuilder<T = any> extends Dispatcher {
     this.dispatch('cancel')
   }
 
-  hide() {
+  hide(_keep?: boolean) {
     if (!this.div) return
 
     this.div.hidden = true

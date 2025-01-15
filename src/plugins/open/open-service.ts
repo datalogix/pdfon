@@ -1,3 +1,4 @@
+import { stopEvent } from '@/pdfjs'
 import { IL10n } from '@/l10n'
 import { createElement } from '@/utils'
 
@@ -72,15 +73,14 @@ export class OpenService {
     const dropzone = this.dropzone = this.container.appendChild(createElement('div', 'open-dropzone'))
     dropzone.appendChild(createElement('span', { innerText: this.l10n.get('open.description') }))
 
-    this.container.addEventListener('dragover', (e) => {
-      if (!e.dataTransfer) return
+    this.container.addEventListener('dragover', (event) => {
+      if (!event.dataTransfer) return
 
-      for (let i = 0; i < e.dataTransfer.items.length; i++) {
-        if (e.dataTransfer.items[i].type === 'application/pdf') {
-          e.dataTransfer.dropEffect = e.dataTransfer.effectAllowed === 'copy' ? 'copy' : 'move'
+      for (let i = 0; i < event.dataTransfer.items.length; i++) {
+        if (event.dataTransfer.items[i].type === 'application/pdf') {
+          event.dataTransfer.dropEffect = event.dataTransfer.effectAllowed === 'copy' ? 'copy' : 'move'
           dropzone.classList.add('open-dragover')
-          e.preventDefault()
-          e.stopPropagation()
+          stopEvent(event)
           return
         }
       }
@@ -92,14 +92,11 @@ export class OpenService {
       }
     })
 
-    this.container.addEventListener('drop', (e) => {
-      if (e.dataTransfer?.files?.[0].type !== 'application/pdf') return
+    this.container.addEventListener('drop', (event) => {
+      if (event.dataTransfer?.files?.[0].type !== 'application/pdf') return
       dropzone.classList.remove('open-dragover')
-
-      e.preventDefault()
-      e.stopPropagation()
-
-      this.select(e.dataTransfer.files[0])
+      stopEvent(event)
+      this.select(event.dataTransfer.files[0])
     })
   }
 }

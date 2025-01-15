@@ -1,33 +1,44 @@
+import { stopEvent } from '@/pdfjs'
 import { createElement } from '@/utils'
 
 export class HandTool {
-  private active = false
+  private activateAbortController?: AbortController
+  private mouseDownAbortController?: AbortController
+  private scrollAbortController?: AbortController
   private scrollLeftStart = 0
   private scrollTopStart = 0
   private clientXStart = 0
   private clientYStart = 0
-  private onMouseDownListener = this.onMouseDown.bind(this)
-  private onMouseMoveListener = this.onMouseMove.bind(this)
-  private onMouseUpListener = this.onMouseUp.bind(this)
   private overlay: HTMLDivElement = createElement('div', 'grabbing-overlay')
 
   constructor(private readonly element: HTMLDivElement) {}
 
   activate() {
-    if (this.active) return
+    if (this.activateAbortController) return
 
-    this.active = true
-    this.element.addEventListener('mousedown', this.onMouseDownListener, true)
+    this.activateAbortController = new AbortController()
+    this.element.addEventListener('mousedown', this.onMouseDown.bind(this), {
+      capture: true,
+      signal: this.activateAbortController.signal,
+    })
     this.element.classList.add('grab')
   }
 
   deactivate() {
-    if (!this.active) return
+    if (!this.activateAbortController) return
 
-    this.active = false
-    this.element.removeEventListener('mousedown', this.onMouseDownListener, true)
-    this.onMouseUp()
+    this.activateAbortController.abort()
+    this.activateAbortController = undefined
+    this.endPan()
     this.element.classList.remove('grab')
+  }
+
+  toggle() {
+    if (this.activateAbortController) {
+      this.deactivate()
+    } else {
+      this.activate()
+    }
   }
 
   private ignoreTarget(node: HTMLElement) {
@@ -46,12 +57,20 @@ export class HandTool {
     this.clientXStart = event.clientX
     this.clientYStart = event.clientY
 
-    this.element.addEventListener('mousemove', this.onMouseMoveListener, true)
-    this.element.addEventListener('mouseup', this.onMouseUpListener, true)
-    this.element.addEventListener('scroll', this.onMouseUpListener, true)
+    this.mouseDownAbortController = new AbortController()
+    this.element.addEventListener('mousemove', this.onMouseMove.bind(this), { capture: true, signal: this.mouseDownAbortController.signal })
+    this.element.addEventListener('mouseup', this.endPan.bind(this), { capture: true, signal: this.mouseDownAbortController.signal })
+    // When a scroll event occurs before a mousemove, assume that the user
+    // dragged a scrollbar (necessary for Opera Presto, Safari and IE)
+    // (not needed for Chrome/Firefox)
+    this.scrollAbortController = new AbortController()
 
-    event.preventDefault()
-    event.stopPropagation()
+    this.element.addEventListener('scroll', this.endPan.bind(this), {
+      capture: true,
+      signal: this.scrollAbortController.signal,
+    })
+
+    stopEvent(event)
 
     const focusedElement = document.activeElement as HTMLElement
     if (focusedElement && !focusedElement.contains(target)) {
@@ -60,10 +79,12 @@ export class HandTool {
   }
 
   private onMouseMove(event: MouseEvent) {
-    this.element.removeEventListener('scroll', this.onMouseUpListener, true)
+    this.scrollAbortController?.abort()
+    this.scrollAbortController = undefined
 
     if (!(event.buttons & 1)) {
-      this.onMouseUp()
+      // The left mouse button is released.
+      this.endPan()
       return
     }
 
@@ -77,14 +98,16 @@ export class HandTool {
     })
 
     if (!this.overlay.parentNode) {
-      this.element.append(this.overlay)
+      document.body.append(this.overlay)
     }
   }
 
-  private onMouseUp(_event?: MouseEvent | Event) {
-    this.element.removeEventListener('mousemove', this.onMouseMoveListener, true)
-    this.element.removeEventListener('mouseup', this.onMouseUpListener, true)
-    this.element.removeEventListener('scroll', this.onMouseUpListener, true)
+  private endPan(_event?: MouseEvent | Event) {
+    this.mouseDownAbortController?.abort()
+    this.mouseDownAbortController = undefined
+    this.scrollAbortController?.abort()
+    this.scrollAbortController = undefined
+    // Note: ChildNode.remove doesn't throw if the parentNode is undefined.
     this.overlay.remove()
   }
 }

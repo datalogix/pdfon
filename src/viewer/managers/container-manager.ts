@@ -47,6 +47,10 @@ export class ContainerManager extends Manager {
     this.on('firstpageloaded', ({ pdfDocument, viewport }) => {
       this.setScaleFactor(viewport.scale)
       applyHighlightHCMFilter(this.viewerContainer, this.viewer.pageColors, pdfDocument.filterFactory)
+
+      if (this.viewer.pageColors?.background) {
+        this.viewerContainer.style.setProperty('--page-bg-color', this.viewer.pageColors.background)
+      }
     })
 
     this.on('metadataloaded', ({ info }) => {

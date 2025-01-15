@@ -1,5 +1,5 @@
 import { TextLayerMode } from '@/enums'
-import { AbortException, TextLayer, normalizeUnicode } from '@/pdfjs'
+import { AbortException, TextLayer, normalizeUnicode, stopEvent } from '@/pdfjs'
 import { createElement, removeNullCharacters } from '@/utils'
 import { TextAccessibilityManager } from './text-accessibility-manager'
 import { LayerBuilder } from './layer-builder'
@@ -111,8 +111,7 @@ export class TextLayerBuilder extends LayerBuilder {
         )
       }
 
-      event.preventDefault()
-      event.stopPropagation()
+      stopEvent(event)
     })
 
     TextLayerBuilder.textLayers.set(div, end)

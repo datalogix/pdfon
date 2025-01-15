@@ -15,7 +15,7 @@ export class AnnotationManager extends Manager {
   private _annotationMode!: number
   private _annotationEditorMode!: number
   private switchAnnotationEditorModeTimeoutId?: NodeJS.Timeout
-  private onPageRenderedCallback?: ({ pageNumber }: { pageNumber: number }) => void
+  private switchAnnotationEditorModeAbortController?: AbortController
 
   init() {
     this._annotationMode = this.options.annotationMode ?? AnnotationMode.ENABLE_FORMS
@@ -69,6 +69,8 @@ export class AnnotationManager extends Manager {
       null, // enableUpdatedAddImage
       null, // enableNewAltTextWhenAddingImage
       null, // mlManager
+      null, // editorUndoBar
+      this.options.supportsPinchToZoom ?? true,
     )
 
     this.dispatch('annotationeditoruimanager', { uiManager: this._annotationEditorUIManager })
@@ -140,18 +142,22 @@ export class AnnotationManager extends Manager {
 
       if (isEditing && idsToRefresh) {
         this.cleanupSwitchAnnotationEditorMode()
-        this.onPageRenderedCallback = ({ pageNumber }) => {
-          idsToRefresh.delete(pageNumber)
-
-          if (idsToRefresh.size === 0) {
-            this.switchAnnotationEditorModeTimeoutId = setTimeout(updater, 0)
-          }
-        }
+        this.switchAnnotationEditorModeAbortController = new AbortController()
 
         this.on(
           'pagerendered',
-          this.onPageRenderedCallback,
-          { signal: this.pagesManager.signal },
+          ({ pageNumber }) => {
+            idsToRefresh.delete(pageNumber)
+            if (idsToRefresh.size === 0) {
+              this.switchAnnotationEditorModeTimeoutId = setTimeout(updater, 0)
+            }
+          },
+          {
+            signal: AbortSignal.any([
+              this.pagesManager.signal,
+              this.switchAnnotationEditorModeAbortController.signal,
+            ].filter(value => value !== undefined)),
+          },
         )
 
         return
@@ -162,10 +168,8 @@ export class AnnotationManager extends Manager {
   }
 
   private cleanupSwitchAnnotationEditorMode() {
-    if (this.onPageRenderedCallback) {
-      this.off('pagerendered', this.onPageRenderedCallback)
-      this.onPageRenderedCallback = undefined
-    }
+    this.switchAnnotationEditorModeAbortController?.abort()
+    this.switchAnnotationEditorModeAbortController = undefined
 
     if (this.switchAnnotationEditorModeTimeoutId !== undefined) {
       clearTimeout(this.switchAnnotationEditorModeTimeoutId)

@@ -27,6 +27,10 @@ export class Page extends RenderView {
     this.options.container?.append(this.div)
 
     if (this.options.isStandalone) {
+      if (this.options.pageColors?.background) {
+        this.options.container?.style.setProperty('--page-bg-color', this.options.pageColors.background)
+      }
+
       this.updateOptionalContentConfigPromise(this.options.optionalContentConfigPromise)
     }
   }
@@ -173,8 +177,10 @@ export class Page extends RenderView {
   }
 
   protected async finishRenderTask(renderTask: RenderTask, error?: any) {
-    if (!error || !(error instanceof RenderingCancelledException)) {
+    if (!(error instanceof RenderingCancelledException)) {
       this.canvasPage.show(true)
+    } else {
+      this.canvasPage.reset()
     }
 
     error = await super.finishRenderTask(renderTask, error)

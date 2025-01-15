@@ -29,6 +29,9 @@ const DIACRITICS_EXCEPTION = new Set([
   0x0f74,
 ])
 
+const NOT_DIACRITIC_FROM_END_REG_EXP = /([^\p{M}])\p{M}*$/u
+const NOT_DIACRITIC_FROM_START_REG_EXP = /^\p{M}*([^\p{M}])/u
+
 enum CharacterType {
   SPACE = 0,
   ALPHA_LETTER = 1,
@@ -166,7 +169,7 @@ export function convertToRegExpString(query: string, matchDiacritics?: boolean, 
 }
 
 export function isEntireWord(content: string, startIndex: number, length: number) {
-  let match = content.slice(0, startIndex).match(/([^\p{M}])\p{M}*$/u)
+  let match = content.slice(0, startIndex).match(NOT_DIACRITIC_FROM_END_REG_EXP)
 
   if (match) {
     const first = content.charCodeAt(startIndex)
@@ -177,7 +180,7 @@ export function isEntireWord(content: string, startIndex: number, length: number
     }
   }
 
-  match = content.slice(startIndex + length).match(/^\p{M}*([^\p{M}])/u)
+  match = content.slice(startIndex + length).match(NOT_DIACRITIC_FROM_START_REG_EXP)
 
   if (match) {
     const last = content.charCodeAt(startIndex + length - 1)

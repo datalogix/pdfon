@@ -30,7 +30,7 @@ export class DownloadManager implements IDownloadManager {
         window.open(viewerUrl)
         return true
       } catch (ex) {
-        console.error(`openOrDownloadData: ${ex}`)
+        console.error('openOrDownloadData:', ex)
         // Release the `blobUrl`, since opening it failed, and fallback to
         // downloading the PDF file.
         URL.revokeObjectURL(blobUrl)
@@ -49,7 +49,7 @@ export class DownloadManager implements IDownloadManager {
       blobUrl = URL.createObjectURL(new Blob([data], { type: 'application/pdf' }))
     } else {
       if (!createValidAbsoluteUrl(url, 'http://example.com')) {
-        console.error(`download - not a valid URL: ${url}`)
+        console.error('download - not a valid URL:', url)
         return
       }
 

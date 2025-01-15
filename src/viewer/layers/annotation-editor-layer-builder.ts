@@ -1,7 +1,8 @@
 import { AnnotationEditorLayer, DrawLayer, type AnnotationEditorLayerOptions } from '@/pdfjs'
-import { AnnotationLayerBuilder } from './annotation-layer-builder'
+import type { AnnotationLayerBuilder } from './annotation-layer-builder'
 import { LayerBuilder } from './layer-builder'
-import { TextLayerBuilder } from './text-layer-builder'
+import type { TextLayerBuilder } from './text-layer-builder'
+import type { StructTreeLayerBuilder } from './struct-tree-layer-builder'
 
 export class AnnotationEditorLayerBuilder extends LayerBuilder {
   private _annotationEditorLayer?: AnnotationEditorLayer
@@ -43,10 +44,11 @@ export class AnnotationEditorLayerBuilder extends LayerBuilder {
     this._annotationEditorLayer = new AnnotationEditorLayer({
       div,
       uiManager: this.annotationEditorUIManager,
-      accessibilityManager: this.findLayer<TextLayerBuilder>(TextLayerBuilder)?.textAccessibilityManager,
+      structTreeLayer: this.findLayer<StructTreeLayerBuilder>('StructTreeLayerBuilder'),
+      accessibilityManager: this.findLayer<TextLayerBuilder>('TextLayerBuilder')?.textAccessibilityManager,
       pageIndex: this.id - 1,
-      annotationLayer: this.findLayer<AnnotationLayerBuilder>(AnnotationLayerBuilder)?.annotationLayer,
-      textLayer: this.findLayer<TextLayerBuilder>(TextLayerBuilder),
+      annotationLayer: this.findLayer<AnnotationLayerBuilder>('AnnotationLayerBuilder')?.annotationLayer,
+      textLayer: this.findLayer<TextLayerBuilder>('TextLayerBuilder'),
       drawLayer: this._drawLayer,
       viewport: clonedViewport,
       l10n: this.l10n as any,
@@ -74,11 +76,19 @@ export class AnnotationEditorLayerBuilder extends LayerBuilder {
     this._annotationEditorLayer = undefined
   }
 
+  hide() {
+    if (!this.div) return
+
+    this.annotationEditorLayer?.pause(true)
+    super.hide()
+  }
+
   show() {
     if (this._annotationEditorLayer?.isInvisible) {
       return
     }
 
     super.show()
+    this._annotationEditorLayer?.pause(false)
   }
 }

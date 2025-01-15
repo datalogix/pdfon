@@ -13,7 +13,10 @@ const CHARACTERS_TO_NORMALIZE = {
   '\u00BE': '3/4', // Vulgar fraction three quarters
 }
 
-const SYLLABLES_LENGTHS = new Map<string, number>()
+const DIACRITICS_REG_EXP = /\p{M}+/gu
+const SYLLABLES_REG_EXP = /[\uAC00-\uD7AF\uFA6C\uFACF-\uFAD1\uFAD5-\uFAD7]+/g
+const SYLLABLES_LENGTHS = new Map()
+const FIRST_CHAR_SYLLABLES_REG_EXP = '[\\u1100-\\u1112\\ud7a4-\\ud7af\\ud84a\\ud84c\\ud850\\ud854\\ud857\\ud85f]'
 const NFKC_CHARS_TO_NORMALIZE = new Map()
 
 let noSyllablesRegExp: RegExp | null = null
@@ -27,7 +30,7 @@ export function normalize(text: string) {
   // Collect syllables length and positions.
   const syllablePositions: number[][] = []
   let m
-  while ((m = /[\uAC00-\uD7AF\uFA6C\uFACF-\uFAD1\uFAD5-\uFAD7]+/g.exec(text)) !== null) {
+  while ((m = SYLLABLES_REG_EXP.exec(text)) !== null) {
     let { index } = m
     for (const char of m[0]) {
       let len = SYLLABLES_LENGTHS.get(char)
@@ -53,7 +56,8 @@ export function normalize(text: string) {
     // 30A0-30FF: Katakana
     const CJK = '(?:\\p{Ideographic}|[\u3040-\u30FF])'
     const HKDiacritics = '(?:\u3099|\u309A)'
-    const regexp = `([${replace}])|([${toNormalizeWithNFKC}])|(${HKDiacritics}\\n)|(\\p{M}+(?:-\\n)?)|(\\S-\\n)|(${CJK}\\n)|(\\n)`
+    const CompoundWord = '\\p{Ll}-\\n\\p{Lu}'
+    const regexp = `([${replace}])|([${toNormalizeWithNFKC}])|(${HKDiacritics}\\n)|(\\p{M}+(?:-\\n)?)|(${CompoundWord})|(\\S-\\n)|(${CJK}\\n)|(\\n)`
 
     if (syllablePositions.length === 0) {
       // Most of the syllables belong to Hangul so there are no need
@@ -65,7 +69,7 @@ export function normalize(text: string) {
       )
     } else {
       normalizationRegex = withSyllablesRegExp = new RegExp(
-        regexp + `|([\\u1100-\\u1112\\ud7a4-\\ud7af\\ud84a\\ud84c\\ud850\\ud854\\ud857\\ud85f])`,
+        regexp + `|(${FIRST_CHAR_SYLLABLES_REG_EXP})`,
         'gum',
       )
     }
@@ -100,12 +104,12 @@ export function normalize(text: string) {
 
   // Collect diacritics length and positions.
   const rawDiacriticsPositions: number[][] = []
-  while ((m = /\p{M}+/gu.exec(text)) !== null) {
+  while ((m = DIACRITICS_REG_EXP.exec(text)) !== null) {
     rawDiacriticsPositions.push([m[0].length, m.index])
   }
 
   let normalized = text.normalize('NFD')
-  const positions = [[0, 0]]
+  const positions = [0, 0]
   let rawDiacriticsIndex = 0
   let syllableIndex = 0
   let shift = 0
@@ -113,148 +117,165 @@ export function normalize(text: string) {
   let eol = 0
   let hasDiacritics = false
 
-  normalized = normalized.replace(normalizationRegex, (_match, p1, p2, p3, p4, p5, p6, p7, p8, i) => {
-    i -= shiftOrigin
-    if (p1) {
-      // Maybe fractions or quotations mark...
-      const replacement = CHARACTERS_TO_NORMALIZE[p1 as keyof typeof CHARACTERS_TO_NORMALIZE]
-      const jj = replacement.length
-      for (let j = 1; j < jj; j++) {
-        positions.push([i - shift + j, shift - j])
+  normalized = normalized.replace(
+    normalizationRegex,
+    (_match, p1, p2, p3, p4, p5, p6, p7, p8, p9, i) => {
+      i -= shiftOrigin
+      if (p1) {
+        // Maybe fractions or quotations mark...
+        const replacement = CHARACTERS_TO_NORMALIZE[p1 as keyof typeof CHARACTERS_TO_NORMALIZE]
+        const jj = replacement.length
+        for (let j = 1; j < jj; j++) {
+          positions.push(i - shift + j, shift - j)
+        }
+        shift -= jj - 1
+        return replacement
       }
-      shift -= jj - 1
-      return replacement
-    }
 
-    if (p2) {
-      // Use the NFKC representation to normalize the char.
-      let replacement = NFKC_CHARS_TO_NORMALIZE.get(p2)
-      if (!replacement) {
-        replacement = p2.normalize('NFKC')
-        NFKC_CHARS_TO_NORMALIZE.set(p2, replacement)
+      if (p2) {
+        // Use the NFKC representation to normalize the char.
+        let replacement = NFKC_CHARS_TO_NORMALIZE.get(p2)
+        if (!replacement) {
+          replacement = p2.normalize('NFKC')
+          NFKC_CHARS_TO_NORMALIZE.set(p2, replacement)
+        }
+        const jj = replacement.length
+        for (let j = 1; j < jj; j++) {
+          positions.push(i - shift + j, shift - j)
+        }
+        shift -= jj - 1
+        return replacement
       }
-      const jj = replacement.length
-      for (let j = 1; j < jj; j++) {
-        positions.push([i - shift + j, shift - j])
-      }
-      shift -= jj - 1
-      return replacement
-    }
 
-    if (p3) {
-      // We've a Katakana-Hiragana diacritic followed by a \n so don't replace
-      // the \n by a whitespace.
-      hasDiacritics = true
+      if (p3) {
+        // We've a Katakana-Hiragana diacritic followed by a \n so don't replace
+        // the \n by a whitespace.
+        hasDiacritics = true
 
-      // Diacritic.
-      if (i + eol === rawDiacriticsPositions[rawDiacriticsIndex]?.[1]) {
-        ++rawDiacriticsIndex
-      } else {
-        // i is the position of the first diacritic
-        // so (i - 1) is the position for the letter before.
-        positions.push([i - 1 - shift + 1, shift - 1])
-        shift -= 1
+        // Diacritic.
+        if (i + eol === rawDiacriticsPositions[rawDiacriticsIndex]?.[1]) {
+          ++rawDiacriticsIndex
+        } else {
+          // i is the position of the first diacritic
+          // so (i - 1) is the position for the letter before.
+          positions.push(i - 1 - shift + 1, shift - 1)
+          shift -= 1
+          shiftOrigin += 1
+        }
+
+        // End-of-line.
+        positions.push(i - shift + 1, shift)
         shiftOrigin += 1
+        eol += 1
+
+        return p3.charAt(0)
       }
 
-      // End-of-line.
-      positions.push([i - shift + 1, shift])
-      shiftOrigin += 1
-      eol += 1
+      if (p4) {
+        const hasTrailingDashEOL = p4.endsWith('\n')
+        const len = hasTrailingDashEOL ? p4.length - 2 : p4.length
 
-      return p3.charAt(0)
-    }
+        // Diacritics.
+        hasDiacritics = true
+        let jj = len
+        if (i + eol === rawDiacriticsPositions[rawDiacriticsIndex]?.[1]) {
+          jj -= rawDiacriticsPositions[rawDiacriticsIndex][0]
+          ++rawDiacriticsIndex
+        }
 
-    if (p4) {
-      const hasTrailingDashEOL = p4.endsWith('\n')
-      const len = hasTrailingDashEOL ? p4.length - 2 : p4.length
+        for (let j = 1; j <= jj; j++) {
+          // i is the position of the first diacritic
+          // so (i - 1) is the position for the letter before.
+          positions.push(i - 1 - shift + j, shift - j)
+        }
+        shift -= jj
+        shiftOrigin += jj
 
-      // Diacritics.
-      hasDiacritics = true
-      let jj = len
-      if (i + eol === rawDiacriticsPositions[rawDiacriticsIndex]?.[1]) {
-        jj -= rawDiacriticsPositions[rawDiacriticsIndex][0]
-        ++rawDiacriticsIndex
+        if (hasTrailingDashEOL) {
+          // Diacritics are followed by a -\n.
+          // See comments in `if (p6)` block.
+          i += len - 1
+          positions.push(i - shift + 1, 1 + shift)
+          shift += 1
+          shiftOrigin += 1
+          eol += 1
+          return p4.slice(0, len)
+        }
+
+        return p4
       }
 
-      for (let j = 1; j <= jj; j++) {
-        // i is the position of the first diacritic
-        // so (i - 1) is the position for the letter before.
-        positions.push([i - 1 - shift + j, shift - j])
+      if (p5) {
+        // Compound word with a line break after the hyphen.
+        // Since the \n isn't in the original text, o = 3 and n = 3.
+        shiftOrigin += 1
+        eol += 1
+        return p5.replace('\n', '')
       }
-      shift -= jj
-      shiftOrigin += jj
 
-      if (hasTrailingDashEOL) {
-        // Diacritics are followed by a -\n.
-        // See comments in `if (p5)` block.
-        i += len - 1
-        positions.push([i - shift + 1, 1 + shift])
+      if (p6) {
+        // "X-\n" is removed because an hyphen at the end of a line
+        // with not a space before is likely here to mark a break
+        // in a word.
+        // If X is encoded with UTF-32 then it can have a length greater than 1.
+        // The \n isn't in the original text so here y = i, n = X.len - 2 and
+        // o = X.len - 1.
+        const len = p6.length - 2
+        positions.push(i - shift + len, 1 + shift)
         shift += 1
         shiftOrigin += 1
         eol += 1
-        return p4.slice(0, len)
+        return p6.slice(0, -2)
       }
 
-      return p4
-    }
-
-    if (p5) {
-      // "X-\n" is removed because an hyphen at the end of a line
-      // with not a space before is likely here to mark a break
-      // in a word.
-      // If X is encoded with UTF-32 then it can have a length greater than 1.
-      // The \n isn't in the original text so here y = i, n = X.len - 2 and
-      // o = X.len - 1.
-      const len = p5.length - 2
-      positions.push([i - shift + len, 1 + shift])
-      shift += 1
-      shiftOrigin += 1
-      eol += 1
-      return p5.slice(0, -2)
-    }
-
-    if (p6) {
-      // An ideographic at the end of a line doesn't imply adding an extra
-      // white space.
-      // A CJK can be encoded in UTF-32, hence their length isn't always 1.
-      const len = p6.length - 1
-      positions.push([i - shift + len, shift])
-      shiftOrigin += 1
-      eol += 1
-      return p6.slice(0, -1)
-    }
-
-    if (p7) {
-      // eol is replaced by space: "foo\nbar" is likely equivalent to
-      // "foo bar".
-      positions.push([i - shift + 1, shift - 1])
-      shift -= 1
-      shiftOrigin += 1
-      eol += 1
-      return ' '
-    }
-
-    // p8
-    if (i + eol === syllablePositions[syllableIndex]?.[1]) {
-      // A syllable (1 char) is replaced with several chars (n) so
-      // newCharsLen = n - 1.
-      const newCharLen = syllablePositions[syllableIndex][0] - 1
-      ++syllableIndex
-      for (let j = 1; j <= newCharLen; j++) {
-        positions.push([i - (shift - j), shift - j])
+      if (p7) {
+        // An ideographic at the end of a line doesn't imply adding an extra
+        // white space.
+        // A CJK can be encoded in UTF-32, hence their length isn't always 1.
+        const len = p7.length - 1
+        positions.push(i - shift + len, shift)
+        shiftOrigin += 1
+        eol += 1
+        return p7.slice(0, -1)
       }
-      shift -= newCharLen
-      shiftOrigin += newCharLen
-    }
-    return p8
-  })
 
-  positions.push([normalized.length, shift])
+      if (p8) {
+        // eol is replaced by space: "foo\nbar" is likely equivalent to
+        // "foo bar".
+        positions.push(i - shift + 1, shift - 1)
+        shift -= 1
+        shiftOrigin += 1
+        eol += 1
+        return ' '
+      }
+
+      // p8
+      if (i + eol === syllablePositions[syllableIndex]?.[1]) {
+        // A syllable (1 char) is replaced with several chars (n) so
+        // newCharsLen = n - 1.
+        const newCharLen = syllablePositions[syllableIndex][0] - 1
+        ++syllableIndex
+        for (let j = 1; j <= newCharLen; j++) {
+          positions.push(i - (shift - j), shift - j)
+        }
+        shift -= newCharLen
+        shiftOrigin += newCharLen
+      }
+      return p9
+    },
+  )
+
+  positions.push(normalized.length, shift)
+  const starts = new Uint32Array(positions.length >> 1)
+  const shifts = new Int32Array(positions.length >> 1)
+  for (let i = 0, ii = positions.length; i < ii; i += 2) {
+    starts[i >> 1] = positions[i]
+    shifts[i >> 1] = positions[i + 1]
+  }
 
   return {
     normalized,
-    positions,
+    positions: [Array.from(starts), Array.from(shifts)],
     hasDiacritics,
   }
 }

@@ -18,7 +18,7 @@ export class FindToolbarItem extends ToolbarActionToggle {
 
   init() {
     this.bar = createElement('div', 'findbar')
-    this.findField = this.bar.appendChild(createElement('input', 'find-field', {
+    this.findField = this.bar.appendChild(createElement('input', {
       type: 'text',
       title: this.l10n.get('find.field.title'),
       placeholder: this.l10n.get('find.field.placeholder'),
@@ -40,23 +40,35 @@ export class FindToolbarItem extends ToolbarActionToggle {
     this.findMsg = createElement('span', 'find-msg')
     this.findResultsCount = createElement('span', 'find-results')
 
-    this.findField.addEventListener('input', () => this.dispatchEvent(), { signal: this.signal })
-    this.findPreviousButton.addEventListener('click', () => this.dispatchEvent('again', true), { signal: this.signal })
-    this.findNextButton.addEventListener('click', () => this.dispatchEvent('again', false), { signal: this.signal })
-    this.findHighlightAll.addEventListener('click', () => this.dispatchEvent('highlightallchange'), { signal: this.signal })
-    this.findCaseSensitive.addEventListener('click', () => this.dispatchEvent('casesensitivitychange'), { signal: this.signal })
-    this.findMatchDiacritics.addEventListener('click', () => this.dispatchEvent('diacriticmatchingchange'), { signal: this.signal })
-    this.findEntireWord.addEventListener('click', () => this.dispatchEvent('entirewordchange'), { signal: this.signal })
+    const checkedInputs = new Map([
+      [this.findHighlightAll, 'highlightallchange'],
+      [this.findCaseSensitive, 'casesensitivitychange'],
+      [this.findMatchDiacritics, 'diacriticmatchingchange'],
+      [this.findEntireWord, 'entirewordchange'],
+    ])
 
-    this.bar.addEventListener('keydown', (e) => {
-      if (e.key == 'Enter' && e.target === this.findField) {
-        this.dispatchEvent('again', e.shiftKey)
+    this.bar.addEventListener('keydown', ({ key, shiftKey, target }) => {
+      if (key == 'Enter') {
+        if (target === this.findField) {
+          this.dispatchEvent('again', shiftKey)
+        } else if (target instanceof HTMLInputElement && checkedInputs.has(target)) {
+          target.checked = !target.checked
+          this.dispatchEvent(checkedInputs.get(target))
+        }
       }
 
-      if (e.key == 'Escape') {
+      if (key == 'Escape') {
         this.close()
       }
     })
+
+    this.findField.addEventListener('input', () => this.dispatchEvent(), { signal: this.signal })
+    this.findPreviousButton.addEventListener('click', () => this.dispatchEvent('again', true), { signal: this.signal })
+    this.findNextButton.addEventListener('click', () => this.dispatchEvent('again', false), { signal: this.signal })
+
+    for (const [elem, evtName] of checkedInputs) {
+      elem.addEventListener('click', () => this.dispatchEvent(evtName), { signal: this.signal })
+    }
 
     const labelHighlightAll = createElement('label', 'find-checkbox')
     labelHighlightAll.append(this.findHighlightAll, createElement('span', { innerText: this.l10n.get('find.highlight-all') }))
@@ -70,8 +82,11 @@ export class FindToolbarItem extends ToolbarActionToggle {
     const labelMatchDiacritics = createElement('label', 'find-checkbox')
     labelMatchDiacritics.append(this.findMatchDiacritics, createElement('span', { innerText: this.l10n.get('find.match-diacritics') }))
 
+    const findField = createElement('div', 'find-field')
+    findField.append(this.findField)
+
     const findFieldContainer = createElement('div', 'find-field-container')
-    findFieldContainer.append(this.findField, this.findPreviousButton, this.findNextButton)
+    findFieldContainer.append(findField, this.findPreviousButton, this.findNextButton)
 
     const findOptionsContainer = createElement('div', 'find-options-container')
     findOptionsContainer.append(labelHighlightAll, labelCaseSensitive, labelEntireWord, labelMatchDiacritics)

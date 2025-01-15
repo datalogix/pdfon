@@ -76,7 +76,7 @@ export class LayersPage extends Dispatcher {
     for (let i = this.container.childNodes.length - 1; i >= 0; i--) {
       const node = this.container.childNodes[i]
 
-      if (this.builders.some(builder => node === (keep && builder.div))) {
+      if (this.builders.some(builder => node === builder.canKeep(keep))) {
         continue
       }
 
@@ -90,8 +90,8 @@ export class LayersPage extends Dispatcher {
     }
 
     this.builders
-      .filter(builder => builder.canKeep(keep))
-      .forEach(builder => builder.hide())
+      .filter(builder => !!builder.canKeep(keep))
+      .forEach(builder => builder.hide(keep))
   }
 
   process(params: PageUpdate) {
@@ -106,8 +106,10 @@ export class LayersPage extends Dispatcher {
     this.builders.forEach(builder => builder.updateOptionalContentConfig(optionalContentConfig))
   }
 
-  find<T>(item: LayerBuilderType) {
-    const name = item instanceof LayerBuilder ? item.constructor.name : item.name
+  find<T>(item: LayerBuilderType | string) {
+    const name = item instanceof LayerBuilder
+      ? item.constructor.name
+      : (typeof item === 'string' ? item : item.name)
 
     return this.builders.find(builder => builder.constructor.name === name) as T | undefined
   }

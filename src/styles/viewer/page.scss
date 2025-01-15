@@ -1,13 +1,16 @@
 .viewer-container {
   .page {
+    --scale-round-x: 1px;
+    --scale-round-y: 1px;
+
     direction: ltr;
     width: 816px;
     height: 1056px;
+    background-color: var(--page-bg-color, rgb(255 255 255));
 
     @apply
       relative
       overflow-visible
-      bg-white
       bg-clip-content
       border-solid
       border-16

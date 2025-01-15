@@ -25,8 +25,8 @@ export function updateLayerDimensions(
 
   const w = `var(--scale-factor) * ${pageWidth}px`
   const h = `var(--scale-factor) * ${pageHeight}px`
-  const widthStr = `round(${w}, 1px)`
-  const heightStr = `round(${h}, 1px)`
+  const widthStr = `round(down, ${w}, var(--scale-round-x, 1px))`
+  const heightStr = `round(down, ${h}, var(--scale-round-y, 1px))`
 
   if (!mustFlip || viewport.rotation % 180 === 0) {
     style.width = widthStr

@@ -3,30 +3,31 @@ import { binarySearchFirstItem } from '@/utils'
 // Determine the original, non-normalized, match index such that highlighting of
 // search results is correct in the `textLayer` for strings containing e.g. "½"
 // characters; essentially "inverting" the result of the `normalize` function.
-export function getOriginalIndex(diffs: number[][], pos: number, len: number) {
+export function getOriginalIndex<T extends number>(diffs: T[][], pos: T, len: T) {
   if (!diffs) {
     return [pos, len]
   }
 
+  const [starts, shifts] = diffs
   // First char in the new string.
   const start = pos
   // Last char in the new string.
   const end = pos + len - 1
-  let i = binarySearchFirstItem<number[]>(diffs, x => x[0] >= start)
-  if (diffs[i][0] > start) {
+  let i = binarySearchFirstItem(starts, x => x >= start)
+  if (starts[i] > start) {
     --i
   }
 
-  let j = binarySearchFirstItem<number[]>(diffs, x => x[0] >= end, i)
-  if (diffs[j][0] > end) {
+  let j = binarySearchFirstItem(starts, x => x >= end, i)
+  if (starts[j] > end) {
     --j
   }
 
   // First char in the old string.
-  const oldStart = start + diffs[i][1]
+  const oldStart = start + shifts[i]
 
   // Last char in the old string.
-  const oldEnd = end + diffs[j][1]
+  const oldEnd = end + shifts[j]
   const oldLen = oldEnd + 1 - oldStart
 
   return [oldStart, oldLen]

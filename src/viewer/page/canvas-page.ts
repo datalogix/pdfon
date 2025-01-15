@@ -1,13 +1,18 @@
-import type { PageViewport } from '@/pdfjs'
 import { MAX_CANVAS_PIXELS } from '@/config'
+import { OutputScale, type PageViewport } from '@/pdfjs'
 import { createElement, approximateFraction, floorToDivide } from '@/utils'
 import type { Page } from './page'
 
 export class CanvasPage {
   private _canvasWrapper?: HTMLDivElement
   private _canvas?: HTMLCanvasElement
+  private prevCanvas?: HTMLCanvasElement
   private hasRestrictedScaling = false
   private outputScale?: { sx: number, sy: number }
+  private scaleRoundX = 1
+  private scaleRoundY = 1
+  private hidden?: boolean
+  private _originalViewport?: PageViewport
 
   constructor(
     private readonly page: Page,
@@ -22,28 +27,39 @@ export class CanvasPage {
     return this._canvas
   }
 
+  get originalViewport() {
+    return this._originalViewport
+  }
+
   render() {
-    const viewport = this.page.viewport
-    this._canvasWrapper = createElement('div', 'canvasWrapper')
-    this.page.layersPage.add(this._canvasWrapper, 0)
-
-    this._canvas = createElement('canvas')
-    this._canvas.setAttribute('role', 'presentation')
-    this._canvas.hidden = true
-    this._canvasWrapper.append(this._canvas)
-
-    const outputScale = this.outputScale = {
-      sx: window.devicePixelRatio || 1,
-      sy: window.devicePixelRatio || 1,
+    // Wrap the canvas so that if it has a CSS transform for high DPI the
+    // overflow will be hidden in Firefox.
+    let canvasWrapper = this._canvasWrapper
+    if (!canvasWrapper) {
+      canvasWrapper = this._canvasWrapper = createElement('div', 'canvasWrapper')
+      this.page.layersPage.add(canvasWrapper, 0)
     }
+
+    const canvas = document.createElement('canvas')
+    canvas.setAttribute('role', 'presentation')
+
+    this.prevCanvas = this._canvas
+    this._canvas = canvas
+    this._originalViewport = this.page.viewport
+    this.hidden = false
+
+    const { width, height } = this.page.viewport
+    const outputScale = this.outputScale = new OutputScale()
 
     if (this.maxCanvasPixels === 0) {
       const invScale = 1 / this.page.scale
+      // Use a scale that makes the canvas have the originally intended size
+      // of the page.
       outputScale.sx *= invScale
       outputScale.sy *= invScale
       this.hasRestrictedScaling = true
     } else if (this.maxCanvasPixels > 0) {
-      const pixelsInViewport = viewport.width * viewport.height
+      const pixelsInViewport = width * height
       const maxScale = Math.sqrt(this.maxCanvasPixels / pixelsInViewport)
 
       if (outputScale.sx > maxScale || outputScale.sy > maxScale) {
@@ -58,12 +74,23 @@ export class CanvasPage {
     const sfx = approximateFraction(outputScale.sx)
     const sfy = approximateFraction(outputScale.sy)
 
-    this._canvas.width = floorToDivide(viewport.width * outputScale.sx, sfx[0])
-    this._canvas.height = floorToDivide(viewport.height * outputScale.sy, sfy[0])
-    this._canvas.style.width = floorToDivide(viewport.width, sfx[1]) + 'px'
-    this._canvas.style.height = floorToDivide(viewport.height, sfy[1]) + 'px'
+    const canvasWidth = (this._canvas.width = floorToDivide(Math.fround(width * outputScale.sx), sfx[0]))
+    const canvasHeight = (this._canvas.height = floorToDivide(Math.fround(height * outputScale.sy), sfy[0]))
+    const pageWidth = floorToDivide(Math.fround(width), sfx[1])
+    const pageHeight = floorToDivide(Math.fround(height), sfy[1])
+    outputScale.sx = canvasWidth / pageWidth
+    outputScale.sy = canvasHeight / pageHeight
 
-    return this.outputScale.sx !== 1 || this.outputScale.sy !== 1
+    if (this.scaleRoundX !== sfx[1]) {
+      this.page.div.style.setProperty('--scale-round-x', `${sfx[1]}px`)
+      this.scaleRoundX = sfx[1]
+    }
+    if (this.scaleRoundY !== sfy[1]) {
+      this.page.div.style.setProperty('--scale-round-y', `${sfy[1]}px`)
+      this.scaleRoundY = sfy[1]
+    }
+
+    return outputScale.scaled
       ? [outputScale.sx, 0, 0, outputScale.sy, 0, 0]
       : undefined
   }
@@ -92,25 +119,49 @@ export class CanvasPage {
     })
   }
 
-  show(isLastShow: boolean) {
-    if (!this._canvas?.hidden) return
-
-    const { pageColors } = this.page.options
-    const hasHCM = !!(pageColors?.background && pageColors?.foreground)
-
-    if (!hasHCM || isLastShow) {
-      this._canvas.hidden = false
+  show(isLastShow?: boolean) {
+    if (this.hidden || !this._canvasWrapper || !this._canvas) {
+      return
     }
+
+    const hasHCM = !!(this.page.options.pageColors?.background && this.page.options.pageColors?.foreground)
+
+    if (!this.prevCanvas && !hasHCM) {
+      // Don't add the canvas until the first draw callback, or until
+      // drawing is complete when `!this.renderingQueue`, to prevent black
+      // flickering.
+      // In whatever case, the canvas must be the first child.
+      this._canvasWrapper.prepend(this._canvas)
+      this.hidden = true
+      return
+    }
+
+    if (!isLastShow) {
+      return
+    }
+
+    if (this.prevCanvas) {
+      this.prevCanvas.replaceWith(this._canvas)
+      this.prevCanvas.width = this.prevCanvas.height = 0
+    } else {
+      this._canvasWrapper.prepend(this._canvas)
+    }
+
+    this.hidden = true
   }
 
-  destroy() {
+  reset() {
+    this.prevCanvas?.remove()
+    this.destroy()
+  }
+
+  destroy(destroyWrapper?: boolean) {
+    if (destroyWrapper) this._canvasWrapper = undefined
     if (!this._canvas) return
 
-    this._canvas.width = 0
-    this._canvas.height = 0
-
-    this._canvasWrapper?.removeChild(this._canvas)
-
-    delete this._canvas
+    this._canvas.remove()
+    this._canvas.width = this._canvas.height = 0
+    this._canvas = undefined
+    this._originalViewport = undefined
   }
 }

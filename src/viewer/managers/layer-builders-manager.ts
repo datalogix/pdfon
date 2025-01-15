@@ -3,7 +3,7 @@ import { Manager } from './'
 
 export class LayerBuildersManager extends Manager {
   private builders = new Set<layers.LayerBuilderType>([
-    layers.ZoomLayerBuilder,
+    layers.CanvasLayerBuilder,
     layers.TextLayerBuilder,
     layers.AnnotationLayerBuilder,
     layers.AnnotationEditorLayerBuilder,

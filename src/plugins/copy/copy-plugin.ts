@@ -1,3 +1,4 @@
+import { stopEvent } from '@/pdfjs'
 import { TextLayerMode } from '@/enums'
 import { createElement, removeNullCharacters } from '@/utils'
 import { Plugin } from '../plugin'
@@ -45,8 +46,7 @@ export class CopyPlugin extends Plugin {
     }
 
     if (this.getAllTextInProgress || this.textLayerMode === TextLayerMode.ENABLE_PERMISSIONS) {
-      event.preventDefault()
-      event.stopPropagation()
+      stopEvent(event)
       return
     }
 
@@ -74,8 +74,7 @@ export class CopyPlugin extends Plugin {
       abortController.abort()
     })
 
-    event.preventDefault()
-    event.stopPropagation()
+    stopEvent(event)
   }
 
   private async getAllText() {
