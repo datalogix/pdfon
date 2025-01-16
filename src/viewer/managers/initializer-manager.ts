@@ -26,6 +26,7 @@ export class InitializerManager extends Manager {
 
   init() {
     this.on('documentinit', ({ pdfDocument }) => this.setupInitializer(pdfDocument))
+    this.on('documentinitialview', ({ options }) => this.executeInitializers(options))
     this.on('documentinitialized', () => {
       this._initialized = true
     })
@@ -35,58 +36,15 @@ export class InitializerManager extends Manager {
     this._initialized = false
   }
 
-  private setupInitializer(pdfDocument: PDFDocumentProxy) {
-    this.applyInitializers(pdfDocument)
-      .then(options => this.setInitialView(options))
-      .then(async () => {
-        // Make all navigation keys work on document load,
-        // unless the viewer is embedded in a web page.
-        if (!isEmbedded()) {
-          this.containerManager.focus()
-        }
-
-        // For documents with different page sizes, once all pages are
-        // resolved, ensure that the correct location becomes visible on load.
-        // (To reduce the risk, in very large and/or slow loading documents,
-        //  that the location changes *after* the user has started interacting
-        //  with the viewer, wait for either `pagesPromise` or a timeout.)
-        await Promise.race([
-          this.pagesManager.pagesPromise,
-          new Promise(resolve => setTimeout(resolve, FORCE_PAGES_LOADED_TIMEOUT)),
-        ])
-      })
-      .catch(() => this.setInitialView())
-      .finally(() => this.viewer.update())
-  }
-
-  private async applyInitializers(pdfDocument: PDFDocumentProxy) {
-    let options: initializers.InitializerOptions = {}
-    const initializers = this.initializers.sort((a, b) => b.priority - a.priority)
-
-    for (const initializer of initializers) {
-      try {
-        options = await initializer.apply({
-          pdfDocument,
-          viewer: this.viewer as ViewerType,
-          options,
-        })
-      } catch (reason) {
-        this.logger.error(`Unable to load initializer`, reason)
-      }
-    }
-
-    return options
-  }
-
-  private setInitialView(options?: initializers.InitializerOptions) {
+  private applyInitialView(options: initializers.InitializerOptions = {}) {
     queueMicrotask(async () => {
-      if (options?.scroll) this.scrollManager.scrollMode = options.scroll
-      if (options?.spread) this.spreadManager.spreadMode = options.spread
-      if (options?.rotation) this.rotationManager.rotation = options.rotation
+      if (options.scroll) this.scrollManager.scrollMode = options.scroll
+      if (options.spread) this.spreadManager.spreadMode = options.spread
+      if (options.rotation) this.rotationManager.rotation = options.rotation
 
-      if (options?.scale && !options.scale.toString().toLowerCase().includes('fit')) {
+      if (options.scale && !options.scale.toString().toLowerCase().includes('fit')) {
         this.scrollManager.scrollPageIntoView({
-          pageNumber: options?.page ?? 1,
+          pageNumber: options.page ?? 1,
           destination: [
             'XYZ',
             options.scrollLeft ?? 0,
@@ -95,9 +53,9 @@ export class InitializerManager extends Manager {
           ],
           allowNegativeOffset: true,
         })
-      } else if (options?.scale) {
+      } else if (options.scale) {
         this.scrollManager.scrollPageIntoView({
-          pageNumber: options?.page ?? 1,
+          pageNumber: options.page ?? 1,
           destination: [
             options.scale,
             options.scrollLeft ?? 0,
@@ -105,11 +63,81 @@ export class InitializerManager extends Manager {
           ] as any as ScrollDestination,
           allowNegativeOffset: true,
         })
-      } else if (options?.page) {
+      } else if (options.page) {
         this.pagesManager.currentPageNumber = options.page
       }
 
-      this.dispatch('documentinitialized', { options })
+      this.dispatch('documentinitialview', { options })
     })
+  }
+
+  private async setupInitializer(pdfDocument: PDFDocumentProxy) {
+    try {
+      const options = await this.prepareInitializers(pdfDocument)
+      this.applyInitialView(options)
+
+      if (!isEmbedded()) {
+        this.containerManager.focus()
+      }
+
+      await Promise.race([
+        this.pagesManager.pagesPromise,
+        new Promise(resolve => setTimeout(resolve, FORCE_PAGES_LOADED_TIMEOUT)),
+      ])
+    } catch {
+      this.applyInitialView()
+    } finally {
+      this.viewer.update()
+      this.dispatch('documentinitialized')
+    }
+  }
+
+  private async prepareInitializers(pdfDocument: PDFDocumentProxy) {
+    let options: initializers.InitializerOptions = {}
+    const initializers = this.initializers.sort((a, b) => b.priority - a.priority)
+
+    for (const initializer of initializers) {
+      try {
+        initializer.init(pdfDocument, this.viewer as ViewerType)
+        options = await initializer.prepare(options)
+      } catch (reason) {
+        this.logger.error(`Unable to prepare initializer`, reason)
+      }
+    }
+
+    return options
+  }
+
+  private async executeInitializers(options: initializers.InitializerOptions) {
+    const initializers = this.initializers.sort((a, b) => b.priority - a.priority)
+    const handlers: ((options: initializers.InitializerOptions) => void)[] = []
+
+    for (const initializer of initializers) {
+      try {
+        const handler = await initializer.execute(options)
+        if (handler) {
+          handlers.push(handler)
+        }
+      } catch (reason) {
+        this.logger.error(`Unable to execute initializer`, reason)
+      }
+    }
+
+    this.on('documentinitialized', () => {
+      handlers.forEach(handler => handler(options))
+      this.finishInitializers(options)
+    })
+  }
+
+  private async finishInitializers(options: initializers.InitializerOptions) {
+    const initializers = this.initializers.sort((a, b) => b.priority - a.priority)
+
+    for (const initializer of initializers) {
+      try {
+        await initializer.finish(options)
+      } catch (reason) {
+        this.logger.error(`Unable to execute initializer`, reason)
+      }
+    }
   }
 }

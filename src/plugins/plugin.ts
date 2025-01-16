@@ -1,5 +1,5 @@
 import { Dispatcher } from '@/bus'
-import type { ViewerType } from '@/viewer'
+import type { Initializer, ViewerType } from '@/viewer'
 import type { Toolbar, ToolbarItemType } from '@/toolbar'
 
 export {
@@ -12,6 +12,7 @@ export abstract class Plugin<T = any> extends Dispatcher {
   private _toolbar?: Toolbar
   private _viewer?: ViewerType
   protected abortController?: AbortController
+  protected initializer?: Initializer
 
   constructor(readonly params?: T) {
     super()
@@ -111,6 +112,10 @@ export abstract class Plugin<T = any> extends Dispatcher {
 
     await this.init()
 
+    if (this.initializer) {
+      this.viewer.addInitializer(this.initializer)
+    }
+
     this.dispatch(`plugin${this.name}init`)
   }
 
@@ -124,6 +129,10 @@ export abstract class Plugin<T = any> extends Dispatcher {
     this.abortController = undefined
 
     await this.destroy()
+
+    if (this.initializer) {
+      this.viewer.removeInitializer(this.initializer)
+    }
 
     this.dispatch(`plugin${this.name}destroy`)
   }

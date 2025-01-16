@@ -1,9 +1,9 @@
 import { apiPageLayoutToViewerModes } from '@/utils'
-import { Initializer, type InitializerParams } from './initializer'
+import { Initializer, type InitializerOptions } from './initializer'
 
 export class DocumentInitializer extends Initializer {
-  async apply({ pdfDocument, options }: InitializerParams) {
-    const pageLayout = await pdfDocument.getPageLayout().catch(() => { })
+  async prepare(options: InitializerOptions) {
+    const pageLayout = await this.pdfDocument.getPageLayout().catch(() => { })
 
     if (pageLayout && (options.scroll === undefined || options.spread === undefined)) {
       const modes = apiPageLayoutToViewerModes(pageLayout)

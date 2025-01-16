@@ -1,7 +1,7 @@
-import { Initializer, type InitializerParams } from './initializer'
+import { Initializer, type InitializerOptions } from './initializer'
 
 export class AnimationInitializer extends Initializer {
-  async apply({ options }: InitializerParams) {
+  async prepare(options: InitializerOptions) {
     await new Promise(resolve => window.requestAnimationFrame(resolve))
 
     return options
