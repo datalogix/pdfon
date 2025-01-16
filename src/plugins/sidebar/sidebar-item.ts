@@ -1,12 +1,12 @@
 import { Dispatcher } from '@/bus'
 import { createElement } from '@/utils'
-import type { Sidebar } from './sidebar'
+import type { SidebarToolbarItem } from './sidebar-toolbar-item'
 
 export abstract class SidebarItem extends Dispatcher {
   protected container = createElement('div', 'sidebar-content')
   protected initialized = false
   protected opened = false
-  protected sidebar?: Sidebar
+  protected sidebar?: SidebarToolbarItem
   protected abortController?: AbortController
 
   constructor() {
@@ -14,7 +14,7 @@ export abstract class SidebarItem extends Dispatcher {
     this.hide()
   }
 
-  setSidebar(sidebar: Sidebar) {
+  setSidebar(sidebar: SidebarToolbarItem) {
     this.sidebar = sidebar
   }
 

@@ -1,5 +1,5 @@
-import { SidebarItem } from '@/toolbar'
 import { createElement } from '@/utils'
+import { SidebarItem } from '../sidebar'
 import type { Bookmark } from './bookmark'
 import type { BookmarkPlugin } from './bookmark-plugin'
 

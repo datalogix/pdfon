@@ -1,10 +1,10 @@
-import type { SidebarType } from '@/enums'
 import { ToolbarActionToggle } from '@/toolbar'
 import { Drawer } from '@/tools'
 import { createElement } from '@/utils'
-import { SidebarItem } from './sidebar-item'
+import type { SidebarItem } from './sidebar-item'
+import type { SidebarType } from './sidebar-types'
 
-export class Sidebar extends ToolbarActionToggle {
+export class SidebarToolbarItem extends ToolbarActionToggle {
   protected element = createElement('div', 'sidebar')
   protected menu = createElement('ul', 'sidebar-menu')
   protected items = new Map<SidebarType, SidebarItem>()

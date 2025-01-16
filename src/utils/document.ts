@@ -1,5 +1,5 @@
 import { AnnotationEditorType, AnnotationMode, GlobalWorkerOptions, PageViewport, PermissionFlag } from '@/pdfjs'
-import { ScrollMode, SidebarTypes, SpreadMode, TextLayerMode } from '@/enums'
+import { ScrollMode, SpreadMode, TextLayerMode } from '@/enums'
 import { PageColors } from '@/viewer'
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -73,19 +73,6 @@ export function apiPageLayoutToViewerModes(layout: string) {
   }
 
   return { scrollMode, spreadMode }
-}
-
-export function apiPageModeToSidebar(mode: string) {
-  switch (mode) {
-    case 'UseThumbs':
-      return SidebarTypes.THUMBNAIL
-    case 'UseOutlines':
-      return SidebarTypes.OUTLINE
-    case 'UseAttachments':
-      return SidebarTypes.ATTACHMENT
-    case 'UseOC':
-      return SidebarTypes.LAYER
-  }
 }
 
 export function initializePermissions(permissions?: number[], defaults: {

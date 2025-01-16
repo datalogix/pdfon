@@ -1,6 +1,6 @@
-import { SidebarItem } from '@/toolbar'
 import { ProgressBar } from '@/tools'
 import { createElement } from '@/utils'
+import { SidebarItem } from '../sidebar'
 import type { InteractionPlugin } from './interaction-plugin'
 
 export class InteractionSidebarItem extends SidebarItem {

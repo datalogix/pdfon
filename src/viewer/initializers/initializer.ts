@@ -1,8 +1,9 @@
 import type { PDFDocumentProxy } from '@/pdfjs'
-import type { ScrollMode, SidebarType, SpreadMode } from '@/enums'
+import type { ScrollMode, SpreadMode } from '@/enums'
 import type { ViewerType } from '../types'
 
 export type InitializerOptions = Partial<{
+  [key: string]: any
   scroll?: ScrollMode
   spread?: SpreadMode
   rotation?: number
@@ -10,8 +11,6 @@ export type InitializerOptions = Partial<{
   scale?: number | string
   scrollTop?: number
   scrollLeft?: number
-  sidebar?: SidebarType
-  sidebaropened?: boolean
 }>
 
 export type InitializerParams = {

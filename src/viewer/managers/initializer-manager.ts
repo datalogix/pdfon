@@ -84,13 +84,6 @@ export class InitializerManager extends Manager {
       if (options?.spread) this.spreadManager.spreadMode = options.spread
       if (options?.rotation) this.rotationManager.rotation = options.rotation
 
-      if (options?.sidebar) {
-        queueMicrotask(() => this.dispatch('sidebarselect', {
-          key: options?.sidebar,
-          open: options?.sidebaropened,
-        }))
-      }
-
       if (options?.scale && !options.scale.toString().toLowerCase().includes('fit')) {
         this.scrollManager.scrollPageIntoView({
           pageNumber: options?.page ?? 1,

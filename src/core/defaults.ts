@@ -17,6 +17,7 @@ export const DEFAULT_PLUGINS: plugins.PluginType[] = [
   plugins.ResizePlugin,
   plugins.ResolutionPlugin,
   plugins.ScriptingPlugin,
+  plugins.SidebarPlugin,
   plugins.StatsPlugin,
   plugins.StoragePlugin,
   plugins.ThumbnailPlugin,
@@ -89,7 +90,7 @@ export const DEFAULT_TOOLBAR_ITEMS = new Map<string, toolbar.ToolbarItemType>([
 
   // ui
   ['menu', toolbar.Menu],
-  ['sidebar', new toolbar.Sidebar(new Map<string, toolbar.SidebarItem>([
+  ['sidebar', new plugins.SidebarToolbarItem(new Map<string, plugins.SidebarItem>([
     ['thumbnail', new plugins.ThumbnailSidebarItem()],
     ['bookmark', new plugins.BookmarkSidebarItem()],
     ['interaction', new plugins.InteractionSidebarItem()],

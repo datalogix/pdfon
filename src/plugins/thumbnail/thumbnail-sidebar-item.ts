@@ -1,6 +1,6 @@
 import { PresentationModeState, RenderingStates } from '@/enums'
-import { SidebarItem } from '@/toolbar'
 import { createElement } from '@/utils'
+import { SidebarItem } from '../sidebar'
 import { ThumbnailViewer } from './thumbnail-viewer'
 
 export class ThumbnailSidebarItem extends SidebarItem {
