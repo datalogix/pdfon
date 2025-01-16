@@ -1,7 +1,6 @@
 # Pdfon
 
 - Revisar modais (css)
-- Sidebar - Mover para um plugin
 
 - Rastreador de progresso (Progress tracker)
   ( ) Na biblioteca exibir o progresso geral e o tempo utilizado
