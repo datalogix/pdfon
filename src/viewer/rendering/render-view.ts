@@ -6,6 +6,7 @@ import { createElement } from '@/utils'
 import type { RenderingQueue } from './rendering-queue'
 
 export abstract class RenderView extends Dispatcher implements pdfjs.IRenderableView {
+  private _name?: string
   readonly div = createElement('div')
 
   private _pdfPage?: pdfjs.PDFPageProxy
@@ -54,7 +55,11 @@ export abstract class RenderView extends Dispatcher implements pdfjs.IRenderable
   }
 
   get name() {
-    return this.constructor.name.toLowerCase()
+    if (!this._name) {
+      this._name = this.constructor.name.toLowerCase()
+    }
+
+    return this._name
   }
 
   get renderingId() {
@@ -171,6 +176,10 @@ export abstract class RenderView extends Dispatcher implements pdfjs.IRenderable
     this.cancel()
   }
 
+  protected markAsLoaded() {
+    this.div.setAttribute('data-loaded', 'true')
+  }
+
   protected cancel(extraDelay = 0) {
     this.renderTask?.cancel(extraDelay)
     this.renderTask = undefined
@@ -211,8 +220,6 @@ export abstract class RenderView extends Dispatcher implements pdfjs.IRenderable
         async () => await this.finishRenderTask(renderTask),
         async error => await this.finishRenderTask(renderTask, error),
       )
-
-      this.div.setAttribute('data-loaded', 'true')
 
       return resultPromise.finally(() => {
         this.dispatch(`${this.name}render`, {

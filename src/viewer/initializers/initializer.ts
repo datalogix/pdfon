@@ -16,16 +16,14 @@ export type InitializerOptions = Partial<{
 
 export type InitializerExecuteResult = void | ((options: InitializerOptions) => void)
 
+export type InitializerType = (Initializer | (new () => Initializer))
+
 export abstract class Initializer extends Dispatcher {
   private _pdfDocument?: PDFDocumentProxy
   private _viewer?: ViewerType
 
   get priority() {
     return 0
-  }
-
-  get name() {
-    return this.constructor.name.toLowerCase().replace('plugin', '')
   }
 
   get pdfDocument() {

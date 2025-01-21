@@ -1,43 +1,24 @@
-import { StoragePlugin } from '@/plugins'
+import type { ResourcePlugin } from '@/plugins'
 import { ToolbarActionToggle } from '@/toolbar'
 import { Modal } from '@/tools'
 import { createElement } from '@/utils'
+import type { Resource } from './resource'
 
-export type ResourceItem = {
-  name: string
-  src?: string
-  items?: ResourceItem[]
-}
-
-export class Resource extends ToolbarActionToggle {
-  protected resources: ResourceItem[] = []
-
-  get enabled() {
-    return this.resources.length > 0
+export class ResourceToolbarItem extends ToolbarActionToggle {
+  get resourceManager() {
+    return this.viewer.getLayerProperty<ResourcePlugin>('ResourcePlugin')?.resourceManager
   }
 
-  get storage() {
-    return this.viewer.getLayerProperty<StoragePlugin>('StoragePlugin')?.storage
+  get enabled() {
+    return (this.resourceManager?.length ?? 0) > 0
   }
 
   protected init() {
-    this.on('documentdestroy', () => {
-      this.resources = []
-      this.toggle()
-    })
-
-    this.on('storageinitialized', () => this.dispatch('resourceload'))
-
-    this.on('resourceload', ({ resources }) => {
-      this.resources = resources ?? this.storage?.get('resources') ?? []
-      this.storage?.set('resources', this.resources)
-      this.toggle()
-      this.dispatch('resourceloaded', { resources: this.resources })
-    })
+    this.on('resources', () => this.toggle())
   }
 
   open() {
-    Modal.open(this.item(this.resources), {
+    Modal.open(this.item(this.resourceManager?.all ?? []), {
       title: this.l10n.get('resource.title'),
       backdrop: 'overlay',
       onClose: () => this.execute(),
@@ -48,7 +29,7 @@ export class Resource extends ToolbarActionToggle {
     Modal.close()
   }
 
-  protected item(items: ResourceItem[]) {
+  protected item(items: Resource[]) {
     const ul = createElement('ul')
     items?.forEach((item) => {
       if (item.src) {

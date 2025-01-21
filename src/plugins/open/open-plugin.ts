@@ -20,12 +20,12 @@ export class OpenPlugin extends Plugin {
     })
 
     this.on('openfile', () => this.openService?.chooseFile())
-    this.on('documentload', () => this.openService?.hideDropzone())
+    this.on('documentopen', () => this.openService?.hideDropzone())
     this.on(['documentempty', 'documenterror'], () => this.openService?.showDropzone())
   }
 
   protected destroy() {
-    this.openService?.reset()
+    this.openService?.destroy()
     this.openService = undefined
   }
 }

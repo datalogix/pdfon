@@ -1,12 +1,13 @@
 import { Dispatcher } from '@/bus'
 import { createElement } from '@/utils'
-import type { SidebarToolbarItem } from './sidebar-toolbar-item'
+import type { SidebarManager } from './sidebar-manager'
 
 export abstract class SidebarItem extends Dispatcher {
+  private _name?: string
   protected container = createElement('div', 'sidebar-content')
   protected initialized = false
   protected opened = false
-  protected sidebar?: SidebarToolbarItem
+  protected sidebarManager?: SidebarManager
   protected abortController?: AbortController
 
   constructor() {
@@ -14,16 +15,28 @@ export abstract class SidebarItem extends Dispatcher {
     this.hide()
   }
 
-  setSidebar(sidebar: SidebarToolbarItem) {
-    this.sidebar = sidebar
+  setSidebarManager(sidebarManager: SidebarManager) {
+    this.sidebarManager = sidebarManager
+  }
+
+  get name() {
+    if (!this._name) {
+      this._name = this.constructor.name.toLowerCase().replace('sidebaritem', '')
+    }
+
+    return this._name
+  }
+
+  get order() {
+    return 0
   }
 
   get viewer() {
-    return this.sidebar!.viewer
+    return this.sidebarManager!.viewer
   }
 
   get eventBus() {
-    return this.sidebar!.eventBus
+    return this.sidebarManager!.eventBus
   }
 
   get signal() {
@@ -31,7 +44,7 @@ export abstract class SidebarItem extends Dispatcher {
   }
 
   get l10n() {
-    return this.sidebar!.l10n
+    return this.sidebarManager!.l10n
   }
 
   abstract build(): Node
@@ -46,7 +59,7 @@ export abstract class SidebarItem extends Dispatcher {
     await this.init()
   }
 
-  async terminate(removeOfSidebar = true) {
+  async terminate() {
     if (!this.initialized) return
 
     this.initialized = false
@@ -58,9 +71,7 @@ export abstract class SidebarItem extends Dispatcher {
     this.abortController = undefined
     this.container.innerHTML = ''
 
-    if (removeOfSidebar) {
-      this.sidebar?.remove(this)
-    }
+    this.sidebarManager?.delete(this)
   }
 
   protected init(): Promise<void> | void {

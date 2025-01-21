@@ -1,80 +1,85 @@
 import { Plugin, type ToolbarItemType } from '../plugin'
+import { BookManager } from './book-manager'
+import type { Book, BookId } from './book'
 import { LibraryToolbarItem } from './library-toolbar-item'
-import type { Book } from './book'
-import type { InformationItem } from '@/toolbar'
+import type { InformationPlugin } from '../information'
 
-export class LibraryPlugin extends Plugin {
+export type LibraryPluginParams = {
+  books?: Book[]
+  bookId?: BookId
+}
+
+export class LibraryPlugin extends Plugin<LibraryPluginParams> {
   protected getToolbarItems() {
     return new Map<string, ToolbarItemType>([
       ['library', LibraryToolbarItem],
     ])
   }
 
-  private _books: Book[] = []
-  private _book?: Book
+  private _bookManager?: BookManager
 
-  get books() {
-    return this._books
+  get bookManager() {
+    return this._bookManager
   }
 
-  set books(books) {
-    this._books = books
-    this.dispatch('books', { books })
-  }
-
-  get book() {
-    return this._book
-  }
-
-  set book(book) {
-    if (this.book?.id === book?.id) {
-      return
-    }
-
-    this._book = book
-    this.dispatch('book', { book })
+  get informationManager() {
+    return this.viewer.getLayerProperty<InformationPlugin>('InformationPlugin')?.informationManager
   }
 
   protected init() {
+    this._bookManager = new BookManager(this.eventBus)
+
     this.on('documentopen', ({ documentType }) => {
-      if (documentType !== this.book?.src) {
-        this.book = undefined
+      if (this._bookManager && documentType !== this._bookManager.current?.src) {
+        this._bookManager.select(undefined)
       }
     })
 
     this.on('documenttitleupdated', () => {
-      if (this.book) {
-        document.title = this.book.name
-      }
+      document.title = this._bookManager?.current?.name ?? document.title
     })
 
     this.on('book', ({ book }) => {
-      if (book) {
-        this.on('documentinitialized', () => {
-          this.dispatch('interactionload', { interactions: book.interactions })
-          this.dispatch('resourceload', { resources: book.resources })
-        }, { once: true })
-
-        this.viewer.openDocument(book.src)
+      if (!book) {
+        this.informationManager?.set([])
+        return
       }
 
-      this.setBookInformation(book)
-    })
-  }
+      this.on('documentinitialized', () => {
+        this.dispatch('interactionload', { interactions: book.interactions })
+        this.dispatch('resourceload', { resources: book.resources })
+      }, { once: true })
 
-  protected setBookInformation(book?: Book) {
-    const informations = new Map<string, InformationItem>([])
+      this.viewer.openDocument(book.src)
 
-    if (book) {
-      ['name', 'sku', 'author', 'description'].forEach((key, index) => {
-        informations.set(key, {
+      const props = ['name', 'sku', 'author', 'description']
+
+      props.forEach((key, index) => {
+        this.informationManager?.add({
           name: this.l10n.get(`library.book.${key}`),
           value: book[key],
           order: index + 1,
         })
       })
+    })
+  }
+
+  protected onLoad() {
+    if (!this.params?.books) {
+      return
     }
 
-    this.dispatch('informationupdate', ({ informations }))
+    this.bookManager?.set(this.params.books)
+
+    if (!this.params?.bookId) {
+      return
+    }
+
+    this._bookManager?.select(this.params?.bookId)
+  }
+
+  protected destroy() {
+    this._bookManager?.destroy()
+    this._bookManager = undefined
   }
 }

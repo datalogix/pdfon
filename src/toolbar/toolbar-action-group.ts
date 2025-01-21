@@ -1,8 +1,8 @@
-import { ToolbarMenu, type ToolbarMenuActions } from './toolbar-menu'
+import { ToolbarMenu, type ToolbarMenuItems } from './toolbar-menu'
 
 export abstract class ToolbarActionGroup extends ToolbarMenu {
-  constructor(readonly actions: ToolbarMenuActions) {
-    super(actions)
+  constructor(items: ToolbarMenuItems) {
+    super(items)
 
     this.container.classList.add('toolbar-action-group')
   }

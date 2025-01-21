@@ -105,9 +105,9 @@ export class Thumbnail extends RenderView {
     this.image = createElement('img', 'thumbnail-image', {
       'src': reducedCanvas.toDataURL(),
       'aria-label': this.options.l10n.get('thumbnail.image', { page: this.pageLabel ?? this.id }),
+      'onload': () => this.markAsLoaded(),
     })
 
-    this.div.setAttribute('data-loaded', 'true')
     this.placeholderImg.replaceWith(this.image)
 
     reducedCanvas.width = 0

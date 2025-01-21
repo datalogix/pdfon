@@ -1,23 +1,38 @@
 import { formatTime } from '@/utils'
 import { Plugin } from '../plugin'
 import type { StoragePlugin } from '../storage'
+import { StatsTracker } from './stats-tracker'
+import type { InformationPlugin } from '../information'
 
 export type StatsPluginParams = {
   interval?: number
-  pageVisibilityPercentage?: number
+  visibilityPercentage?: number
 }
 
 export class StatsPlugin extends Plugin<StatsPluginParams> {
-  private i?: NodeJS.Timeout
-  private pagesViews: Map<number, number> = new Map()
-  private time: number = 0
+  private _statsTracker?: StatsTracker
+
+  get statsTracker() {
+    return this._statsTracker
+  }
 
   get storage() {
     return this.viewer.getLayerProperty<StoragePlugin>('StoragePlugin')?.storage
   }
 
+  get informationManager() {
+    return this.viewer.getLayerProperty<InformationPlugin>('InformationPlugin')?.informationManager
+  }
+
   protected init() {
-    this.on(['documentdestroy', 'pagesinit'], () => this.destroy())
+    this._statsTracker = new StatsTracker({
+      views: () => this.viewer.getVisiblePages().views,
+      onUpdate: (pagesViews, time) => this.dispatch('statsupdate', { pagesViews, time }),
+      ...this.params,
+    })
+
+    this.on('documentdestroy', () => this._statsTracker?.stop())
+    this.on('pagesloaded', () => this._statsTracker?.start())
 
     this.on('storageinitialized', () => {
       this.dispatch('statsload', {
@@ -26,59 +41,34 @@ export class StatsPlugin extends Plugin<StatsPluginParams> {
       })
     })
 
-    this.on('pagesloaded', () => {
-      const interval = this.params?.interval ?? 3
-      this.i = setInterval(() => this.tick(interval), interval * 1000)
-      this.tick(0)
-    })
-
     this.on('statsload', (params) => {
-      if (params?.pagesViews !== undefined) this.pagesViews = params.pagesViews
-      if (params?.time !== undefined) this.time = params.time
+      this._statsTracker?.load(
+        params?.pagesViews !== undefined ? params.pagesViews : new Map(),
+        params?.time !== undefined ? params.time : 0,
+      )
     })
 
-    this.on('statsupdate', ({ time, pagesViews }) => {
+    this.on('statsupdate', ({ pagesViews, time }) => {
       this.storage?.set('page-views', JSON.stringify(Array.from(pagesViews.entries())))
       this.storage?.set('usage-time', time)
 
-      this.dispatch('informationadd', {
-        key: 'page-views',
-        information: {
-          name: this.l10n.get('information.page-views'),
-          value: pagesViews.size,
-          total: this.viewer.pagesCount,
-          order: 3,
-        },
+      this.informationManager?.add({
+        name: this.l10n.get('information.page-views'),
+        value: pagesViews.size,
+        total: this.viewer.pagesCount,
+        order: 3,
       })
 
-      this.dispatch('informationadd', {
-        key: 'usage-time',
-        information: {
-          name: this.l10n.get('information.usage-time'),
-          value: formatTime(time),
-          order: 4,
-        },
+      this.informationManager?.add({
+        name: this.l10n.get('information.usage-time'),
+        value: formatTime(time),
+        order: 4,
       })
-    })
-  }
-
-  protected tick(interval: number) {
-    this.time += interval
-
-    this.viewer.getVisiblePages().views
-      .filter(view => view.percent > (this.params?.pageVisibilityPercentage ?? 30))
-      .forEach(view => this.pagesViews.set(view.id, (this.pagesViews.get(view.id) ?? 0) + interval))
-
-    this.dispatch('statsupdate', {
-      time: this.time,
-      pagesViews: this.pagesViews,
     })
   }
 
   protected destroy() {
-    clearInterval(this.i)
-    this.i = undefined
-    this.pagesViews.clear()
-    this.time = 0
+    this._statsTracker?.stop()
+    this._statsTracker = undefined
   }
 }

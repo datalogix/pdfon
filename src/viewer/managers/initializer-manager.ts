@@ -1,26 +1,26 @@
 import type { PDFDocumentProxy } from '@/pdfjs'
 import { FORCE_PAGES_LOADED_TIMEOUT } from '@/config'
 import { isEmbedded } from '@/utils'
-import * as initializers from '../initializers'
+import { AnimationInitializer, DocumentInitializer, type Initializer, type InitializerOptions } from '../initializers'
 import type { ViewerType } from '../types'
 import { Manager, type ScrollDestination } from './'
 
 export class InitializerManager extends Manager {
   private _initialized = false
-  private initializers: initializers.Initializer[] = [
-    new initializers.AnimationInitializer(),
-    new initializers.DocumentInitializer(),
+  private initializers: Initializer[] = [
+    new AnimationInitializer(),
+    new DocumentInitializer(),
   ]
 
   get initialized() {
     return this._initialized
   }
 
-  addInitializer(initializer: initializers.Initializer) {
+  addInitializer(initializer: Initializer) {
     this.initializers.push(initializer)
   }
 
-  removeInitializer(initializer: initializers.Initializer) {
+  removeInitializer(initializer: Initializer) {
     this.initializers.splice(this.initializers.findIndex(value => value === initializer), 1)
   }
 
@@ -36,7 +36,28 @@ export class InitializerManager extends Manager {
     this._initialized = false
   }
 
-  private applyInitialView(options: initializers.InitializerOptions = {}) {
+  private async setupInitializer(pdfDocument: PDFDocumentProxy) {
+    try {
+      const options = await this.prepareInitializers(pdfDocument)
+      this.applyInitialView(options)
+
+      if (!isEmbedded()) {
+        this.containerManager.focus()
+      }
+
+      await Promise.race([
+        this.pagesManager.pagesPromise,
+        new Promise(resolve => setTimeout(resolve, FORCE_PAGES_LOADED_TIMEOUT)),
+      ])
+    } catch {
+      this.applyInitialView()
+    } finally {
+      this.viewer.update()
+      this.dispatch('documentinitialized')
+    }
+  }
+
+  private applyInitialView(options: InitializerOptions = {}) {
     queueMicrotask(async () => {
       if (options.scroll) this.scrollManager.scrollMode = options.scroll
       if (options.spread) this.spreadManager.spreadMode = options.spread
@@ -71,29 +92,8 @@ export class InitializerManager extends Manager {
     })
   }
 
-  private async setupInitializer(pdfDocument: PDFDocumentProxy) {
-    try {
-      const options = await this.prepareInitializers(pdfDocument)
-      this.applyInitialView(options)
-
-      if (!isEmbedded()) {
-        this.containerManager.focus()
-      }
-
-      await Promise.race([
-        this.pagesManager.pagesPromise,
-        new Promise(resolve => setTimeout(resolve, FORCE_PAGES_LOADED_TIMEOUT)),
-      ])
-    } catch {
-      this.applyInitialView()
-    } finally {
-      this.viewer.update()
-      this.dispatch('documentinitialized')
-    }
-  }
-
   private async prepareInitializers(pdfDocument: PDFDocumentProxy) {
-    let options: initializers.InitializerOptions = {}
+    let options: InitializerOptions = {}
     const initializers = this.initializers.sort((a, b) => b.priority - a.priority)
 
     for (const initializer of initializers) {
@@ -108,9 +108,9 @@ export class InitializerManager extends Manager {
     return options
   }
 
-  private async executeInitializers(options: initializers.InitializerOptions) {
+  private async executeInitializers(options: InitializerOptions) {
     const initializers = this.initializers.sort((a, b) => b.priority - a.priority)
-    const handlers: ((options: initializers.InitializerOptions) => void)[] = []
+    const handlers: ((options: InitializerOptions) => void)[] = []
 
     for (const initializer of initializers) {
       try {
@@ -129,7 +129,7 @@ export class InitializerManager extends Manager {
     })
   }
 
-  private async finishInitializers(options: initializers.InitializerOptions) {
+  private async finishInitializers(options: InitializerOptions) {
     const initializers = this.initializers.sort((a, b) => b.priority - a.priority)
 
     for (const initializer of initializers) {

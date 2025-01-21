@@ -28,8 +28,10 @@ export abstract class ToolbarActionToggle extends ToolbarAction {
 
     if (this.opened) {
       this.open()
+      this.dispatch(`${this.name}open`)
     } else {
       this.close()
+      this.dispatch(`${this.name}close`)
     }
 
     this.dispatch(`${this.name}toggle`, { opened: this.opened })

@@ -43,18 +43,18 @@ export class Toolbar extends Dispatcher {
 
     return toolbarConfig.map((groupConfig) => {
       const items = new Map<string, ToolbarItem>()
-      const validKeys = this.getValidKeys(groupConfig)
-      validKeys.forEach(key => items.set(key, this.resolveToolbarItem(key)))
+      const validKeys = this.getValidNames(groupConfig)
+      validKeys.forEach(name => items.set(name, this.resolveToolbarItem(name)))
       return items
     })
   }
 
-  protected getValidKeys(groupConfig: string): string[] {
-    return groupConfig.split(' ').filter(key => this.list.has(key))
+  protected getValidNames(groupConfig: string) {
+    return groupConfig.split(' ').filter(name => this.list.has(name))
   }
 
-  protected resolveToolbarItem(key: string): ToolbarItem {
-    const item = this.list.get(key)!
+  resolveToolbarItem(name: string) {
+    const item = this.list.get(name)!
 
     const toolbarItem = typeof item === 'function'
       ? new item()
@@ -69,9 +69,9 @@ export class Toolbar extends Dispatcher {
     for (const groupItems of this.createGroups()) {
       const group = createElement('div', 'toolbar-group')
 
-      for (const [key, item] of groupItems) {
+      for (const [name, item] of groupItems) {
         await item.initialize()
-        this.items.set(key, item)
+        this._items.set(name, item)
         group.appendChild(item.render())
       }
 
@@ -86,7 +86,7 @@ export class Toolbar extends Dispatcher {
   }
 
   async terminate() {
-    for (const item of this.items.values()) {
+    for (const item of this._items.values()) {
       await item.terminate()
     }
 

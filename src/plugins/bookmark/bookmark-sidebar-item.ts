@@ -4,14 +4,18 @@ import type { Bookmark } from './bookmark'
 import type { BookmarkPlugin } from './bookmark-plugin'
 
 export class BookmarkSidebarItem extends SidebarItem {
-  get bookmarkService() {
-    return this.viewer.getLayerProperty<BookmarkPlugin>('BookmarkPlugin')?.bookmarkService
+  get bookmarkManager() {
+    return this.viewer.getLayerProperty<BookmarkPlugin>('BookmarkPlugin')?.bookmarkManager
+  }
+
+  get order() {
+    return 3
   }
 
   build() {
     const container = createElement('div', 'bookmark-sidebar')
-    this.on(['bookmarkloaded', 'bookmarkupdated'], ({ bookmarks }) => this.renderList(container, bookmarks))
-    this.renderList(container, this.bookmarkService?.all())
+    this.on(['bookmarks', 'bookmarkupdated'], ({ bookmarks }) => this.renderList(container, bookmarks))
+    this.renderList(container, this.bookmarkManager?.all)
     return container
   }
 
@@ -31,12 +35,12 @@ export class BookmarkSidebarItem extends SidebarItem {
 
   protected renderItem(bookmark: Bookmark) {
     const deleteButton = createElement('button', 'bookmark-delete', { type: 'button' })
-    deleteButton.addEventListener('click', () => this.dispatch('bookmarkdelete', { bookmark }))
+    deleteButton.addEventListener('click', () => this.bookmarkManager?.delete(bookmark.page))
 
     const content = createElement('button', 'bookmark-content', { type: 'button' })
     content.appendChild(createElement('span', 'bookmark-page', { innerText: this.l10n.get('bookmark.page', { page: bookmark.page }) }))
     content.appendChild(createElement('span', 'bookmark-title', { innerText: bookmark.message }))
-    content.addEventListener('click', () => this.dispatch('bookmarkselect', { bookmark }))
+    content.addEventListener('click', () => this.bookmarkManager?.select(bookmark.page))
 
     const container = createElement('div', 'bookmark')
     container.appendChild(content)

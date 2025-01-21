@@ -2,7 +2,7 @@ import { Dispatcher, EventBus } from '@/bus'
 import type { IL10n } from '@/l10n'
 import type { Bookmark } from './bookmark'
 
-export class BookmarkService extends Dispatcher {
+export class BookmarkManager extends Dispatcher {
   protected bookmarks = new Map<number, Bookmark>()
 
   constructor(
@@ -16,14 +16,14 @@ export class BookmarkService extends Dispatcher {
     return this.bookmarks.size
   }
 
-  load(bookmarks: Bookmark[] = []) {
-    this.destroy()
-    bookmarks.forEach(bookmark => this.bookmarks.set(bookmark.page, bookmark))
-    this.dispatch('bookmarkloaded', { bookmarks: this.all() })
+  get all() {
+    return Array.from(this.bookmarks.values()).sort((a, b) => a.page - b.page)
   }
 
-  all() {
-    return Array.from(this.bookmarks.values()).sort((a, b) => a.page - b.page)
+  set(bookmarks: Bookmark[]) {
+    this.bookmarks.clear()
+    bookmarks.forEach(bookmark => this.bookmarks.set(bookmark.page, bookmark))
+    this.dispatch('bookmarks', { bookmarks: this.all })
   }
 
   has(page: number) {
@@ -34,12 +34,20 @@ export class BookmarkService extends Dispatcher {
     return this.bookmarks.get(page)
   }
 
+  select(page: number) {
+    const bookmark = this.get(page)
+
+    if (bookmark) {
+      this.dispatch('bookmarkclick', { bookmark })
+    }
+  }
+
   add(bookmark: Bookmark) {
     this.bookmarks.set(bookmark.page, bookmark)
     this.dispatch('bookmarkadded', { bookmark })
   }
 
-  addOrDelete(page: number) {
+  toggle(page: number) {
     const bookmark = this.get(page)
     const placeholder = this.l10n.get('bookmark.add-message', { page })
     const message = window.prompt(

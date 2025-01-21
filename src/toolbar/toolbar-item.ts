@@ -5,13 +5,18 @@ import type { Toolbar } from './toolbar'
 export type ToolbarItemType = ToolbarItem | (new () => ToolbarItem)
 
 export abstract class ToolbarItem extends Dispatcher {
+  private _name?: string
   protected container = createElement('div', ['toolbar-item', this.className])
   private _toolbar?: Toolbar
   protected initialized = false
   protected abortController?: AbortController
 
   get name() {
-    return this.constructor.name.toLowerCase().replace('toolbaritem', '')
+    if (!this._name) {
+      this._name = this.constructor.name.toLowerCase().replace('toolbaritem', '')
+    }
+
+    return this._name
   }
 
   get className() {

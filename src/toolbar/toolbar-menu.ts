@@ -4,17 +4,24 @@ import { ToolbarAction } from './toolbar-action'
 import type { Toolbar } from './toolbar'
 
 export type ToolbarMenuActions = (ToolbarAction | ToolbarAction[])[]
+export type ToolbarMenuItem = ToolbarAction | string
+export type ToolbarMenuItems = (ToolbarMenuItem | ToolbarMenuItem[])[]
 
 export class ToolbarMenu extends ToolbarActionToggle {
   protected onDocumentClickListener = this.execute.bind(this)
   protected menu?: HTMLDivElement
+  protected actions: ToolbarMenuActions = []
 
-  constructor(readonly actions: ToolbarMenuActions) {
+  constructor(readonly items: ToolbarMenuItems) {
     super()
   }
 
   private matchActionByName(action: ToolbarAction, name: string): boolean {
     return action.name.toLowerCase() === name.toLowerCase()
+  }
+
+  get(name: string) {
+    return this.actions.flat().find(action => this.matchActionByName(action, name))
   }
 
   add(action: ToolbarAction | ToolbarAction[], index?: number, group?: number) {
@@ -48,11 +55,7 @@ export class ToolbarMenu extends ToolbarActionToggle {
     }
   }
 
-  get(name: string) {
-    return this.actions.flat().find(action => this.matchActionByName(action, name))
-  }
-
-  remove(name: string) {
+  delete(name: string) {
     const removeRecursive = (actions: ToolbarMenuActions) => {
       for (let i = 0; i < actions.length; i++) {
         const action = actions[i]
@@ -72,6 +75,11 @@ export class ToolbarMenu extends ToolbarActionToggle {
 
   setToolbar(toolbar: Toolbar) {
     super.setToolbar(toolbar)
+
+    this.actions = this.items.map(items => Array.isArray(items)
+      ? items.map(item => typeof item === 'string' ? toolbar.resolveToolbarItem(item) as ToolbarAction : item)
+      : typeof items === 'string' ? toolbar.resolveToolbarItem(items) as ToolbarAction : items,
+    )
 
     this.actions.flat().forEach(action => action.setToolbar(toolbar))
   }

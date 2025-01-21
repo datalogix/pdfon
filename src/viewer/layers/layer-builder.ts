@@ -8,6 +8,7 @@ export type LayerBuilderType = (LayerBuilder | (new () => LayerBuilder))
 export abstract class LayerBuilder<T = any> extends Dispatcher {
   div?: HTMLDivElement
 
+  private _name?: string
   protected _page?: Page
   protected abortController?: AbortController
   protected cancelled = false
@@ -21,7 +22,11 @@ export abstract class LayerBuilder<T = any> extends Dispatcher {
   }
 
   get name() {
-    return this.constructor.name.toLowerCase()
+    if (!this._name) {
+      this._name = this.constructor.name.toLowerCase()
+    }
+
+    return this._name
   }
 
   get page() {

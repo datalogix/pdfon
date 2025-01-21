@@ -13,6 +13,7 @@ export class OpenService {
   ) {
     this.setupFileInput()
     this.setupDropzone()
+    this.hideDropzone()
   }
 
   onChooseFile(callback?: (file: File, blob: string) => void) {
@@ -35,7 +36,7 @@ export class OpenService {
     }
   }
 
-  reset() {
+  destroy() {
     this.fileInput?.remove()
     this.fileInput = undefined
     this.dropzone?.remove()

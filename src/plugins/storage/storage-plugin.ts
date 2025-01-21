@@ -3,7 +3,7 @@ import { StorageInitializer } from './storage-initializer'
 import { StorageService } from './storage-service'
 
 export class StoragePlugin extends Plugin {
-  protected initializer = new StorageInitializer()
+  protected initializers = [StorageInitializer]
   private _storage?: StorageService
 
   get storage() {

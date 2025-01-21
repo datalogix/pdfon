@@ -8,7 +8,7 @@ import { Pdfon } from '.'
   const pdfon = new Pdfon()
 
   pdfon.on('pluginlibraryinit', ({ source }) => {
-    source.books = [
+    source.bookManager.set([
       {
         id: '1',
         name: 'Creators 1',
@@ -215,7 +215,9 @@ import { Pdfon } from '.'
         isbn: '978-65-5752-244-0',
         author: 'Louis Rogers, Ben Goldstein',
       },
-    ]
+    ])
+
+    // source.bookManager.select(2)
   })
 
   const viewer = await pdfon.render()

@@ -1,6 +1,8 @@
+export type BookId = string | number
+
 export type Book = {
-  [x: string]: any
-  id: string | number
+  [key: string]: any
+  id: BookId
   name: string
   src: string
   cover?: string

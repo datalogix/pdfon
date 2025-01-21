@@ -1,12 +1,7 @@
 import { createElement } from '@/utils'
 import { LayerBuilder } from '@/viewer'
-import type { WatermarkPlugin } from './watermark-plugin'
 
-export class WatermarkLayerBuilder extends LayerBuilder {
-  get image() {
-    return this.layerProperties.getLayerProperty<WatermarkPlugin>('WatermarkPlugin')?.params?.image
-  }
-
+export class WatermarkLayerBuilder extends LayerBuilder<{ image: string }> {
   canRegister() {
     return false
   }
@@ -14,12 +9,12 @@ export class WatermarkLayerBuilder extends LayerBuilder {
   init() {
     const { canvasWrapper } = this.canvasPage
 
-    if (!this.image || !canvasWrapper || canvasWrapper.querySelector('.watermark')) {
+    if (!this.params?.image || !canvasWrapper || canvasWrapper.querySelector('.watermark')) {
       return
     }
 
     const div = createElement('div', 'watermark')
-    div.style.backgroundImage = `url('${this.image}')`
+    div.style.backgroundImage = `url('${this.params.image}')`
     canvasWrapper.appendChild(div)
   }
 }

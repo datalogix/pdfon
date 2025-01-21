@@ -56,6 +56,8 @@ export class Pdfon extends Dispatcher {
       await plugin.initialize()
     }
 
+    this.dispatch('pluginsinit', { plugins })
+
     return plugins
   }
 

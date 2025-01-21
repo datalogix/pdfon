@@ -58,6 +58,8 @@ export class Drawer {
   }
 
   open() {
+    if (this.opened) return
+
     this.opened = true
     this.container.classList.add('drawer-opened')
 

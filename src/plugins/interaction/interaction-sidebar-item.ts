@@ -4,13 +4,17 @@ import { SidebarItem } from '../sidebar'
 import type { InteractionPlugin } from './interaction-plugin'
 
 export class InteractionSidebarItem extends SidebarItem {
-  get interactionService() {
-    return this.viewer.getLayerProperty<InteractionPlugin>('InteractionPlugin')?.interactionService
+  get interactionManager() {
+    return this.viewer.getLayerProperty<InteractionPlugin>('InteractionPlugin')?.interactionManager
+  }
+
+  get order() {
+    return 2
   }
 
   build() {
     const container = createElement('div', 'interaction-sidebar')
-    this.on('interactionloaded', () => this.renderList(container))
+    this.on('interactions', () => this.renderList(container))
     this.renderList(container)
     return container
   }
@@ -19,12 +23,12 @@ export class InteractionSidebarItem extends SidebarItem {
     container.innerHTML = ''
 
     const progressBar = new ProgressBar(
-      this.interactionService?.all().length,
-      this.interactionService?.completed.length ?? 0,
+      this.interactionManager?.length,
+      this.interactionManager?.completed.length ?? 0,
     )
 
     this.on('interactionupdated', () => {
-      progressBar.value = this.interactionService?.completed.length ?? 0
+      progressBar.value = this.interactionManager?.completed.length ?? 0
       summaryValue.innerText = this.l10n.get('interaction.progress', {
         value: progressBar.value,
         total: progressBar.total,
@@ -58,7 +62,7 @@ export class InteractionSidebarItem extends SidebarItem {
 
     const list = createElement('div', 'interaction-group')
 
-    this.interactionService?.allGroup().forEach((interactions) => {
+    this.interactionManager?.getGroupedByPage().forEach((interactions) => {
       const ul = createElement('ul', 'interaction-list')
 
       interactions.forEach((interaction) => {
@@ -78,7 +82,7 @@ export class InteractionSidebarItem extends SidebarItem {
 
         button.appendChild(content)
         button.appendChild(createElement('span', 'interaction-animation'))
-        button.addEventListener('click', () => this.dispatch('interactionclick', { interaction }))
+        button.addEventListener('click', () => this.interactionManager?.select(interaction))
 
         this.on(`interactionupdated${interaction.id}`, () => {
           button.classList.remove('interaction-uncompleted')

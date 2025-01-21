@@ -7,6 +7,7 @@ export const DEFAULT_PLUGINS: plugins.PluginType[] = [
   plugins.CursorPlugin,
   plugins.DownloadPlugin,
   plugins.FindPlugin,
+  plugins.InformationPlugin,
   plugins.InteractionPlugin,
   plugins.LoadingPlugin,
   plugins.LibraryPlugin,
@@ -16,6 +17,7 @@ export const DEFAULT_PLUGINS: plugins.PluginType[] = [
   plugins.PrintPlugin,
   plugins.ResizePlugin,
   plugins.ResolutionPlugin,
+  plugins.ResourcePlugin,
   plugins.ScriptingPlugin,
   plugins.SidebarPlugin,
   plugins.StatsPlugin,
@@ -35,25 +37,6 @@ export const DEFAULT_TOOLBAR_ITEMS = new Map<string, toolbar.ToolbarItemType>([
   // annotation
   ['annotation', toolbar.Annotation],
 
-  // cursor
-  ['cursor-hand', plugins.CursorHand],
-  ['cursor-select', plugins.CursorSelect],
-
-  // document
-  ['open', plugins.OpenToolbarItem],
-  ['download', plugins.DownloadToolbarItem],
-  ['print', plugins.PrintToolbarItem],
-  ['presentation', plugins.PresentationToolbarItem],
-
-  // find
-  ['find', plugins.FindToolbarItem],
-
-  // information
-  ['information', toolbar.Information],
-
-  // library
-  ['library', plugins.LibraryToolbarItem],
-
   // pagination
   ['current-page', toolbar.CurrentPage],
   ['first-page', toolbar.FirstPage],
@@ -62,9 +45,6 @@ export const DEFAULT_TOOLBAR_ITEMS = new Map<string, toolbar.ToolbarItemType>([
   ['next-page', toolbar.NextPage],
   ['previous-page', toolbar.PreviousPage],
   ['paginate', toolbar.Paginate],
-
-  // resource
-  ['resource', toolbar.Resource],
 
   // rotate
   ['rotate-cw', toolbar.RotateCw],
@@ -90,11 +70,6 @@ export const DEFAULT_TOOLBAR_ITEMS = new Map<string, toolbar.ToolbarItemType>([
 
   // ui
   ['menu', toolbar.Menu],
-  ['sidebar', new plugins.SidebarToolbarItem(new Map<string, plugins.SidebarItem>([
-    ['thumbnail', new plugins.ThumbnailSidebarItem()],
-    ['bookmark', new plugins.BookmarkSidebarItem()],
-    ['interaction', new plugins.InteractionSidebarItem()],
-  ]))],
 ])
 
 export const DEFAULT_OPTIONS = {

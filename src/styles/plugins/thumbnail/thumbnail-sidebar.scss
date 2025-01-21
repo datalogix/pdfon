@@ -55,8 +55,17 @@
         h-full
         border-dashed
         border
-        border-gray-700
+        border-gray-500
+        flex
+        items-center
+        justify-center
       ;
+
+      &:before {
+        content: '';
+
+        @apply i-ph-spinner w-6 h-6 animate-spin;
+      }
     }
   }
 }

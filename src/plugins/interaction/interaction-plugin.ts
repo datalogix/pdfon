@@ -1,26 +1,44 @@
+import type { InformationPlugin } from '../information'
 import { Plugin } from '../plugin'
-import { StoragePlugin } from '../storage'
-import { Interaction } from './interaction'
+import type { SidebarPlugin } from '../sidebar'
+import type { StoragePlugin } from '../storage'
+import type { Interaction, InteractionId } from './interaction'
 import { InteractionLayerBuilder } from './interaction-layer-builder'
-import { InteractionService } from './interaction-service'
+import { InteractionManager } from './interaction-manager'
+import { InteractionSidebarItem } from './interaction-sidebar-item'
 
-export class InteractionPlugin extends Plugin {
-  private _interactionService?: InteractionService
+export type InteractionPluginParams = {
+  interactions?: Interaction[]
+  interactionId?: InteractionId
+}
 
-  get interactionService() {
-    return this._interactionService
+export class InteractionPlugin extends Plugin<InteractionPluginParams> {
+  protected layerBuilders = [InteractionLayerBuilder]
+  private _interactionManager?: InteractionManager
+  private interactionSidebarItem = new InteractionSidebarItem()
+
+  get interactionManager() {
+    return this._interactionManager
   }
 
   get storage() {
     return this.viewer.getLayerProperty<StoragePlugin>('StoragePlugin')?.storage
   }
 
-  protected init() {
-    this.viewer.addLayerBuilder(InteractionLayerBuilder)
-    this._interactionService = new InteractionService()
+  get sidebarManager() {
+    return this.viewer.getLayerProperty<SidebarPlugin>('SidebarPlugin')?.sidebarManager
+  }
 
-    this.on('documentdestroy', () => this.interactionService?.destroy())
+  get informationManager() {
+    return this.viewer.getLayerProperty<InformationPlugin>('InformationPlugin')?.informationManager
+  }
+
+  protected init() {
+    this._interactionManager = new InteractionManager(this.eventBus)
+
+    this.on('documentdestroy', () => this._interactionManager?.destroy())
     this.on('storageinitialized', () => this.dispatch('interactionload'))
+    this.on('interactionclick', ({ interaction }) => this.setCurrentPage(interaction.page))
 
     this.on('interactionload', ({ interactions }) => {
       const stored: Interaction[] | undefined = this.storage?.get('interactions')
@@ -32,36 +50,39 @@ export class InteractionPlugin extends Plugin {
         }))
       }
 
-      this.interactionService?.load(interactions ?? stored)
-      this.dispatch('interactionloaded', { interactions: this.interactionService?.all() })
+      this._interactionManager?.set(interactions ?? stored ?? [])
     })
 
-    this.on(['interactionloaded', 'interactionupdated'], () => {
-      this.storage?.set('interactions', this.interactionService?.all())
-
-      this.dispatch('informationadd', {
-        key: 'interactions',
-        information: {
-          name: this.l10n.get('interaction.title'),
-          value: this.interactionService?.completed.length || 0,
-          total: this.interactionService?.all().length,
-          order: 4,
-        },
+    this.on(['interactions', 'interactionupdated'], () => {
+      this.storage?.set('interactions', this._interactionManager?.all)
+      this.informationManager?.add({
+        name: this.l10n.get('interaction.title'),
+        value: this._interactionManager?.completed.length || 0,
+        total: this._interactionManager?.length,
+        order: 4,
       })
-    })
-
-    this.on('interactionclick', ({ interaction }) => {
-      interaction.completed = true
-      this.setCurrentPage(interaction.page)
-      this.interactionService?.open(interaction)
-      this.dispatch(`interactionupdated${interaction.id}`, { interaction })
-      this.dispatch('interactionupdated', { interaction })
     })
   }
 
+  protected onLoad() {
+    this.sidebarManager?.add(this.interactionSidebarItem)
+
+    if (!this.params?.interactions) {
+      return
+    }
+
+    this._interactionManager?.set(this.params?.interactions)
+
+    if (!this.params?.interactionId) {
+      return
+    }
+
+    this._interactionManager?.select(this.params?.interactionId)
+  }
+
   protected destroy() {
-    this.viewer.removeLayerBuilder(InteractionLayerBuilder)
-    this._interactionService?.destroy()
-    this._interactionService = undefined
+    this.sidebarManager?.delete(this.interactionSidebarItem)
+    this._interactionManager?.destroy()
+    this._interactionManager = undefined
   }
 }

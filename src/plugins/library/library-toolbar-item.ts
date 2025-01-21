@@ -1,29 +1,23 @@
 import { ToolbarActionToggle } from '@/toolbar'
 import { Modal } from '@/tools'
-import { createElement, waitOnEventOrTimeout } from '@/utils'
+import { createElement } from '@/utils'
 import { LibraryPlugin } from './library-plugin'
 import type { Book } from './book'
 
 export class LibraryToolbarItem extends ToolbarActionToggle {
   protected persist = false
 
-  get library() {
-    return this.viewer.getLayerProperty<LibraryPlugin>('LibraryPlugin')
+  get bookManager() {
+    return this.viewer.getLayerProperty<LibraryPlugin>('LibraryPlugin')?.bookManager
   }
 
   init() {
-    if (!this.library?.books.length) {
+    if (!this.bookManager?.length) {
       this.terminate()
       return
     }
 
     this.on('documentempty', () => this.openPersist())
-
-    waitOnEventOrTimeout(this.eventBus, 'documentload', 250).then((type) => {
-      if (type === 'timeout') {
-        this.openPersist()
-      }
-    })
   }
 
   openPersist() {
@@ -34,7 +28,7 @@ export class LibraryToolbarItem extends ToolbarActionToggle {
 
   open() {
     const content = createElement('div', 'books')
-    this.library?.books.forEach(book => content.appendChild(this.item(book)))
+    this.bookManager?.all.forEach(book => content.appendChild(this.item(book)))
 
     Modal.open(content, {
       title: this.l10n.get('library.title'),
@@ -65,9 +59,8 @@ export class LibraryToolbarItem extends ToolbarActionToggle {
     button.appendChild(book.cover ? createElement('img', { src: book.cover }) : createElement('i'))
     button.appendChild(info)
     button.addEventListener('click', () => {
-      if (!this.library) return
       this.close()
-      this.library.book = book
+      this.bookManager?.select(book)
     })
 
     return button

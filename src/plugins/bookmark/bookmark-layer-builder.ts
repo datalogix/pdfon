@@ -3,21 +3,21 @@ import { createElement } from '@/utils'
 import type { BookmarkPlugin } from './bookmark-plugin'
 
 export class BookmarkLayerBuilder extends LayerBuilder {
-  get bookmarkService() {
-    return this.layerProperties.getLayerProperty<BookmarkPlugin>('BookmarkPlugin')?.bookmarkService
+  get bookmarkManager() {
+    return this.layerProperties.getLayerProperty<BookmarkPlugin>('BookmarkPlugin')?.bookmarkManager
   }
 
   protected async build() {
     const div = this.create('bookmark-layer', -1)
     const button = div.appendChild(createElement('button', 'bookmark', { type: 'button' }))
-    button.addEventListener('click', () => this.bookmarkService?.addOrDelete(this.id))
+    button.addEventListener('click', () => this.bookmarkManager?.toggle(this.id))
 
-    if (this.bookmarkService?.has(this.id)) {
+    if (this.bookmarkManager?.has(this.id)) {
       button.classList.add('selected')
     }
 
-    this.on('bookmarkloaded', () => {
-      if (this.bookmarkService?.has(this.id)) {
+    this.on('bookmarks', () => {
+      if (this.bookmarkManager?.has(this.id)) {
         button.classList.add('selected')
       }
     })

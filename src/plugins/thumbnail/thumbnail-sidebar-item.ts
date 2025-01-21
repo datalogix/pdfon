@@ -6,6 +6,10 @@ import { ThumbnailViewer } from './thumbnail-viewer'
 export class ThumbnailSidebarItem extends SidebarItem {
   protected thumbnailViewer?: ThumbnailViewer
 
+  get order() {
+    return 1
+  }
+
   build() {
     const container = createElement('div', 'thumbnail-sidebar')
 

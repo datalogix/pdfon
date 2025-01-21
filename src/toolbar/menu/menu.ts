@@ -1,45 +1,44 @@
-import * as plugins from '@/plugins'
-import * as toolbar from '@/toolbar'
+import { ToolbarMenu } from '../toolbar-menu'
 
-export class Menu extends toolbar.ToolbarMenu {
-  constructor(actions = [
+export class Menu extends ToolbarMenu {
+  constructor(items = [
     [
-      new toolbar.Information(),
-      new toolbar.Resource(),
-      new plugins.LibraryToolbarItem(),
+      'information',
+      'resource',
+      'library',
     ],
     [
-      new plugins.OpenToolbarItem(),
-      new plugins.DownloadToolbarItem(),
-      new plugins.PrintToolbarItem(),
-      new plugins.PresentationToolbarItem(),
+      'open',
+      'download',
+      'print',
+      'presentation',
     ],
     [
-      new toolbar.CurrentPage(),
-      new toolbar.FirstPage(),
-      new toolbar.LastPage(),
+      'current-page',
+      'first-page',
+      'last-page',
     ],
     [
-      new plugins.CursorSelect(),
-      new plugins.CursorHand(),
+      'cursor-select',
+      'cursor-hand',
     ],
     [
-      new toolbar.SpreadNone(),
-      new toolbar.SpreadEven(),
-      new toolbar.SpreadOdd(),
+      'spread-none',
+      'spread-even',
+      'spread-odd',
     ],
     [
-      new toolbar.RotateCw(),
-      new toolbar.RotateCcw(),
+      'rotate-cw',
+      'rotate-ccw',
     ],
     [
-      new toolbar.ScrollPage(),
-      new toolbar.ScrollVertical(),
-      new toolbar.ScrollHorizontal(),
-      new toolbar.ScrollWrapped(),
+      'scroll-page',
+      'scroll-vertical',
+      'scroll-horizontal',
+      'scroll-wrapped',
     ],
   ]) {
-    super(actions)
+    super(items)
   }
 
   async initialize() {

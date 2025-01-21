@@ -1,5 +1,7 @@
+export type InteractionId = string | number
+
 export type Interaction = {
-  id: string | number
+  id: InteractionId
   title?: string
   page: number
   type: 'image' | 'audio' | 'video' | 'question' | 'link' | 'iframe' | 'text'

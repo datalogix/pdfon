@@ -7,10 +7,8 @@ export * from './toolbar'
 
 // items
 export * from './annotation'
-export * from './information'
 export * from './menu'
 export * from './pagination'
-export * from './resource'
 export * from './rotate'
 export * from './scroll'
 export * from './spread'

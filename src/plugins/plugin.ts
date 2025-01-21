@@ -1,5 +1,5 @@
 import { Dispatcher } from '@/bus'
-import type { Initializer, ViewerType } from '@/viewer'
+import type { Initializer, InitializerType, LayerBuilderType, ViewerType } from '@/viewer'
 import type { Toolbar, ToolbarItemType } from '@/toolbar'
 
 export {
@@ -9,17 +9,25 @@ export {
 export type PluginType = (Plugin | (new (params?: any) => Plugin))
 
 export abstract class Plugin<T = any> extends Dispatcher {
+  private _name?: string
   private _toolbar?: Toolbar
   private _viewer?: ViewerType
   protected abortController?: AbortController
-  protected initializer?: Initializer
+  protected initializers: InitializerType[] = []
+  protected layerBuilders: LayerBuilderType[] = []
+  private _initializers: Initializer[] = []
+  private _layerBuilders: LayerBuilderType[] = []
 
   constructor(readonly params?: T) {
     super()
   }
 
   get name() {
-    return this.constructor.name.toLowerCase().replace('plugin', '')
+    if (!this._name) {
+      this._name = this.constructor.name.toLowerCase().replace('plugin', '')
+    }
+
+    return this._name
   }
 
   get toolbar() {
@@ -94,12 +102,28 @@ export abstract class Plugin<T = any> extends Dispatcher {
     this._viewer = viewer
   }
 
+  protected init(): Promise<void> | void {
+
+  }
+
+  protected onLoad(): Promise<void> | void {
+
+  }
+
+  protected destroy(): Promise<void> | void {
+
+  }
+
   protected getToolbarItems(): Map<string, ToolbarItemType> {
     return new Map()
   }
 
-  protected init(): Promise<void> | void {
+  protected getInitializers(): InitializerType[] {
+    return []
+  }
 
+  protected getLayerBuilders(): LayerBuilderType[] {
+    return []
   }
 
   async initialize() {
@@ -112,15 +136,16 @@ export abstract class Plugin<T = any> extends Dispatcher {
 
     await this.init()
 
-    if (this.initializer) {
-      this.viewer.addInitializer(this.initializer)
-    }
+    this._initializers = this.initializers.concat(this.getInitializers())
+      .map(initializer => typeof initializer === 'function' ? new initializer() : initializer)
+    this._layerBuilders = this.layerBuilders.concat(this.getLayerBuilders())
+
+    this._initializers.forEach(initialize => this.viewer.addInitializer(initialize))
+    this._layerBuilders.forEach(layerBuilder => this.viewer.addLayerBuilder(layerBuilder))
 
     this.dispatch(`plugin${this.name}init`)
-  }
 
-  protected destroy(): Promise<void> | void {
-
+    setTimeout(async () => this.onLoad(), 0)
   }
 
   async terminate() {
@@ -130,9 +155,8 @@ export abstract class Plugin<T = any> extends Dispatcher {
 
     await this.destroy()
 
-    if (this.initializer) {
-      this.viewer.removeInitializer(this.initializer)
-    }
+    this._initializers.forEach(initialize => this.viewer.removeInitializer(initialize))
+    this._layerBuilders.forEach(layerBuilder => this.viewer.removeLayerBuilder(layerBuilder))
 
     this.dispatch(`plugin${this.name}destroy`)
   }

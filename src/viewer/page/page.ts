@@ -177,6 +177,8 @@ export class Page extends RenderView {
   }
 
   protected async finishRenderTask(renderTask: RenderTask, error?: any) {
+    this.markAsLoaded()
+
     if (!(error instanceof RenderingCancelledException)) {
       this.canvasPage.show(true)
     } else {

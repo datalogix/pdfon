@@ -1,12 +1,21 @@
 import { Plugin } from '../plugin'
+import { SidebarPlugin } from '../sidebar'
 import { ThumbnailLayerBuilder } from './thumbnail-layer-builder'
+import { ThumbnailSidebarItem } from './thumbnail-sidebar-item'
 
 export class ThumbnailPlugin extends Plugin {
-  protected init() {
-    this.viewer.addLayerBuilder(ThumbnailLayerBuilder)
+  protected layerBuilders = [ThumbnailLayerBuilder]
+  private thumbnailSidebarItem = new ThumbnailSidebarItem()
+
+  get sidebarManager() {
+    return this.viewer.getLayerProperty<SidebarPlugin>('SidebarPlugin')?.sidebarManager
+  }
+
+  protected onLoad() {
+    this.sidebarManager?.add(this.thumbnailSidebarItem)
   }
 
   protected destroy() {
-    this.viewer.removeLayerBuilder(ThumbnailLayerBuilder)
+    this.sidebarManager?.delete(this.thumbnailSidebarItem)
   }
 }
