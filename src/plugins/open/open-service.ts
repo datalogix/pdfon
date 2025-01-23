@@ -74,7 +74,9 @@ export class OpenService {
 
   protected setupDropzone() {
     const dropzone = this.dropzone = this.container.appendChild(createElement('div', 'open-dropzone'))
-    dropzone.appendChild(createElement('span', { innerText: this.l10n.get('open.description') }))
+    const span = createElement('span', { innerText: this.l10n.get('open.description') })
+    span.addEventListener('click', () => this.fileInput?.click())
+    dropzone.appendChild(span)
 
     this.container.addEventListener('dragover', (event) => {
       if (!event.dataTransfer) return

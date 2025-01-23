@@ -8,7 +8,7 @@
     z-100000
     inset-0
     transition
-    bg-gray-700/50
+    bg-gray-500/30
     flex
     items-center
     justify-center
@@ -26,7 +26,9 @@
       content: '';
 
       @apply
-        i-mdi:cloud-upload-outline w-32 h-32
+        i-mdi:cloud-upload-outline
+        w-32
+        h-32
       ;
     }
 
@@ -40,6 +42,7 @@
       py-8
       text-center
       text-2xl
+      cursor-pointer
     ;
   }
 
