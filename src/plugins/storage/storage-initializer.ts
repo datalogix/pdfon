@@ -16,12 +16,12 @@ export class StorageInitializer extends Initializer {
   }
 
   finish() {
-    const isInPresentationMode = () => this.viewer.isInPresentationMode
+    const isNotPresentationMode = () => !this.viewer.isInPresentationMode
     this.dispatch('storeonevent', { eventName: 'pagechanging', key: 'page', parameter: 'pageNumber' })
-    this.dispatch('storeonevent', { eventName: 'rotationchanging', key: 'rotation', parameter: 'rotation', validate: isInPresentationMode })
-    this.dispatch('storeonevent', { eventName: 'scalechanging', key: 'scale', parameter: 'scale', validate: isInPresentationMode })
-    this.dispatch('storeonevent', { eventName: 'scrollmodechanged', key: 'scroll', parameter: 'mode', validate: isInPresentationMode })
-    this.dispatch('storeonevent', { eventName: 'spreadmodechanged', key: 'spread', parameter: 'mode', validate: isInPresentationMode })
+    this.dispatch('storeonevent', { eventName: 'rotationchanging', key: 'rotation', parameter: 'rotation', validate: isNotPresentationMode })
+    this.dispatch('storeonevent', { eventName: 'scalechanging', key: 'scale', parameter: 'scale', validate: isNotPresentationMode })
+    this.dispatch('storeonevent', { eventName: 'scrollmodechanged', key: 'scroll', parameter: 'mode', validate: isNotPresentationMode })
+    this.dispatch('storeonevent', { eventName: 'spreadmodechanged', key: 'spread', parameter: 'mode', validate: isNotPresentationMode })
     this.dispatch('storeonevent', {
       eventName: 'updateviewarea',
       parameter: ({ location }: { location: Location }) => ({
