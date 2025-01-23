@@ -1,16 +1,5 @@
 # Pdfon
 
-- Revisar modais (css)
+Modern and extensible PDF viewer library built on PDF.js with interactive features, resource management, and i18n support
 
-- Rastreador de progresso (Progress tracker)
-  ( ) Na biblioteca exibir o progresso geral e o tempo utilizado
-
-- Modo offline
-  ( ) Salvar o PDF no navegador
-  ( ) Visualmente informar que está no modo offline
-  ( ) Exibir na Biblioteca os livros que estão offline
-
-- Anotações - Revisar funcionamento (Criar um plugin para isso?)
-- History - Carregar as preferencias através do hash da url
-- KeyboardManager - (manipular pelo teclado)
-- Folhear - Nova Visualização
+https://pdfon.netlify.app/
