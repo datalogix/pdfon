@@ -1,1 +1,1 @@
-export * from './notify'
+export * from './notify-plugin'
