@@ -18,7 +18,7 @@ export abstract class CursorBase extends ToolbarAction {
 
   protected init() {
     this.on('cursortoolchanged', ({ disabled }) => {
-      this.markAsActivated(disabled)
+      if (!disabled) this.markAsActivated()
     })
   }
 
