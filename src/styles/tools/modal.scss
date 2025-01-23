@@ -18,14 +18,14 @@
 
   &.modal-backdrop-overlay {
     @apply
-    bg-black/40
+      bg-black/40
     ;
   }
 
   &.modal-backdrop-blur {
     @apply
       backdrop-blur-sm
-    bg-black/40
+      bg-black/40
     ;
   }
 }
