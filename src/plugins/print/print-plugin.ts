@@ -1,5 +1,5 @@
 import type { PrintAnnotationStorage } from '@/pdfjs'
-import { dispatchEvent } from '@/utils'
+import { createElement, dispatchEvent } from '@/utils'
 import { Modal, ProgressBar } from '@/tools'
 import type { ScriptingPlugin } from '../scripting'
 import { Plugin, type ToolbarItemType } from '../plugin'
@@ -67,8 +67,8 @@ export class PrintPlugin extends Plugin<PrintPluginParams> {
   }
 
   protected destroy() {
-    this.printService?.destroy()
-    this.printService = undefined
+    this.abortPrint()
+
     window.print = print
   }
 
@@ -124,7 +124,17 @@ export class PrintPlugin extends Plugin<PrintPluginParams> {
     const progressBar = new ProgressBar()
     progressBar.onEnd = () => Modal.close()
 
-    Modal.open(progressBar.render(), {
+    const cancelButton = createElement('button', { type: 'button' })
+    cancelButton.addEventListener('click', () => this.abortPrint())
+    cancelButton.innerText = this.l10n.get('print.cancel-button')
+
+    const content = createElement('div', 'print-content')
+    content.appendChild(progressBar.render())
+    content.appendChild(cancelButton)
+
+    Modal.open(content, {
+      title: this.l10n.get('print.progress-title'),
+      backdrop: 'blur',
       persist: true,
     }).classList.add('modal-printing')
 
@@ -137,9 +147,8 @@ export class PrintPlugin extends Plugin<PrintPluginParams> {
     })
   }
 
-  private onAfterPrint() {
-    this.printAnnotationStoragePromise?.then(() => this.scriptingManager?.dispatchDidPrint())
-    this.printAnnotationStoragePromise = undefined
+  private abortPrint() {
+    Modal.close()
 
     this.printService?.destroy()
     this.printService = undefined
@@ -147,6 +156,13 @@ export class PrintPlugin extends Plugin<PrintPluginParams> {
     this.pdfDocument?.annotationStorage.resetModified()
     this.viewer.renderingQueue.stopPrinting()
     this.viewer.forceRendering()
+  }
+
+  private onAfterPrint() {
+    this.printAnnotationStoragePromise?.then(() => this.scriptingManager?.dispatchDidPrint())
+    this.printAnnotationStoragePromise = undefined
+
+    this.abortPrint()
   }
 
   private setupAutoPrint() {

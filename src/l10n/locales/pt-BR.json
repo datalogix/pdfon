@@ -185,9 +185,8 @@
     "image": "Miniatura da página {{ page }}"
   },
   "print": {
-    "progress-message": "Preparando documento para impressão…",
-    "progress-percent": "{{ progress }} %",
-    "progress-close-button": "Cancelar",
+    "progress-title": "Preparando documento para impressão…",
+    "cancel-button": "Cancelar",
     "not-supported": "A impressão não é totalmente suportada neste navegador.",
     "not-ready": "O PDF não está totalmente carregado para impressão."
   },

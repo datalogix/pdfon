@@ -3,7 +3,9 @@
 }
 
 .print-container {
-  @apply hidden;
+  @apply
+    hidden
+  ;
 }
 
 @media print {
