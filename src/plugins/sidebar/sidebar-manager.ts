@@ -1,5 +1,5 @@
 import { Dispatcher, type EventBus } from '@/bus'
-import type { L10n } from '@/l10n'
+import type { IL10n } from '@/l10n'
 import { createElement } from '@/utils'
 import type { SidebarItem } from './sidebar-item'
 import type { ViewerType } from '@/viewer'
@@ -19,7 +19,7 @@ export class SidebarManager extends Dispatcher {
   constructor(
     readonly eventBus: EventBus,
     readonly viewer: ViewerType,
-    readonly l10n: L10n,
+    readonly l10n: IL10n,
   ) {
     super()
 
