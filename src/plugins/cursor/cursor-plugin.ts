@@ -3,6 +3,7 @@ import { PresentationModeState } from '@/enums'
 import { Plugin, type ToolbarItemType } from '../plugin'
 import { HandTool } from './hand-tool'
 import { CursorHand } from './cursor-hand'
+import { CursorInitializer } from './cursor-initializer'
 import { CursorSelect } from './cursor-select'
 
 export enum CursorTool {
@@ -22,15 +23,12 @@ export class CursorPlugin extends Plugin<CursorPluginParams> {
     ])
   }
 
+  protected initializers = [CursorInitializer]
   private active?: CursorTool
   private prevActive?: CursorTool
   private handTool?: HandTool
 
   protected init() {
-    queueMicrotask(() => {
-      this.switchTool(this.params?.cursorToolOnLoad ?? CursorTool.SELECT)
-    })
-
     this.handTool = new HandTool(this.viewerContainer)
 
     this.on('switchcursortool', (evt: { reset: boolean, tool: CursorTool }) => {
@@ -55,7 +53,7 @@ export class CursorPlugin extends Plugin<CursorPluginParams> {
     let presentationModeState = PresentationModeState.NORMAL
 
     const disableActive = () => {
-      this.prevActive ??= this.active
+      this.prevActive = this.active
       this.switchTool(CursorTool.SELECT, true)
     }
 

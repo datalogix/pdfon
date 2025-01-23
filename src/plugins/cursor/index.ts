@@ -1,5 +1,6 @@
 export * from './cursor-base'
 export * from './cursor-hand'
+export * from './cursor-initializer'
 export * from './cursor-plugin'
 export * from './cursor-select'
 export * from './hand-tool'
