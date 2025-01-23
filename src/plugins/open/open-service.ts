@@ -25,15 +25,17 @@ export class OpenService {
   }
 
   showDropzone() {
-    if (this.dropzone) {
-      this.dropzone.hidden = false
-    }
+    if (!this.dropzone) return
+
+    this.dropzone.hidden = false
+    this.dropzone.classList.remove('hidden')
   }
 
   hideDropzone() {
-    if (this.dropzone) {
-      this.dropzone.hidden = true
-    }
+    if (!this.dropzone) return
+
+    this.dropzone.hidden = true
+    this.dropzone.classList.add('hidden')
   }
 
   destroy() {
