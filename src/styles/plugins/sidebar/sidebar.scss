@@ -58,6 +58,12 @@
       transition
       relative
     ;
+
+    &.hidden {
+      @apply
+        hidden
+      ;
+    }
   }
 }
 

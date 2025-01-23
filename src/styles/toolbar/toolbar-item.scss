@@ -7,4 +7,10 @@
     h-full
     w-auto
   ;
+
+  &.hidden {
+    @apply
+      hidden
+    ;
+  }
 }
