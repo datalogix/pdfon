@@ -1,0 +1,28 @@
+.loading-content {
+  @apply
+    bg-white
+    rounded-xl
+    px-14
+    py-8
+    shadow-2xl
+    text-center
+    text-gray-700
+    flex
+    flex-col
+    items-center
+    justify-center
+    gap-2
+  ;
+
+  &:before {
+    content: '';
+
+    @apply
+      block
+      i-ph-spinner
+      animate-spin
+      w-8
+      h-8
+    ;
+  }
+}

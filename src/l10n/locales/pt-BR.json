@@ -228,5 +228,10 @@
   },
   "open": {
     "description": "Arraste e solte o PDF"
+  },
+  "loading": {
+    "init": "Carregando...",
+    "finish": "Inicializando...",
+    "update": "Carregando... {{ percentage }}"
   }
 }

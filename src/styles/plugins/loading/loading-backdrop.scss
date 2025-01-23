@@ -1,0 +1,12 @@
+.pdfon >.loading {
+  @apply
+    fixed
+    inset-0
+    z-100000000000
+    backdrop-blur-sm
+    bg-gray-50/30
+    flex
+    items-center
+    justify-center
+  ;
+}

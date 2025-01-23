@@ -41,9 +41,6 @@ export class ContainerManager extends Manager {
       { once: true },
     )
 
-    this.on('documentopen', () => this.rootContainer.classList.add('loading'))
-    this.on(['documentloaded', 'documenterror', 'documentempty'], () => this.rootContainer.classList.remove('loading'))
-
     this.on('firstpageloaded', ({ pdfDocument, viewport }) => {
       this.setScaleFactor(viewport.scale)
       applyHighlightHCMFilter(this.viewerContainer, this.viewer.pageColors, pdfDocument.filterFactory)
