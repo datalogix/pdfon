@@ -26,6 +26,10 @@ export class LoadingService {
   }
 
   update(loaded: number, total: number) {
+    if (isNaN(loaded) || isNaN(total)) {
+      return
+    }
+
     const percentage = new Intl.NumberFormat('pt-BR', { style: 'percent' })
       .format(loaded > 0 ? loaded / total : 0)
 
