@@ -41,14 +41,14 @@
     -translate-y-1/2
     text-gray-700
     bg-white
-    shadow-xl
+    shadow-2xl
     border
-    rounded
     w-full
     max-w-xs
     sm:max-w-md
     md:max-w-lg
     lg:max-w-xl
+    rounded-lg
     z-1000001
   ;
 
@@ -61,9 +61,10 @@
       py-3
       px-4
       border-b
-      bg-gray-100
+      bg-gray-50
       text-lg
       font-semibold
+      rounded-t-lg
     ;
   }
 
