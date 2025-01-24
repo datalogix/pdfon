@@ -122,7 +122,7 @@ export class PrintPlugin extends Plugin<PrintPluginParams> {
     )
 
     const progressBar = new ProgressBar()
-    progressBar.onEnd = () => Modal.close()
+    // progressBar.onEnd = () => Modal.close()
 
     const cancelButton = createElement('button', { type: 'button' })
     cancelButton.addEventListener('click', () => this.abortPrint())
