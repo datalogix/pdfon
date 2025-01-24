@@ -3,14 +3,13 @@ import { createElement } from '@/utils'
 
 export class LoadingService {
   protected container = createElement('div', 'loading')
-  protected content = createElement('div', 'loading-content')
+  protected content = this.container.appendChild(createElement('div', 'loading-content'))
 
   constructor(
     readonly rootContainer: HTMLElement,
     readonly l10n: IL10n,
   ) {
     rootContainer.appendChild(this.container)
-    this.container.appendChild(this.content)
     this.init()
   }
 
@@ -30,9 +29,7 @@ export class LoadingService {
       return
     }
 
-    const percentage = new Intl.NumberFormat('pt-BR', { style: 'percent' })
-      .format(loaded > 0 ? loaded / total : 0)
-
+    const percentage = new Intl.NumberFormat('pt-BR', { style: 'percent' }).format(loaded > 0 ? loaded / total : 0)
     this.content.innerHTML = this.l10n.get('loading.update', { percentage })
   }
 
