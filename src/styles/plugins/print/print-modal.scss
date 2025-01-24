@@ -1,0 +1,51 @@
+.modal-printing {
+  @apply
+    max-w-md!
+  ;
+
+  .modal-header {
+    @apply
+      py-6!
+      bg-white!
+      border-none!
+      text-center!
+    ;
+  }
+
+  .print-content {
+    @apply
+      flex
+      flex-col
+      items-center
+      justify-center
+      gap-6
+    ;
+
+    > button {
+      @apply
+        text-red-500
+        px-4
+        py-2
+        rounded
+        pointer
+        hover:opacity-70
+        transition
+        flex
+        items-center
+        justify-center
+        gap-2
+      ;
+
+      &:before {
+        content: '';
+
+        @apply
+          i-ph:x-bold
+          block
+          w-4
+          h-4
+        ;
+      }
+    }
+  }
+}
