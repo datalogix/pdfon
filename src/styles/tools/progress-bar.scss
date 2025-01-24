@@ -3,31 +3,49 @@
     select-none
     w-full
     rounded-full
-    h-4
+    h-5
     bg-gray-200
-    text-white
     relative
+    overflow-hidden
   ;
 
-  .percentage, > span {
+  .bar {
     @apply
-      text-3
       rounded-full
       bg-blue-500
       h-full
-      text-center
       absolute
       transition-all
       ease
       duration-500
     ;
+  }
 
-    &.hidden {
-      @apply hidden;
-    }
+  .percentage {
+    @apply
+      flex
+      items-center
+      justify-center
+      w-full
+      h-full
+      text-3
+      text-center
+      absolute
+      text-gray-700
+    ;
+  }
 
-    &.completed {
+  &.completed {
+    .bar {
       @apply bg-green-500;
+    }
+  }
+
+  &.half {
+    .percentage {
+      @apply
+        text-white
+      ;
     }
   }
 }

@@ -2,7 +2,8 @@ import { createElement } from '@/utils'
 
 export class ProgressBar {
   protected container = createElement('div', 'progress-bar')
-  protected span = this.container.appendChild(createElement('span'))
+  protected bar = this.container.appendChild(createElement('div', 'bar'))
+  protected span = this.container.appendChild(createElement('span', 'percentage'))
   private _total
   private _value
   onEnd?: () => void
@@ -37,39 +38,32 @@ export class ProgressBar {
   }
 
   get percentageForHumans() {
-    const formatter = new Intl.NumberFormat('pt-BR', {
-      style: 'decimal',
-      maximumFractionDigits: 2,
-      minimumFractionDigits: 0,
-    })
-
-    return `${formatter.format(this.percentage)} %`
+    return new Intl.NumberFormat('pt-BR', { style: 'percent' }).format(this._value > 0 ? this._value / this._total : 0)
   }
 
   private update() {
-    const pct = this.percentage
+    this.container.classList.remove('completed')
 
-    this.span.classList.remove('hidden')
-    this.span.classList.remove('completed')
+    if (this.percentage > 50) this.container.classList.add('half')
+    if (this.percentage === 100) this.container.classList.add('completed')
 
-    if (pct === 0) this.span.classList.add('hidden')
-    if (pct === 100) this.span.classList.add('completed')
+    this.span.innerText = this.percentageForHumans
+    this.container.dataset.percentage = this.span.innerText.replace('%', '').trim()
 
     // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-    this.span.offsetHeight
-    this.span.innerText = this.percentageForHumans
-    this.span.style.width = `${pct}%`
+    this.bar.offsetHeight
+    this.bar.style.width = `${this.percentage}%`
 
     const onTransitionEnd = () => {
-      if (pct === 100 && this.onEnd) {
+      if (this.percentage === 100 && this.onEnd) {
         setTimeout(this.onEnd, 300)
       }
 
-      this.span.removeEventListener('transitionend', onTransitionEnd)
+      this.bar.removeEventListener('transitionend', onTransitionEnd)
     }
 
-    this.span.addEventListener('transitionend', onTransitionEnd)
-    if (pct === 100 && this.onEnd) this.onEnd()
+    this.bar.addEventListener('transitionend', onTransitionEnd)
+    if (this.percentage === 100 && this.onEnd) this.onEnd()
   }
 
   render() {
