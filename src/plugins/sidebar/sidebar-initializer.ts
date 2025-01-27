@@ -7,9 +7,13 @@ export class SidebarInitializer extends Initializer {
   }
 
   async prepare(options: InitializerOptions) {
+    if (options.sidebar !== undefined) {
+      return options
+    }
+
     const pageMode = await this.pdfDocument.getPageMode().catch(() => { })
 
-    if (pageMode && options.sidebar === undefined) {
+    if (pageMode) {
       switch (pageMode) {
         case 'UseThumbs':
           options.sidebar = 'thumbnail'

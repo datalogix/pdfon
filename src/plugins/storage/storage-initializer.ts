@@ -10,8 +10,8 @@ export class StorageInitializer extends Initializer {
     const data = Object.fromEntries(Object.entries(this.storage?.all() || {}).filter(([_, v]) => v !== undefined))
 
     return {
-      ...options,
       ...data,
+      ...options,
     }
   }
 
