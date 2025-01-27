@@ -12,10 +12,11 @@ export class LibraryToolbarItem extends ToolbarActionToggle {
   }
 
   init() {
-    if (!this.bookManager?.length) {
-      this.terminate()
-      return
-    }
+    this.on('documentinitialized', () => {
+      if (!this.bookManager?.available.length) {
+        this.terminate()
+      }
+    })
 
     this.on('documentempty', () => this.openPersist())
   }
@@ -28,7 +29,7 @@ export class LibraryToolbarItem extends ToolbarActionToggle {
 
   open() {
     const content = createElement('div', 'books')
-    this.bookManager?.all.forEach(book => content.appendChild(this.item(book)))
+    this.bookManager?.available.forEach(book => content.appendChild(this.item(book)))
 
     Modal.open(content, {
       title: this.l10n.get('library.title'),
