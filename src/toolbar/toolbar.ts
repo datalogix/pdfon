@@ -11,7 +11,7 @@ export type ToolbarOptions = {
 export class Toolbar extends Dispatcher {
   readonly container: HTMLDivElement
   protected readonly list = new Map<string, ToolbarItemType>()
-  protected readonly _items = new Map<string, ToolbarItem>()
+  protected readonly _items = new Set<ToolbarItem>()
 
   constructor(
     readonly viewer: ViewerType,
@@ -38,13 +38,13 @@ export class Toolbar extends Dispatcher {
     this.list.set(name, item)
   }
 
-  protected createGroups(): Map<string, ToolbarItem>[] {
+  protected createGroups() {
     const toolbarConfig = this.options?.toolbar ?? []
 
     return toolbarConfig.map((groupConfig) => {
-      const items = new Map<string, ToolbarItem>()
+      const items = new Set<ToolbarItem>()
       const validKeys = this.getValidNames(groupConfig)
-      validKeys.forEach(name => items.set(name, this.resolveToolbarItem(name)))
+      validKeys.forEach(name => items.add(this.resolveToolbarItem(name)))
       return items
     })
   }
@@ -69,9 +69,9 @@ export class Toolbar extends Dispatcher {
     for (const groupItems of this.createGroups()) {
       const group = createElement('div', 'toolbar-group')
 
-      for (const [name, item] of groupItems) {
+      for (const item of groupItems) {
         await item.initialize()
-        this._items.set(name, item)
+        this._items.add(item)
         group.appendChild(item.render())
       }
 
@@ -86,7 +86,7 @@ export class Toolbar extends Dispatcher {
   }
 
   async terminate() {
-    for (const item of this._items.values()) {
+    for (const item of this._items) {
       await item.terminate()
     }
 
