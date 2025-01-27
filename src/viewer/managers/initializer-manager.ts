@@ -25,7 +25,7 @@ export class InitializerManager extends Manager {
   }
 
   init() {
-    this.on('documentinit', ({ pdfDocument }) => this.setupInitializer(pdfDocument))
+    this.on('documentinit', ({ pdfDocument, options }) => this.setupInitializer(pdfDocument, options))
     this.on('documentinitialview', ({ options }) => this.executeInitializers(options))
     this.on('documentinitialized', () => {
       this._initialized = true
@@ -36,10 +36,12 @@ export class InitializerManager extends Manager {
     this._initialized = false
   }
 
-  private async setupInitializer(pdfDocument: PDFDocumentProxy) {
+  private async setupInitializer(pdfDocument: PDFDocumentProxy, options: InitializerOptions = {}) {
     try {
-      const options = await this.prepareInitializers(pdfDocument)
-      this.applyInitialView(options)
+      this.applyInitialView({
+        ...await this.prepareInitializers(pdfDocument),
+        ...options,
+      })
 
       if (!isEmbedded()) {
         this.containerManager.focus()
@@ -50,7 +52,7 @@ export class InitializerManager extends Manager {
         new Promise(resolve => setTimeout(resolve, FORCE_PAGES_LOADED_TIMEOUT)),
       ])
     } catch {
-      this.applyInitialView()
+      this.applyInitialView(options)
     } finally {
       this.viewer.update()
       this.dispatch('documentinitialized')

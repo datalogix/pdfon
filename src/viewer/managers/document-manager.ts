@@ -1,6 +1,7 @@
 import * as pdfjs from '@/pdfjs'
 import { WAIT_LOAD_DOCUMENT } from '@/config'
 import { defineWorker, waitOnEventOrTimeout } from '@/utils'
+import type { InitializerOptions } from '../initializers'
 import { Manager } from './'
 
 export class DocumentManager extends Manager {
@@ -42,14 +43,14 @@ export class DocumentManager extends Manager {
     }
   }
 
-  async openDocument(documentType?: pdfjs.DocumentType, documentFilename?: string) {
+  async openDocument(documentType?: pdfjs.DocumentType, documentFilename?: string, options: InitializerOptions = {}) {
     defineWorker()
 
-    this.dispatch('documentopen', { documentType, documentFilename })
+    this.dispatch('documentopen', { documentType, documentFilename, options })
 
     await this.closeDocument()
 
-    this.dispatch('documentload', { documentType, documentFilename })
+    this.dispatch('documentload', { documentType, documentFilename, options })
 
     const loadingTask = this.loadingTask = pdfjs.getDocument(documentType)
 
@@ -60,7 +61,7 @@ export class DocumentManager extends Manager {
     try {
       const pdfDocument = await loadingTask.promise
       this._pdfDocument = pdfDocument
-      this.dispatch('documentinit', { pdfDocument, documentType, documentFilename })
+      this.dispatch('documentinit', { pdfDocument, documentType, documentFilename, options })
     } catch (reason) {
       if (loadingTask !== this.loadingTask) {
         return

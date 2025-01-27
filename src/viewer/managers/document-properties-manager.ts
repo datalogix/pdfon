@@ -66,8 +66,8 @@ export class DocumentPropertiesManager extends Manager {
   }
 
   init() {
-    this.on('documentinit', ({ pdfDocument, documentType, filename }) => {
-      this.setupDocumentProperties(pdfDocument, documentType, filename)
+    this.on('documentinit', ({ pdfDocument, documentType, documentFilename }) => {
+      this.setupDocumentProperties(pdfDocument, documentType, documentFilename)
     })
   }
 
