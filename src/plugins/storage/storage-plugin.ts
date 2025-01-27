@@ -2,7 +2,12 @@ import { Plugin } from '../plugin'
 import { StorageInitializer } from './storage-initializer'
 import { StorageService } from './storage-service'
 
-export class StoragePlugin extends Plugin {
+export type StoragePluginParams = {
+  fingerprint?: string
+  prefix?: string
+}
+
+export class StoragePlugin extends Plugin<StoragePluginParams> {
   protected initializers = [StorageInitializer]
   private _storage?: StorageService
 
@@ -11,8 +16,12 @@ export class StoragePlugin extends Plugin {
   }
 
   protected init(): Promise<void> | void {
-    this.on('documentinit', ({ pdfDocument }) => {
-      this._storage = new StorageService(pdfDocument.fingerprints[0] as string)
+    this.on('documentinit', ({ pdfDocument, options }) => {
+      this._storage = new StorageService(
+        options?.storageId ?? this.params?.fingerprint ?? pdfDocument.fingerprints[0] as string,
+        options?.storagePrefix ?? this.params?.prefix,
+      )
+
       this.dispatch('storageinitialized', { storage: this.storage })
     })
 
