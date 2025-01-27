@@ -13,6 +13,7 @@
       flex
       divide-x
       border-b
+      border-gray-300
       bg-gray-50
       shadow
     ;
@@ -27,26 +28,37 @@
         justify-center
         overflow-hidden
         transition
-        hover:bg-gray-100
-        hover:text-gray-900
+        hover:bg-blue-50
       ;
-
-      &.selected {
-        @apply
-          bg-gray-100
-          text-gray-900
-          shadow-inner
-        ;
-      }
-
-      > span{
-        @apply hidden;
-      }
 
       &:before {
         content: '';
 
-        @apply text-lg;
+        @apply
+          text-lg
+          transition
+        ;
+      }
+
+      &.selected {
+        @apply
+          text-blue-700
+          border-blue-100
+          bg-blue-50
+          shadow-inner
+        ;
+
+        &:before {
+          @apply
+            scale-110
+          ;
+        }
+      }
+
+      > span {
+        @apply
+          hidden
+        ;
       }
     }
   }
@@ -68,7 +80,7 @@
 }
 
 .sidebar-drawer .drawer-container {
-  @apply top-10!;
+  @apply top-14!;
 
-  height: calc(100vh - 2.5rem) !important;
+  height: calc(100vh - 3.5rem) !important;
 }

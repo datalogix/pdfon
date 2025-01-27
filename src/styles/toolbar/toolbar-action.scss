@@ -18,9 +18,12 @@
       items-center
       justify-center
       bg-transparent
-      text-gray-700
-      hover:bg-gray-100
-      hover:text-gray-900
+      text-gray-900
+      rounded-lg
+      border
+      border-transparent
+      hover:border-blue-100
+      hover:bg-blue-50
       disabled:cursor-not-allowed
       disabled:opacity-50
       disabled:text-gray-500!
@@ -38,19 +41,22 @@
         block
         text-lg
         text-gray-700
+        transition
       ;
     }
 
     &.active {
       @apply
-        bg-gray-100
-        text-gray-900
+        text-blue-700
+        border-blue-100
+        bg-blue-50
         shadow-inner
       ;
 
       &:before {
         @apply
-          scale-90
+          scale-110
+          text-blue-700
         ;
       }
     }

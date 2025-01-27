@@ -20,24 +20,24 @@
       invisible
       absolute
       border
-      border-t-none
-      rounded
-      rounded-t-none
+      rounded-lg
       shadow
       bg-white
+      mt-px
       top-10
       flex
       flex-col
       transition
-      -translate-y-1/4
+      -translate-y-1/6
     ;
   }
 
   &.toolbar-menu-open {
     > button {
       @apply
-        bg-white
-        shadow
+        border-gray-300
+        bg-gray-50
+        shadow-inner
       ;
 
       &:after {
