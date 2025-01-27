@@ -35,11 +35,7 @@ export class LibraryPlugin extends Plugin<LibraryPluginParams> {
       }
     })
 
-    this.on('documenttitleupdated', () => {
-      document.title = this._bookManager?.current?.name ?? document.title
-    })
-
-    this.on('book', ({ book }) => {
+    this.on('book', ({ book, options }) => {
       if (!book) {
         this.informationManager?.set([])
         return
@@ -50,7 +46,7 @@ export class LibraryPlugin extends Plugin<LibraryPluginParams> {
         this.dispatch('resourceload', { resources: book.resources })
       }, { once: true })
 
-      this.viewer.openDocument(book.src)
+      this.viewer.openDocument(book.src, book.name, options)
 
       const props = ['name', 'sku', 'author', 'description']
 
