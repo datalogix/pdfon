@@ -28,12 +28,14 @@ export const DEFAULT_PLUGINS: plugins.PluginType[] = [
 ]
 
 export const DEFAULT_TOOLBAR = [
-  'sidebar find paginate',
+  'sidebar divider find divider paginate',
   'zoom-out zoom-in zoom-select',
-  'annotation menu',
+  'annotation divider menu',
 ]
 
 export const DEFAULT_TOOLBAR_ITEMS = new Map<string, toolbar.ToolbarItemType>([
+  ['divider', toolbar.Divider],
+
   // annotation
   ['annotation', toolbar.Annotation],
 
