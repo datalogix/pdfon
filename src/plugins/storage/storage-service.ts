@@ -5,20 +5,24 @@ export type Database = InitializerOptions & Record<string, any>
 export type DatabaseKeys = keyof Database
 
 export class StorageService {
-  private database: Database
-  private key: string
+  private database!: Database
+  private key!: string
 
   constructor(
     fingerprint: string,
+    prefix: string = name,
     private driver: Storage = localStorage,
-    storagePrefix = name,
   ) {
-    this.key = `${storagePrefix}-${fingerprint}`
-    this.database = JSON.parse(this.driver.getItem(this.key) || '{}')
+    this.setKey(fingerprint, prefix)
   }
 
   private write() {
     this.driver.setItem(this.key, JSON.stringify(this.database))
+  }
+
+  setKey(fingerprint: string, prefix: string = name) {
+    this.key = `${prefix}-${fingerprint}`
+    this.database = JSON.parse(this.driver.getItem(this.key) || '{}')
   }
 
   all() {
