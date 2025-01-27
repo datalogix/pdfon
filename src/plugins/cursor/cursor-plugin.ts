@@ -23,10 +23,15 @@ export class CursorPlugin extends Plugin<CursorPluginParams> {
     ])
   }
 
-  protected initializers = [CursorInitializer]
   private active?: CursorTool
   private prevActive?: CursorTool
   private handTool?: HandTool
+
+  protected getInitializers() {
+    return [
+      new CursorInitializer(this.params?.cursorToolOnLoad),
+    ]
+  }
 
   protected init() {
     this.handTool = new HandTool(this.viewerContainer)

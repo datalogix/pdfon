@@ -1,14 +1,14 @@
 import { Initializer, type InitializerOptions } from '@/viewer'
-import { CursorTool, type CursorPlugin } from './cursor-plugin'
+import { CursorTool } from './cursor-plugin'
 
 export class CursorInitializer extends Initializer {
-  get cursorPlugin() {
-    return this.viewer.getLayerProperty<CursorPlugin>('CursorPlugin')
+  constructor(private cursorToolOnLoad?: CursorTool) {
+    super()
   }
 
   async prepare(options: InitializerOptions) {
     if (options.cursor === undefined) {
-      options.cursor = this.cursorPlugin?.params?.cursorToolOnLoad ?? CursorTool.SELECT
+      options.cursor = this.cursorToolOnLoad ?? CursorTool.SELECT
     }
 
     return options
@@ -19,7 +19,7 @@ export class CursorInitializer extends Initializer {
       return
     }
 
-    this.cursorPlugin?.switchTool(options.cursor)
+    this.dispatch('switchcursortool', { tool: options.cursor })
   }
 
   finish() {
