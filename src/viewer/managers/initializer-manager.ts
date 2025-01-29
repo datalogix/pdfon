@@ -60,7 +60,7 @@ export class InitializerManager extends Manager {
   }
 
   private applyInitialView(options: InitializerOptions = {}) {
-    queueMicrotask(async () => {
+    queueMicrotask(() => {
       if (options.scroll) this.scrollManager.scrollMode = options.scroll
       if (options.spread) this.spreadManager.spreadMode = options.spread
       if (options.rotation) this.rotationManager.rotation = options.rotation
