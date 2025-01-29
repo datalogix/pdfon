@@ -20,8 +20,8 @@ export class Pdfon extends Dispatcher {
     super()
   }
 
-  addPlugin(plugin: PluginType) {
-    this.plugins.push(plugin)
+  addPlugin(...plugin: PluginType[]) {
+    this.plugins.push(...plugin)
   }
 
   removePlugin(pluginToRemove: PluginType | string) {
