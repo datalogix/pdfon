@@ -4,6 +4,7 @@ import './styles/index.scss'
 
 import { Pdfon } from '.'
 
+/*
 const books = [
   {
     id: '1',
@@ -216,18 +217,19 @@ const books = [
     author: 'Louis Rogers, Ben Goldstein',
   },
 ];
+*/
 
 (async () => {
   const pdfon = new Pdfon()
   const viewer = await pdfon.render({
-    plugins: {
+    /* plugins: {
       library: {
         books,
         bookId: 1,
       },
-    },
+    }, */
   })
 
-  viewer.openDocument('./_file.pdf')
+  // viewer.openDocument('./_file.pdf')
   // viewer.openDocument('./books/805769_CREATORS 1_AB_miolo.pdf')
 })()
