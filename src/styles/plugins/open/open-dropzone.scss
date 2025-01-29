@@ -8,7 +8,6 @@
     z-100000
     inset-0
     transition
-    bg-gray-500/30
     flex
     items-center
     justify-center
@@ -43,6 +42,7 @@
       text-center
       text-2xl
       cursor-pointer
+      shadow-2xl
     ;
   }
 
@@ -50,8 +50,7 @@
     @apply
       opacity-100
       scale-110
-      flex!
-      text-gray-700
+      text-blue-500
     ;
   }
 }
