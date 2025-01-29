@@ -105,6 +105,6 @@ export class Pdfon extends Dispatcher {
     await this.initializePlugins(toolbar, viewer, opts.plugins)
     await this.initializeToolbar(toolbar)
 
-    return viewer
+    return viewer.start()
   }
 }

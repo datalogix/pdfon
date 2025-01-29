@@ -64,6 +64,12 @@ export class Viewer extends Dispatcher {
     })
   }
 
+  start() {
+    this.dispatch('started')
+
+    return this
+  }
+
   render() {
     this.dispatch('rendered')
 

@@ -9,11 +9,13 @@ export class DocumentManager extends Manager {
   private loadingTask?: pdfjs.PDFDocumentLoadingTask
 
   init() {
-    waitOnEventOrTimeout(this.eventBus, 'documentopen', WAIT_LOAD_DOCUMENT).then((type) => {
-      if (type === 'timeout') {
-        this.dispatch('documentempty')
-      }
-    })
+    this.on('started', () => {
+      waitOnEventOrTimeout(this.eventBus, 'documentopen', WAIT_LOAD_DOCUMENT).then((type) => {
+        if (type === 'timeout') {
+          this.dispatch('documentempty')
+        }
+      })
+    }, { once: true })
   }
 
   reset() {
