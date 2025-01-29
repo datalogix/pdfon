@@ -44,7 +44,7 @@ export class Toolbar extends Dispatcher {
     return toolbarConfig.map((groupConfig) => {
       const items = new Set<ToolbarItem>()
       const validKeys = this.getValidNames(groupConfig)
-      validKeys.forEach(name => items.add(this.resolveToolbarItem(name)))
+      validKeys.forEach(name => items.add(this.resolveToolbarItem(name)!))
       return items
     })
   }
@@ -54,7 +54,11 @@ export class Toolbar extends Dispatcher {
   }
 
   resolveToolbarItem(name: string) {
-    const item = this.list.get(name)!
+    const item = this.list.get(name)
+
+    if (!item) {
+      return undefined
+    }
 
     const toolbarItem = typeof item === 'function'
       ? new item()

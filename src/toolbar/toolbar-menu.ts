@@ -16,6 +16,10 @@ export class ToolbarMenu extends ToolbarActionToggle {
     super()
   }
 
+  get enabled() {
+    return this.actions.flat().some(action => action.enabled)
+  }
+
   private matchActionByName(action: ToolbarAction, name: string): boolean {
     return action.name.toLowerCase() === name.toLowerCase()
   }
@@ -77,9 +81,9 @@ export class ToolbarMenu extends ToolbarActionToggle {
     super.setToolbar(toolbar)
 
     this.actions = this.items.map(items => Array.isArray(items)
-      ? items.map(item => typeof item === 'string' ? toolbar.resolveToolbarItem(item) as ToolbarAction : item)
+      ? items.map(item => typeof item === 'string' ? toolbar.resolveToolbarItem(item) as ToolbarAction : item).filter(item => item !== undefined)
       : typeof items === 'string' ? toolbar.resolveToolbarItem(items) as ToolbarAction : items,
-    )
+    ).filter(item => item !== undefined)
 
     this.actions.flat().forEach(action => action.setToolbar(toolbar))
   }
@@ -104,6 +108,7 @@ export class ToolbarMenu extends ToolbarActionToggle {
       }
     })
 
+    this.toggle()
     this.markAsActivated()
   }
 

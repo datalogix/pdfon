@@ -40,12 +40,4 @@ export class Menu extends ToolbarMenu {
   ]) {
     super(items)
   }
-
-  async initialize() {
-    await super.initialize()
-
-    this.toggle(true)
-
-    this.on('pagesdestroy', () => this.toggle(true))
-  }
 }
