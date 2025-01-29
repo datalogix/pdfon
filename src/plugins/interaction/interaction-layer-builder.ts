@@ -14,9 +14,9 @@ export class InteractionLayerBuilder extends LayerBuilder {
   }
 
   protected renderInteractions() {
-    this.interactionManager?.getByPage(this.id)?.forEach((interaction) => {
-      this.div!.innerHTML = ''
+    this.div!.innerHTML = ''
 
+    this.interactionManager?.getByPage(this.id)?.forEach((interaction) => {
       const button = createElement('button', [
         'interaction',
         `interaction-${interaction.type.toLowerCase()}`,
