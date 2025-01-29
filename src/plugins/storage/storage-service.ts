@@ -1,12 +1,9 @@
 import type { InitializerOptions } from '@/viewer'
 import { name } from '../../../package.json'
 
-export type Database = InitializerOptions & Record<string, any>
-export type DatabaseKeys = keyof Database
-
-export class StorageService {
-  private database!: Database
-  private key!: string
+export class StorageService<TDatabase extends Record<string, any> = InitializerOptions> {
+  private database: TDatabase = {} as TDatabase
+  private key: string = ''
 
   constructor(
     fingerprint: string,
@@ -29,13 +26,13 @@ export class StorageService {
     return this.database
   }
 
-  get<K extends DatabaseKeys>(key: K, defaultValue?: Database[K]) {
-    return this.database[key] !== undefined ? this.database[key] : defaultValue
+  get<K extends keyof TDatabase>(key: K, defaultValue?: TDatabase[K]) {
+    return key in this.database ? this.database[key] : defaultValue
   }
 
-  set<K extends DatabaseKeys>(keyOrProperties: K | Partial<Database>, value?: Database[K]) {
+  set<K extends keyof TDatabase>(keyOrProperties: K | Partial<TDatabase>, value?: TDatabase[K]) {
     if (typeof keyOrProperties === 'string') {
-      this.database[keyOrProperties] = value!
+      this.database[keyOrProperties as K] = value!
     } else {
       Object.assign(this.database, keyOrProperties)
     }

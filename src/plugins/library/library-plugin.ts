@@ -1,3 +1,4 @@
+import { resolveValue } from '@/utils'
 import { Plugin, type ToolbarItemType } from '../plugin'
 import { BookManager } from './book-manager'
 import type { Book, BookId } from './book'
@@ -41,9 +42,13 @@ export class LibraryPlugin extends Plugin<LibraryPluginParams> {
         return
       }
 
-      this.on('documentinitialized', () => {
-        this.dispatch('interactionload', { interactions: book.interactions })
-        this.dispatch('resourceload', { resources: book.resources })
+      this.on('documentinitialized', async () => {
+        const interactions = await resolveValue(book.interactions, book)
+        const resources = await resolveValue(book.resources, book)
+
+        this.dispatch('interactionload', { interactions })
+        this.dispatch('resourceload', { resources })
+        this.dispatch('bookinitialized', { book })
       }, { once: true })
 
       this.viewer.openDocument(book.src, book.name, options)
@@ -60,18 +65,14 @@ export class LibraryPlugin extends Plugin<LibraryPluginParams> {
     })
   }
 
-  protected onLoad() {
-    if (!this.params?.books) {
-      return
+  protected onLoad(params?: LibraryPluginParams) {
+    if (params?.books) {
+      this.bookManager?.set(params.books)
     }
 
-    this.bookManager?.set(this.params.books)
-
-    if (!this.params?.bookId) {
-      return
+    if (params?.bookId) {
+      this.on('books', () => this._bookManager?.select(params.bookId), { once: true })
     }
-
-    this._bookManager?.select(this.params?.bookId)
   }
 
   protected destroy() {

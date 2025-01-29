@@ -7,7 +7,7 @@ export class BookmarkLayerBuilder extends LayerBuilder {
     return this.layerProperties.getLayerProperty<BookmarkPlugin>('BookmarkPlugin')?.bookmarkManager
   }
 
-  protected async build() {
+  protected build() {
     const div = this.create('bookmark-layer', -1)
     const button = div.appendChild(createElement('button', 'bookmark', { type: 'button' }))
     button.addEventListener('click', () => this.bookmarkManager?.toggle(this.id))

@@ -34,12 +34,10 @@ export class ResourcePlugin extends Plugin<ResourcePluginParams> {
     this.on('resources', ({ resources }) => this.storage?.set('resources', resources))
   }
 
-  protected onLoad() {
-    if (!this.params?.resources) {
-      return
+  protected onLoad(params?: ResourcePluginParams) {
+    if (params?.resources) {
+      this._resourceManager?.set(params.resources)
     }
-
-    this._resourceManager?.set(this.params?.resources)
   }
 
   protected destroy() {

@@ -6,7 +6,11 @@ export type WatermarkPluginParams = {
 }
 
 export class WatermarkPlugin extends Plugin<WatermarkPluginParams> {
-  protected getLayerBuilders() {
-    return this.params?.image ? [new WatermarkLayerBuilder(this.params)] : []
+  protected async getLayerBuilders() {
+    const image = await this.params?.image
+
+    return image
+      ? [new WatermarkLayerBuilder({ image })]
+      : []
   }
 }

@@ -23,13 +23,21 @@ export class SidebarPlugin extends Plugin<SidebarPluginParams> {
     return this._sidebarManager
   }
 
-  protected init() {
+  protected async init() {
     this._sidebarManager = new SidebarManager(this.eventBus, this.viewer, this.l10n)
-    this.params?.items?.forEach(item => this._sidebarManager?.add(item))
-    if (this.params?.current) this._sidebarManager.select(this.params?.current)
 
     this.on('sidebaradd', ({ item, order }) => this._sidebarManager?.add(item, order))
     this.on('sidebardelete', ({ item }) => this._sidebarManager?.delete(item))
+  }
+
+  protected onLoad(params?: SidebarPluginParams) {
+    if (params?.items) {
+      params?.items.forEach(item => this._sidebarManager?.add(item))
+    }
+
+    if (params?.current) {
+      this._sidebarManager?.select(params?.current)
+    }
   }
 
   protected destroy() {

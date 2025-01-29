@@ -11,17 +11,28 @@ export class LibraryToolbarItem extends ToolbarActionToggle {
     return this.viewer.getLayerProperty<LibraryPlugin>('LibraryPlugin')?.bookManager
   }
 
+  get enabled() {
+    return (this.bookManager?.available.length ?? 0) > 0
+  }
+
   init() {
-    this.on('documentinitialized', () => {
-      if (!this.bookManager?.available.length) {
-        this.terminate()
-      }
+    this.on('books', () => {
+      this.toggle()
+      this.markAsActivated()
     })
 
-    this.on('documentempty', () => this.openPersist())
+    this.on('documentempty', () => {
+      this.on('books', () => {
+        this.openPersist()
+      })
+
+      this.openPersist()
+    })
   }
 
   openPersist() {
+    if (this.opened || !this.enabled) return
+
     this.persist = true
     this.execute()
     this.persist = false

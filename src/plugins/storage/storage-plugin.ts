@@ -15,11 +15,11 @@ export class StoragePlugin extends Plugin<StoragePluginParams> {
     return this._storage
   }
 
-  protected init(): Promise<void> | void {
-    this.on('documentinit', ({ pdfDocument, options }) => {
+  protected init() {
+    this.on('documentinit', async ({ pdfDocument, options }) => {
       this._storage = new StorageService(
-        options?.storageId ?? this.params?.fingerprint ?? pdfDocument.fingerprints[0] as string,
-        options?.storagePrefix ?? this.params?.prefix,
+        options?.storageId ?? (await this.params?.fingerprint) ?? pdfDocument.fingerprints[0] as string,
+        options?.storagePrefix ?? (await this.params?.prefix),
       )
 
       this.dispatch('storageinitialized', { storage: this.storage })

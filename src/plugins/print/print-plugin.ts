@@ -32,7 +32,7 @@ export class PrintPlugin extends Plugin<PrintPluginParams> {
   }
 
   protected init() {
-    this.on('beforeprint', () => this.onBeforePrint())
+    this.on('beforeprint', async () => await this.onBeforePrint())
     this.on('afterprint', () => this.onAfterPrint())
     this.on('print', () => this.triggerPrint())
 
@@ -91,7 +91,7 @@ export class PrintPlugin extends Plugin<PrintPluginParams> {
     }
   }
 
-  private onBeforePrint() {
+  private async onBeforePrint() {
     this.printAnnotationStoragePromise = this.scriptingManager?.dispatchWillPrint()
       .catch(() => {})
       .then(() => this.pdfDocument?.annotationStorage.print)
@@ -117,7 +117,7 @@ export class PrintPlugin extends Plugin<PrintPluginParams> {
     this.printService = new PrintService(
       this.pdfDocument,
       this.viewer.getPagesOverview(),
-      this.params?.resolution,
+      await this.params?.resolution,
       this.printAnnotationStoragePromise,
     )
 

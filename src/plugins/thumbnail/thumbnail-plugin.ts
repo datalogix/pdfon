@@ -1,5 +1,5 @@
 import { Plugin } from '../plugin'
-import { SidebarPlugin } from '../sidebar'
+import type { SidebarPlugin } from '../sidebar'
 import { ThumbnailLayerBuilder } from './thumbnail-layer-builder'
 import { ThumbnailSidebarItem } from './thumbnail-sidebar-item'
 

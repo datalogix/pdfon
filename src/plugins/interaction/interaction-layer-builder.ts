@@ -7,10 +7,16 @@ export class InteractionLayerBuilder extends LayerBuilder {
     return this.layerProperties.getLayerProperty<InteractionPlugin>('InteractionPlugin')?.interactionManager
   }
 
-  protected async build() {
-    const div = this.create('interaction-layer', 5)
+  protected build() {
+    this.create('interaction-layer', 5)
+    this.on('interactions', () => this.renderInteractions())
+    this.renderInteractions()
+  }
 
+  protected renderInteractions() {
     this.interactionManager?.getByPage(this.id)?.forEach((interaction) => {
+      this.div!.innerHTML = ''
+
       const button = createElement('button', [
         'interaction',
         `interaction-${interaction.type.toLowerCase()}`,
@@ -27,7 +33,7 @@ export class InteractionLayerBuilder extends LayerBuilder {
         button.classList.add('interaction-completed')
       })
 
-      div.appendChild(button)
+      this.div!.appendChild(button)
     })
   }
 }

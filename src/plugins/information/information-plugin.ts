@@ -29,12 +29,10 @@ export class InformationPlugin extends Plugin<InformationPluginParams> {
     this.on('informationdelete', ({ information }) => this._informationManager?.delete(information))
   }
 
-  protected onLoad() {
-    if (!this.params?.informations) {
-      return
+  protected onLoad(params?: InformationPluginParams) {
+    if (params?.informations) {
+      this._informationManager?.set(params.informations)
     }
-
-    this._informationManager?.set(this.params?.informations)
   }
 
   protected destroy() {

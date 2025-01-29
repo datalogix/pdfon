@@ -14,17 +14,17 @@ export class BookmarkSidebarItem extends SidebarItem {
 
   build() {
     const container = createElement('div', 'bookmark-sidebar')
-    this.on(['bookmarks', 'bookmarkupdated'], ({ bookmarks }) => this.renderList(container, bookmarks))
-    this.renderList(container, this.bookmarkManager?.all)
+    this.on(['bookmarks', 'bookmarkupdated'], () => this.renderList(container))
+    this.renderList(container)
     return container
   }
 
-  protected renderList(container: HTMLElement, bookmarks: Bookmark[] = []) {
+  protected renderList(container: HTMLElement) {
     container.innerHTML = ''
 
     const ul = createElement('ul', 'bookmark-list')
 
-    bookmarks.forEach((bookmark) => {
+    this.bookmarkManager?.all.forEach((bookmark) => {
       const li = createElement('li')
       li.appendChild(this.renderItem(bookmark))
       ul.appendChild(li)

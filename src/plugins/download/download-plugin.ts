@@ -3,7 +3,7 @@ import { DownloadManager } from './download-manager'
 import { DownloadToolbarItem } from './download-toolbar-item'
 
 export type DownloadPluginParams = {
-  filename?: () => string
+  filename?: string
 }
 
 export class DownloadPlugin extends Plugin<DownloadPluginParams> {
@@ -16,8 +16,8 @@ export class DownloadPlugin extends Plugin<DownloadPluginParams> {
   readonly downloadManager = new DownloadManager()
   private saveInProgress = false
 
-  get downloadFileName() {
-    return this.params?.filename?.() || this.viewer.documentFilename
+  async getDownloadFileName() {
+    return await this.params?.filename || this.viewer.documentFilename
   }
 
   async downloadOrSave() {
@@ -40,7 +40,8 @@ export class DownloadPlugin extends Plugin<DownloadPluginParams> {
       // When the PDF document isn't ready, simply download using the URL.
     }
 
-    this.downloadManager.download(data, this.viewer.baseUrl, this.downloadFileName)
+    const filename = await this.getDownloadFileName()
+    this.downloadManager.download(data, this.viewer.baseUrl, filename)
   }
 
   async save() {
@@ -52,7 +53,8 @@ export class DownloadPlugin extends Plugin<DownloadPluginParams> {
 
     try {
       const data = await this.pdfDocument.saveDocument()
-      this.downloadManager.download(data, this.viewer.baseUrl, this.downloadFileName)
+      const filename = await this.getDownloadFileName()
+      this.downloadManager.download(data, this.viewer.baseUrl, filename)
     } catch (reason: any) {
       this.logger.error('Error when saving the document', reason)
       await this.download()

@@ -64,20 +64,16 @@ export class InteractionPlugin extends Plugin<InteractionPluginParams> {
     })
   }
 
-  protected onLoad() {
+  protected onLoad(params?: InteractionPluginParams) {
     this.sidebarManager?.add(this.interactionSidebarItem)
 
-    if (!this.params?.interactions) {
-      return
+    if (params?.interactions) {
+      this._interactionManager?.set(params.interactions)
     }
 
-    this._interactionManager?.set(this.params?.interactions)
-
-    if (!this.params?.interactionId) {
-      return
+    if (params?.interactionId) {
+      this.on('interactions', () => this._interactionManager?.select(params.interactionId), { once: true })
     }
-
-    this._interactionManager?.select(this.params?.interactionId)
   }
 
   protected destroy() {

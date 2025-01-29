@@ -24,11 +24,12 @@ export class StatsPlugin extends Plugin<StatsPluginParams> {
     return this.viewer.getLayerProperty<InformationPlugin>('InformationPlugin')?.informationManager
   }
 
-  protected init() {
+  protected async init() {
     this._statsTracker = new StatsTracker({
       views: () => this.viewer.getVisiblePages().views,
       onUpdate: (pagesViews, time) => this.dispatch('statsupdate', { pagesViews, time }),
-      ...this.params,
+      interval: await this.params?.interval,
+      visibilityPercentage: await this.params?.visibilityPercentage,
     })
 
     this.on('documentdestroy', () => this._statsTracker?.stop())

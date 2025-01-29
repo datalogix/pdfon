@@ -27,9 +27,9 @@ export class CursorPlugin extends Plugin<CursorPluginParams> {
   private prevActive?: CursorTool
   private handTool?: HandTool
 
-  protected getInitializers() {
+  protected async getInitializers() {
     return [
-      new CursorInitializer(this.params?.cursorToolOnLoad),
+      new CursorInitializer(await this.params?.cursorToolOnLoad),
     ]
   }
 

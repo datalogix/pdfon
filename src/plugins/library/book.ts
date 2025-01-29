@@ -1,3 +1,6 @@
+import { Interaction } from '../interaction'
+import { Resource } from '../resource'
+
 export type BookId = string | number
 
 export type Book = {
@@ -10,4 +13,6 @@ export type Book = {
   sku?: string
   author?: string
   description?: string
+  interactions?: Interaction[] | ((book: Book) => Interaction[] | Promise<Interaction[]>)
+  resources?: Resource[] | ((book: Book) => Resource[] | Promise<Resource[]>)
 }

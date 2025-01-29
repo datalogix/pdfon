@@ -26,6 +26,12 @@ export class BookmarkManager extends Dispatcher {
     this.dispatch('bookmarks', { bookmarks: this.all })
   }
 
+  merge(bookmarks: Bookmark[]) {
+    bookmarks.forEach((bookmark) => {
+      this.bookmarks.set(bookmark.page, bookmark)
+    })
+  }
+
   has(page: number) {
     return this.bookmarks.has(page)
   }

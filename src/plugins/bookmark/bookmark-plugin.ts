@@ -1,11 +1,16 @@
 import { Plugin } from '../plugin'
 import type { SidebarPlugin } from '../sidebar'
 import type { StoragePlugin } from '../storage'
+import type { Bookmark } from './bookmark'
 import { BookmarkLayerBuilder } from './bookmark-layer-builder'
 import { BookmarkManager } from './bookmark-manager'
 import { BookmarkSidebarItem } from './bookmark-sidebar-item'
 
-export class BookmarkPlugin extends Plugin {
+export type BookmarkPluginParams = {
+  bookmarks?: Bookmark[]
+}
+
+export class BookmarkPlugin extends Plugin<BookmarkPluginParams> {
   protected layerBuilders = [BookmarkLayerBuilder]
   private _bookmarkManager?: BookmarkManager
   private bookmarkSidebarItem = new BookmarkSidebarItem()
@@ -25,20 +30,27 @@ export class BookmarkPlugin extends Plugin {
   protected init() {
     this._bookmarkManager = new BookmarkManager(this.eventBus, this.l10n)
 
-    this.on('storageinitialized', () => this.dispatch('bookmarkload', { bookmarks: this.storage?.get('bookmarks') }))
-    this.on('pagesdestroy', () => this._bookmarkManager?.destroy())
-    this.on('bookmarkload', ({ bookmarks }) => this._bookmarkManager?.set(bookmarks ?? []))
+    this.on('documentdestroy', () => this._bookmarkManager?.destroy())
+    this.on('storageinitialized', () => this.dispatch('bookmarkload'))
+    this.on('bookmarkclick', ({ bookmark }) => this.setCurrentPage(bookmark.page))
 
-    this.on(['bookmarkadded', 'bookmarkdeleted'], () => this.dispatch('bookmarkupdated', { bookmarks: this._bookmarkManager?.all }))
+    this.on('bookmarkload', ({ bookmarks }) => {
+      this._bookmarkManager?.merge(this.storage?.get('bookmarks') ?? [])
+      this._bookmarkManager?.merge(bookmarks ?? [])
+    })
+
+    this.on(['bookmarks', 'bookmarkupdated'], () => this.storage?.set('bookmarks', this._bookmarkManager?.all))
+    this.on(['bookmarkadded', 'bookmarkdeleted'], () => this.dispatch('bookmarkupdated'))
     this.on('bookmarkadded', ({ bookmark }) => this.dispatch(`bookmarkadded${bookmark.page}`, { bookmark }))
     this.on('bookmarkdeleted', ({ bookmark }) => this.dispatch(`bookmarkdeleted${bookmark.page}`, { bookmark }))
-    this.on('bookmarkupdated', ({ bookmarks }) => this.storage?.set('bookmarks', bookmarks))
-
-    this.on('bookmarkclick', ({ bookmark }) => this.setCurrentPage(bookmark.page))
   }
 
-  protected onLoad() {
+  protected onLoad(params?: BookmarkPluginParams) {
     this.sidebarManager?.add(this.bookmarkSidebarItem)
+
+    if (params?.bookmarks) {
+      this._bookmarkManager?.set(params?.bookmarks)
+    }
   }
 
   protected destroy() {

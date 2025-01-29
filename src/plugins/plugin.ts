@@ -1,6 +1,7 @@
 import { Dispatcher } from '@/bus'
-import type { Initializer, InitializerType, LayerBuilderType, ViewerType } from '@/viewer'
 import type { Toolbar, ToolbarItemType } from '@/toolbar'
+import { createResolvedObject, resolveObject, type ResolvedParams } from '@/utils'
+import type { Initializer, InitializerType, LayerBuilderType, ViewerType } from '@/viewer'
 
 export {
   ToolbarItemType,
@@ -17,9 +18,14 @@ export abstract class Plugin<T = any> extends Dispatcher {
   protected layerBuilders: LayerBuilderType[] = []
   private _initializers: Initializer[] = []
   private _layerBuilders: LayerBuilderType[] = []
+  readonly params
 
-  constructor(readonly params?: T) {
+  constructor(params?: ResolvedParams<T>) {
     super()
+
+    if (params) {
+      this.params = createResolvedObject(params)
+    }
   }
 
   get name() {
@@ -106,7 +112,7 @@ export abstract class Plugin<T = any> extends Dispatcher {
 
   }
 
-  protected onLoad(): Promise<void> | void {
+  protected onLoad(_params?: T): Promise<void> | void {
 
   }
 
@@ -118,11 +124,11 @@ export abstract class Plugin<T = any> extends Dispatcher {
     return new Map()
   }
 
-  protected getInitializers(): InitializerType[] {
+  protected getInitializers(): InitializerType[] | Promise<InitializerType[]> {
     return []
   }
 
-  protected getLayerBuilders(): LayerBuilderType[] {
+  protected getLayerBuilders(): LayerBuilderType[] | Promise<LayerBuilderType[]> {
     return []
   }
 
@@ -136,16 +142,16 @@ export abstract class Plugin<T = any> extends Dispatcher {
 
     await this.init()
 
-    this._initializers = this.initializers.concat(this.getInitializers())
+    this._initializers = this.initializers.concat(await this.getInitializers())
       .map(initializer => typeof initializer === 'function' ? new initializer() : initializer)
-    this._layerBuilders = this.layerBuilders.concat(this.getLayerBuilders())
+    this._layerBuilders = this.layerBuilders.concat(await this.getLayerBuilders())
 
     this._initializers.forEach(initialize => this.viewer.addInitializer(initialize))
     this._layerBuilders.forEach(layerBuilder => this.viewer.addLayerBuilder(layerBuilder))
 
     this.dispatch(`plugin${this.name}init`)
 
-    setTimeout(async () => this.onLoad(), 0)
+    setTimeout(async () => this.onLoad(this.params ? await resolveObject(this.params) as T : undefined), 0)
   }
 
   async terminate() {
