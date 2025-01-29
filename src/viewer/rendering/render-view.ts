@@ -17,7 +17,7 @@ export abstract class RenderView extends Dispatcher implements pdfjs.IRenderable
 
   private loadingId?: NodeJS.Timeout
   private _renderingState = RenderingStates.INITIAL
-  private renderTask?: pdfjs.RenderTask
+  protected renderTask?: pdfjs.RenderTask
   protected renderError?: any
 
   resume: (() => void) | null = null

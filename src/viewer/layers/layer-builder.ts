@@ -9,7 +9,7 @@ export abstract class LayerBuilder<T = any> extends Dispatcher {
   div?: HTMLDivElement
 
   private _name?: string
-  protected _page?: Page
+  private _page?: Page
   protected abortController?: AbortController
   protected cancelled = false
 
