@@ -71,7 +71,7 @@ export class LibraryPlugin extends Plugin<LibraryPluginParams> {
     }
 
     if (params?.bookId) {
-      this.on('books', () => this._bookManager?.select(params.bookId), { once: true })
+      this.on('documentempty', () => this._bookManager?.select(params.bookId), { once: true })
     }
   }
 
