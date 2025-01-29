@@ -13,38 +13,42 @@ const books = [
     pages: 65,
     isbn: '978-65-5752-055-0',
     author: 'Silene Cardoso',
-    interactions: [
-      {
-        x: 100,
-        y: 100,
-        type: 'image',
-        content: './books/image.jpg',
-        completed: false,
-        id: 1,
-        page: 1,
-        title: 'Imagem 1',
-      },
-      {
-        x: 100,
-        y: 200,
-        type: 'audio',
-        content: './books/audio.mp3',
-        completed: false,
-        id: 2,
-        page: 1,
-        title: 'Áudio 1',
-      },
-      {
-        x: 100,
-        y: 300,
-        type: 'video',
-        content: './books/video.mp4',
-        completed: false,
-        id: 3,
-        page: 1,
-        title: 'Vídeo 1',
-      },
-    ],
+    interactions: async () => {
+      await new Promise(resolve => setTimeout(resolve, 10000))
+
+      return [
+        {
+          x: 100,
+          y: 100,
+          type: 'image',
+          content: './books/image.jpg',
+          completed: false,
+          id: 1,
+          page: 1,
+          title: 'Imagem 1',
+        },
+        {
+          x: 100,
+          y: 200,
+          type: 'audio',
+          content: './books/audio.mp3',
+          completed: false,
+          id: 2,
+          page: 1,
+          title: 'Áudio 1',
+        },
+        {
+          x: 100,
+          y: 300,
+          type: 'video',
+          content: './books/video.mp4',
+          completed: false,
+          id: 3,
+          page: 1,
+          title: 'Vídeo 1',
+        },
+      ]
+    },
     resources: [
       {
         name: 'Teste1',
@@ -218,11 +222,12 @@ const books = [
   const viewer = await pdfon.render({
     plugins: {
       library: {
-        books: books,
-        // bookId: 2,
+        books,
+        bookId: 1,
       },
     },
   })
+
   viewer.openDocument('./_file.pdf')
   // viewer.openDocument('./books/805769_CREATORS 1_AB_miolo.pdf')
 })()
