@@ -1,6 +1,18 @@
 # Changelog
 
 
+## v0.0.5
+
+[compare changes](https://github.com/datalogix/pdfon/compare/v0.0.4...v0.0.5)
+
+### 🩹 Fixes
+
+- Select first sidebar item ([813e63b](https://github.com/datalogix/pdfon/commit/813e63b))
+
+### ❤️ Contributors
+
+- Ricardo Gobbo De Souza ([@ricardogobbosouza](http://github.com/ricardogobbosouza))
+
 ## v0.0.4
 
 [compare changes](https://github.com/datalogix/pdfon/compare/v0.0.3...v0.0.4)
