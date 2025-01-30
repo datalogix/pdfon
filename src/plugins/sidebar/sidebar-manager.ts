@@ -38,7 +38,12 @@ export class SidebarManager extends Dispatcher {
   open() {
     if (!this.length) return
 
-    this.select(this.current ?? this.items.keys().next().value ?? '')
+    if (this.current) {
+      this.select(this.current)
+    } else {
+      (this.menu.children[0] as HTMLButtonElement).click()
+    }
+
     this.drawer.open()
     this.dispatch('sidebaropen')
   }
@@ -76,15 +81,17 @@ export class SidebarManager extends Dispatcher {
   select(name: string) {
     if (!this.items.has(name)) return
 
-    this.deselectCurrent()
-    this.highlightButton(name)
+    if (name !== this.current) {
+      this.deselectCurrent()
+      this.highlightButton(name)
 
-    if (this.current) {
-      this.items.get(this.current)?.hide()
+      if (this.current) {
+        this.items.get(this.current)?.hide()
+      }
+
+      this.current = name
+      this.dispatch('sidebarselected', { sidebar: name })
     }
-
-    this.current = name
-    this.dispatch('sidebarselected', { sidebar: name })
 
     queueMicrotask(() => {
       if (this.opened) {
@@ -128,6 +135,7 @@ export class SidebarManager extends Dispatcher {
 
   private removeButtons(name: string) {
     const buttons = this.menu.getElementsByClassName(`sidebar-item-${name}`)
+
     while (buttons.length > 0) {
       buttons[0].remove()
     }
