@@ -7,46 +7,35 @@
     flex
     flex-col
     items-center
-    bg-gray-200
     overflow-y-scroll
     relative
-    py-2
-    space-y-2
+    py-4
+    space-y-4
   ;
-
-  a:focus > .thumbnail,
-  .thumbnail:hover {
-    @apply border-gray-300/50;
-  }
-
-  a:focus > .thumbnail > .thumbnail-image,
-  .thumbnail:hover > .thumbnail-image {
-    @apply opacity-95!;
-  }
 
   .thumbnail {
     @apply
       relative
-      border-solid
-      border-7
-      border-transparent
+      border
       rounded
+      shadow
+      transition
+      hover:border-5
     ;
 
     .thumbnail-image {
       @apply
         w-full
         h-full
-        opacity-90
       ;
     }
 
     &.selected {
-      @apply border-gray-300 !important;
-
-      > .thumbnail-image {
-        @apply opacity-100!;
-      }
+      @apply
+        border-gray-300
+        border-5
+        opacity-100
+      ;
     }
 
     &:not([data-loaded]) > .thumbnail-image {
