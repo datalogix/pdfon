@@ -172,6 +172,8 @@ export class FindToolbarItem extends ToolbarActionToggle {
   open() {
     if (!this.bar) return
 
+    this.opened = true
+
     this.bar.classList.add('find-bar-open')
     this.bar.hidden = false
 
@@ -181,6 +183,8 @@ export class FindToolbarItem extends ToolbarActionToggle {
 
   close() {
     if (!this.bar) return
+
+    this.opened = false
 
     this.bar.classList.remove('find-bar-open')
     this.bar.hidden = true
