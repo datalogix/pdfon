@@ -23,10 +23,10 @@
     "build": "vite build",
     "build:demo": "vite build --config vite.config.demo.ts",
     "dev": "vite",
-    "preview": "pnpm build:demo && vite preview",
+    "preview": "npm run build:demo && vite preview",
     "lint": "eslint",
-    "release": "pnpm build && changelogen --release --push && pnpm publish",
-    "test": "pnpm lint"
+    "release": "npm run build && changelogen --release --push && npm publish",
+    "test": "npm run lint"
   },
   "dependencies": {
     "@unocss/reset": "^65.4.3",
@@ -50,6 +50,5 @@
     "vite": "^6.0.11",
     "vite-plugin-dts": "^4.5.0",
     "vite-plugin-eslint2": "^5.0.3"
-  },
-  "packageManager": "pnpm@10.2.0"
+  }
 }
