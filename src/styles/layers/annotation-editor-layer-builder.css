@@ -21,15 +21,15 @@
        var(--outline-around-width)
    );
    --editorFreeText-editing-cursor: text;
-   --editorInk-editing-cursor: url(images/cursor-editorInk.svg) 0 16, pointer;
-   --editorHighlight-editing-cursor: url(images/cursor-editorTextHighlight.svg)
+   --editorInk-editing-cursor: url(../images/cursor-editorInk.svg) 0 16, pointer;
+   --editorHighlight-editing-cursor: url(../images/cursor-editorTextHighlight.svg)
        24 24,
      text;
-   --editorFreeHighlight-editing-cursor: url(images/cursor-editorFreeHighlight.svg)
+   --editorFreeHighlight-editing-cursor: url(../images/cursor-editorFreeHighlight.svg)
        1 18,
      pointer;
 
-   --new-alt-text-warning-image: url(images/altText_warning.svg);
+   --new-alt-text-warning-image: url(../images/altText_warning.svg);
  }
 
  /* The following class is used to hide an element but keep it available to
@@ -75,7 +75,7 @@
 
 @media (min-resolution: 1.1dppx) {
   :root {
-    --editorFreeText-editing-cursor: url(images/cursor-editorFreeText.svg) 0 16,
+    --editorFreeText-editing-cursor: url(../images/cursor-editorFreeText.svg) 0 16,
       text;
   }
  }
@@ -209,9 +209,9 @@
    :is(.freeTextEditor, .inkEditor, .stampEditor, .highlightEditor),
  .textLayer {
    .editToolbar {
-     --editor-toolbar-delete-image: url(images/editor-toolbar-delete.svg);
+     --editor-toolbar-delete-image: url(../images/editor-toolbar-delete.svg);
      --editor-toolbar-bg-color: #f0f0f4;
-     --editor-toolbar-highlight-image: url(images/toolbarButton-editorHighlight.svg);
+     --editor-toolbar-highlight-image: url(../images/toolbarButton-editorHighlight.svg);
      --editor-toolbar-fg-color: #2e2e56;
      --editor-toolbar-border-color: #8f8f9d;
      --editor-toolbar-hover-border-color: var(--editor-toolbar-border-color);
@@ -333,6 +333,7 @@
 
        .delete {
          width: var(--editor-toolbar-height);
+         position: relative;
 
          &::before {
            content: "";
@@ -343,6 +344,8 @@
            background-color: var(--editor-toolbar-fg-color);
            width: 100%;
            height: 100%;
+           position: absolute;
+           inset: 0;
          }
 
          &:hover::before {
@@ -378,8 +381,8 @@
        }
 
        .altText {
-         --alt-text-add-image: url(images/altText_add.svg);
-         --alt-text-done-image: url(images/altText_done.svg);
+         --alt-text-add-image: url(../images/altText_add.svg);
+         --alt-text-done-image: url(../images/altText_done.svg);
 
          display: flex;
          align-items: center;
@@ -854,8 +857,8 @@
  }
 
  .dialog.newAltText {
-   --new-alt-text-ai-disclaimer-icon: url(images/altText_disclaimer.svg);
-   --new-alt-text-spinner-icon: url(images/altText_spinner.svg);
+   --new-alt-text-ai-disclaimer-icon: url(../images/altText_disclaimer.svg);
+   --new-alt-text-spinner-icon: url(../images/altText_spinner.svg);
    --preview-image-bg-color: #f0f0f4;
    --preview-image-border: none;
 
@@ -1131,7 +1134,7 @@
      }
 
      .editToolbar {
-       --editor-toolbar-colorpicker-arrow-image: url(images/toolbarButton-menuArrow.svg);
+       --editor-toolbar-colorpicker-arrow-image: url(../images/toolbarButton-menuArrow.svg);
 
        transform-origin: center !important;
 
@@ -1143,7 +1146,7 @@
            justify-content: center;
            align-items: center;
            gap: 4px;
-           padding: 4px;
+           padding: 0px 4px;
 
            &::after {
              content: "";
@@ -1154,6 +1157,7 @@
              background-color: var(--editor-toolbar-fg-color);
              width: 12px;
              height: 12px;
+             position: relative;
            }
 
            &:hover::after {
@@ -1215,7 +1219,7 @@
      }
    }
  }
-
+/*
  .editorParamsToolbar:has(#highlightParamsToolbarContainer) {
    padding: unset;
  }
@@ -1413,3 +1417,19 @@
      }
    }
  }
+
+ */
+/*
+
+ .editorParamsLabel {
+  flex: none;
+  font: menu;
+  font-size: 13px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 150%;
+  color: var(--main-color);
+  width: fit-content;
+  inset-inline-start: 0;
+}
+*/

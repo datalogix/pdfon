@@ -135,6 +135,18 @@
     "resource": {
       "label": "Recursos",
       "title": "Recursos"
+    },
+    "annotationfreetext": {
+      "label": "Texto",
+      "title": "Texto"
+    },
+    "annotationhighlight": {
+      "label": "Destaque",
+      "title": "Destaque"
+    },
+    "annotationink": {
+      "label": "Desenho",
+      "title": "Desenho"
     }
   },
   "sidebar": {
@@ -232,5 +244,21 @@
     "init": "Carregando...",
     "finish": "Inicializando...",
     "update": "Carregando... {{ percentage }}"
+  },
+  "annotation": {
+    "free-text": {
+      "color": "Cor",
+      "size": "Tamanho"
+    },
+    "ink": {
+      "color": "Cor",
+      "thickness": "Espessura",
+      "opacity": "Opacidade"
+    },
+    "highlight": {
+      "color": "Cor",
+      "thickness": "Espessura",
+      "show-all": "Mostrar todos"
+    }
   }
 }
