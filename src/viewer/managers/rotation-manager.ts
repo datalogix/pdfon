@@ -54,6 +54,7 @@ export class RotationManager extends Manager {
 
     this.dispatch('rotationchanging', {
       rotation,
+      pagesRotation: rotation,
       pageNumber,
     })
 
