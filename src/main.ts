@@ -4,7 +4,6 @@ import './styles/index.scss'
 
 import { Pdfon } from '.'
 
-/*
 const books = [
   {
     id: '1',
@@ -15,7 +14,7 @@ const books = [
     isbn: '978-65-5752-055-0',
     author: 'Silene Cardoso',
     interactions: async () => {
-      await new Promise(resolve => setTimeout(resolve, 10000))
+      // await new Promise(resolve => setTimeout(resolve, 10000))
 
       return [
         {
@@ -217,19 +216,33 @@ const books = [
     author: 'Louis Rogers, Ben Goldstein',
   },
 ];
-*/
 
 (async () => {
   const pdfon = new Pdfon()
   const viewer = await pdfon.render({
-    /* plugins: {
+    plugins: {
       library: {
         books,
-        bookId: 1,
+        // bookId: 1,
       },
-    }, */
+    },
   })
 
-  // viewer.openDocument('./_file.pdf')
-  // viewer.openDocument('./books/805769_CREATORS 1_AB_miolo.pdf')
+  viewer.openDocument('./_file.pdf')
+
+  /*
+  viewer.on('documentload', () => {
+    console.log('documentload')
+    const resources = JSON.parse('[{\u0022name\u0022:\u0022teste\u0022,\u0022src\u0022:\u0022https:\\\/\\\/staging.macmillanonline-plurall.com.br\\\/\u0022}]')
+    viewer.dispatch('resourceload', { resources })
+  })
+
+  viewer.on('documentinitialized', () => {
+    console.log('documentinitialized')
+
+    viewer.on('firstpageloaded', () => {
+      console.log('firstpageloaded')
+    })
+  })
+  */
 })()
