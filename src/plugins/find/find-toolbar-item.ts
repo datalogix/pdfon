@@ -17,7 +17,7 @@ export class FindToolbarItem extends ToolbarActionToggle {
   protected findNextButton?: HTMLButtonElement
 
   init() {
-    this.bar = createElement('div', 'findbar')
+    this.bar = createElement('div', 'find-bar')
     this.findField = this.bar.appendChild(createElement('input', {
       type: 'text',
       title: this.l10n.get('find.field.title'),
@@ -172,7 +172,7 @@ export class FindToolbarItem extends ToolbarActionToggle {
   open() {
     if (!this.bar) return
 
-    this.bar.classList.add('findbar-open')
+    this.bar.classList.add('find-bar-open')
     this.bar.hidden = false
 
     this.findField?.select()
@@ -182,7 +182,7 @@ export class FindToolbarItem extends ToolbarActionToggle {
   close() {
     if (!this.bar) return
 
-    this.bar.classList.remove('findbar-open')
+    this.bar.classList.remove('find-bar-open')
     this.bar.hidden = true
 
     this.dispatch('findbarclose')

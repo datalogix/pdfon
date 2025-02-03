@@ -202,7 +202,7 @@ export class FindController extends Dispatcher {
       if (type === 'again') {
         this.nextMatch()
 
-        // When the findbar was previously closed, and `highlightAll` is set,
+        // When the find bar was previously closed, and `highlightAll` is set,
         // ensure that the matches on all active pages are highlighted again.
         if (findbarClosed && this._state?.highlightAll) {
           this.updateAllPages()
@@ -245,7 +245,7 @@ export class FindController extends Dispatcher {
       }
 
       // Abort any long running searches, to avoid a match being scrolled into
-      // view *after* the findbar has been closed. In this case `this.offset`
+      // view *after* the find bar has been closed. In this case `this.offset`
       // will most likely differ from `this._selected`, hence we also ensure
       // that any new search operation will always start with a clean slate.
       if (this.resumePageIndex) {
@@ -253,7 +253,7 @@ export class FindController extends Dispatcher {
         this.dirtyMatch = true
       }
 
-      // Avoid the UI being in a pending state when the findbar is re-opened.
+      // Avoid the UI being in a pending state when the find bar is re-opened.
       this.updateUIState(FindState.FOUND)
 
       this._highlightMatches = false
