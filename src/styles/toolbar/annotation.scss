@@ -9,3 +9,153 @@
 .toolbar-item-annotationhighlight > button:before {
   @apply i-material-symbols:format-ink-highlighter-outline
 }
+
+.annotation-bar {
+  @apply
+    hidden
+    border
+    bg-white
+    rounded
+    p-2
+    absolute
+    top-10
+    right-0
+    z-30000
+    h-auto
+    text-sm
+    text-left
+    cursor-default
+    shadow
+    max-w-85
+    space-y-2
+  ;
+
+  &.annotation-bar-open {
+    @apply
+      block
+    ;
+  }
+
+  .annotation-field {
+    @apply
+      flex
+      items-center
+      justify-between
+      gap-10
+      p-x
+    ;
+
+    label {
+      @apply
+        text-sm
+      ;
+    }
+
+    input[type="range"],
+    input[type="color"] {
+      @apply
+        w-32
+        h-8
+        border
+        rounded
+      ;
+    }
+
+    .colorPicker {
+      .dropdown {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-direction: row;
+        height: auto;
+        gap: 8px;
+
+        button {
+          width: auto;
+          height: auto;
+          border: none;
+          cursor: pointer;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          background: none;
+          flex: 0 0 auto;
+          padding: 0;
+
+          .swatch {
+            width: 24px;
+            height: 24px;
+          }
+
+          &:is(:active, :focus-visible) {
+            outline: none;
+          }
+
+          &[aria-selected="true"] > .swatch {
+            outline: 2px solid var(--selected-outline-color);
+          }
+
+          &:is(:hover, :active, :focus-visible) > .swatch {
+            outline: 2px solid var(--hover-outline-color);
+          }
+        }
+      }
+    }
+
+    .switch {
+      &:before {
+        content: '';
+
+        @apply
+          absolute
+          rounded-full
+          w-full
+          h-full
+          block
+          border
+          border-gray-300
+          bg-gray-100
+        ;
+      }
+
+      &:after {
+        content: '';
+
+        @apply
+          absolute
+          top-1
+          rounded-full
+          w-4
+          h-4
+          block
+          bg-gray-500
+          border
+          mx-1
+          transition-all
+        ;
+      }
+
+      &:checked {
+        &:before {
+          @apply
+            bg-blue-500
+          ;
+        }
+
+        &:after {
+          @apply
+            bg-blue-100
+            translate-x-8
+          ;
+        }
+      }
+
+      @apply
+        relative
+        w-14
+        h-6
+        appearance-none
+      ;
+    }
+  }
+}

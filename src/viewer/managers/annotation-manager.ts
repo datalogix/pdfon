@@ -65,7 +65,7 @@ export class AnnotationManager extends Manager {
       this.pdfDocument,
       this.viewer.pageColors,
       this.options.annotationEditorHighlightColors ?? 'yellow=#FFFF98,green=#53FFBC,blue=#80EBFF,pink=#FFCBE6,red=#FF4F5F',
-      this.options.enableHighlightFloatingButton ?? true,
+      this.options.enableHighlightFloatingButton ?? false,
       null, // enableUpdatedAddImage
       null, // enableNewAltTextWhenAddingImage
       null, // mlManager
