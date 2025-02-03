@@ -33,7 +33,7 @@
     "i18next": "^24.2.1",
     "i18next-browser-languagedetector": "^8.0.2",
     "ofetch": "^1.4.1",
-    "pdfjs-dist": "^4.10.38"
+    "pdfjs-dist": "4.10.38"
   },
   "devDependencies": {
     "@eslint/js": "^9.18.0",
