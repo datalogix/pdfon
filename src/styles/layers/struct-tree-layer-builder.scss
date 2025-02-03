@@ -1,7 +1,9 @@
 .canvasWrapper {
   canvas {
     .structTree {
-      @apply contain-strict;
+      @apply
+        contain-strict
+      ;
     }
   }
 }
