@@ -6,7 +6,8 @@
 @use 'viewer';
 @use 'pdfon';
 
-@import url(layers/annotation-editor-layer-builder.css);
-@import url(layers/annotation-layer-builder.css);
-@import url(layers/text-layer-builder.css);
-@import url(layers/xfa-layer-builder.css);
+/* TODO: refactor to scss */
+@import url(./plugins/annotation-editor/annotation-editor-layer-builder.css);
+@import url(./layers/annotation-layer-builder.css);
+@import url(./layers/text-layer-builder.css);
+@import url(./layers/xfa-layer-builder.css);

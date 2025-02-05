@@ -1,8 +1,5 @@
 import { AnnotationEditorLayer, DrawLayer, type AnnotationEditorLayerOptions } from '@/pdfjs'
-import type { AnnotationLayerBuilder } from './annotation-layer-builder'
-import { LayerBuilder } from './layer-builder'
-import type { TextLayerBuilder } from './text-layer-builder'
-import type { StructTreeLayerBuilder } from './struct-tree-layer-builder'
+import { LayerBuilder, type AnnotationLayerBuilder, type StructTreeLayerBuilder, type TextLayerBuilder } from '@/viewer'
 
 export class AnnotationEditorLayerBuilder extends LayerBuilder {
   private _annotationEditorLayer?: AnnotationEditorLayer
@@ -84,8 +81,8 @@ export class AnnotationEditorLayerBuilder extends LayerBuilder {
   }
 
   show() {
-    if (this._annotationEditorLayer?.isInvisible) {
-      return
+    if (!this.div || this._annotationEditorLayer?.isInvisible) {
+      // return
     }
 
     super.show()

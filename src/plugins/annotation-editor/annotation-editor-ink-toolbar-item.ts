@@ -1,7 +1,7 @@
 import { AnnotationEditorParamsType, AnnotationEditorType } from '@/pdfjs'
-import { AnnotationBase } from './annotation-base'
+import { AnnotationEditorBaseToolbarItem } from './annotation-editor-base-toolbar-item'
 
-export class AnnotationInk extends AnnotationBase {
+export class AnnotationEditorInkToolbarItem extends AnnotationEditorBaseToolbarItem {
   protected value = AnnotationEditorType.INK
 
   protected buildAnnotationBar() {

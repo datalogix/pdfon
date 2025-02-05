@@ -1,8 +1,8 @@
 import { AnnotationEditorParamsType, AnnotationEditorType, ColorPicker } from '@/pdfjs'
 import { createElement } from '@/utils'
-import { AnnotationBase } from './annotation-base'
+import { AnnotationEditorBaseToolbarItem } from './annotation-editor-base-toolbar-item'
 
-export class AnnotationHighlight extends AnnotationBase {
+export class AnnotationEditorHighlightToolbarItem extends AnnotationEditorBaseToolbarItem {
   protected value = AnnotationEditorType.HIGHLIGHT
 
   protected buildAnnotationBar() {

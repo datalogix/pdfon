@@ -6,7 +6,6 @@ export class LayerBuildersManager extends Manager {
     layers.CanvasLayerBuilder,
     layers.TextLayerBuilder,
     layers.AnnotationLayerBuilder,
-    layers.AnnotationEditorLayerBuilder,
     layers.XfaLayerBuilder,
     layers.StructTreeLayerBuilder,
   ])

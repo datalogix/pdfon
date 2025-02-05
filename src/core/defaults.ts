@@ -2,6 +2,7 @@ import * as plugins from '@/plugins'
 import * as toolbar from '@/toolbar'
 
 export const DEFAULT_PLUGINS: plugins.PluginType[] = [
+  plugins.AnnotationEditorPlugin,
   plugins.BookmarkPlugin,
   plugins.CopyPlugin,
   plugins.CursorPlugin,
@@ -30,14 +31,11 @@ export const DEFAULT_PLUGINS: plugins.PluginType[] = [
 export const DEFAULT_TOOLBAR = [
   'sidebar divider find divider paginate',
   'zoom-out zoom-in zoom-select',
-  'annotation divider menu',
+  'annotation-editor-group divider menu',
 ]
 
 export const DEFAULT_TOOLBAR_ITEMS = new Map<string, toolbar.ToolbarItemType>([
   ['divider', toolbar.Divider],
-
-  // annotation
-  ['annotation', toolbar.Annotation],
 
   // pagination
   ['current-page', toolbar.CurrentPage],
@@ -70,7 +68,7 @@ export const DEFAULT_TOOLBAR_ITEMS = new Map<string, toolbar.ToolbarItemType>([
   ['zoom-out', toolbar.ZoomOut],
   ['zoom-select', toolbar.ZoomSelect],
 
-  // ui
+  // menu
   ['menu', toolbar.Menu],
 ])
 

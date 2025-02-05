@@ -1,0 +1,11 @@
+.toolbar-item-annotationeditorink > button:before {
+  @apply i-ph:pen-thin;
+}
+
+.toolbar-item-annotationeditorfreetext > button:before {
+  @apply i-ph:text;
+}
+
+.toolbar-item-annotationeditorhighlight > button:before {
+  @apply i-material-symbols:format-ink-highlighter-outline
+}

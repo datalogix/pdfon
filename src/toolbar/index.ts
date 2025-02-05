@@ -6,7 +6,6 @@ export * from './toolbar-menu'
 export * from './toolbar'
 
 // items
-export * from './annotation'
 export * from './divider'
 export * from './menu'
 export * from './pagination'

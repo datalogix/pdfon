@@ -1,16 +1,4 @@
-.toolbar-item-annotationink > button:before {
-  @apply i-ph:pen-thin;
-}
-
-.toolbar-item-annotationfreetext > button:before {
-  @apply i-ph:text;
-}
-
-.toolbar-item-annotationhighlight > button:before {
-  @apply i-material-symbols:format-ink-highlighter-outline
-}
-
-.annotation-bar {
+.annotation-editor-bar {
   @apply
     hidden
     border
@@ -30,7 +18,7 @@
     space-y-2
   ;
 
-  &.annotation-bar-open {
+  &.annotation-editor-bar-open {
     @apply
       block
     ;

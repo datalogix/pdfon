@@ -1,12 +1,12 @@
 import { type Toolbar, ToolbarItem } from '@/toolbar'
-import { AnnotationFreeText } from './annotation-free-text'
-import { AnnotationHighlight } from './annotation-highlight'
-import { AnnotationInk } from './annotation-ink'
+import { AnnotationEditorFreeTextToolbarItem } from './annotation-editor-free-text-toolbar-item'
+import { AnnotationEditorHighlightToolbarItem } from './annotation-editor-highlight-toolbar-item'
+import { AnnotationEditorInkToolbarItem } from './annotation-editor-ink-toolbar-item'
 
-export class Annotation extends ToolbarItem {
-  protected freeText = new AnnotationFreeText()
-  protected highlight = new AnnotationHighlight()
-  protected ink = new AnnotationInk()
+export class AnnotationEditorGroupToolbarItem extends ToolbarItem {
+  protected freeText = new AnnotationEditorFreeTextToolbarItem()
+  protected highlight = new AnnotationEditorHighlightToolbarItem()
+  protected ink = new AnnotationEditorInkToolbarItem()
 
   setToolbar(toolbar: Toolbar) {
     super.setToolbar(toolbar)

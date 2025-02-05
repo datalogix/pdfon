@@ -1,3 +1,4 @@
+export * from './annotation-editor'
 export * from './bookmark'
 export * from './copy'
 export * from './cursor'
