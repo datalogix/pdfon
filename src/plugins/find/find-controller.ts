@@ -1,4 +1,4 @@
-import { scrollIntoView } from '@/utils'
+import { scrollIntoView, serialize } from '@/utils'
 import { Dispatcher } from '@/bus'
 import type { ViewerType } from '@/viewer'
 import { getOriginalIndex, convertToRegExpString, isEntireWord, normalize } from './helpers'
@@ -322,7 +322,7 @@ export class FindController extends Dispatcher {
       if (newQuery !== prevQuery) {
         return true
       }
-    } else if (JSON.stringify(newQuery) !== JSON.stringify(prevQuery)) {
+    } else if (serialize(newQuery) !== serialize(prevQuery)) {
       return true
     }
 

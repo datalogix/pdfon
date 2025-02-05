@@ -1,5 +1,6 @@
 import type { InitializerOptions } from '@/viewer'
 import { name } from '../../../package.json'
+import { deserialize, serialize } from '@/utils'
 
 export class StorageService<TDatabase extends Record<string, any> = InitializerOptions> {
   private database: TDatabase = {} as TDatabase
@@ -14,12 +15,12 @@ export class StorageService<TDatabase extends Record<string, any> = InitializerO
   }
 
   private write() {
-    this.driver.setItem(this.key, JSON.stringify(this.database))
+    this.driver.setItem(this.key, serialize(this.database))
   }
 
   setKey(fingerprint: string, prefix: string = name) {
     this.key = `${prefix}-${fingerprint}`
-    this.database = JSON.parse(this.driver.getItem(this.key) || '{}')
+    this.database = deserialize(this.driver.getItem(this.key) ?? '{}')
   }
 
   all() {

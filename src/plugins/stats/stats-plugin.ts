@@ -36,8 +36,10 @@ export class StatsPlugin extends Plugin<StatsPluginParams> {
     this.on('pagesloaded', () => this._statsTracker?.start())
 
     this.on('storageinitialized', () => {
+      const pageViews = this.storage?.get('page-views', new Map())
+
       this.dispatch('statsload', {
-        pagesViews: new Map(JSON.parse(this.storage?.get('page-views', '[]'))),
+        pagesViews: typeof pageViews === 'string' ? new Map(JSON.parse(pageViews)) : pageViews,
         time: parseInt(this.storage?.get('usage-time', 0), 0),
       })
     })
@@ -50,7 +52,7 @@ export class StatsPlugin extends Plugin<StatsPluginParams> {
     })
 
     this.on('statsupdate', ({ pagesViews, time }) => {
-      this.storage?.set('page-views', JSON.stringify(Array.from(pagesViews.entries())))
+      this.storage?.set('page-views', pagesViews)
       this.storage?.set('usage-time', time)
 
       this.informationManager?.add({
