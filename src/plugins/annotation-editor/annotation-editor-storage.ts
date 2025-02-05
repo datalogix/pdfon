@@ -24,7 +24,7 @@ export class AnnotationEditorStorage extends Dispatcher {
     })
 
     this.on('annotationeditorlayerbuilderrender', ({ source }) => {
-      this.addEditors(source)
+      this.addEditors(source.annotationEditorLayer)
     })
 
     let i: NodeJS.Timeout
@@ -47,7 +47,6 @@ export class AnnotationEditorStorage extends Dispatcher {
   }
 
   save() {
-    console.log('save')
     if (!this.pdfDocument) return
 
     this.storage?.set('annotation-editors', this.pdfDocument.annotationStorage.serializable.map)
