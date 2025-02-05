@@ -2,9 +2,9 @@ import { AnnotationEditorType } from '@/pdfjs'
 import { PresentationModeState } from '@/enums'
 import { Plugin, type ToolbarItemType } from '../plugin'
 import { HandTool } from './hand-tool'
-import { CursorHand } from './cursor-hand'
 import { CursorInitializer } from './cursor-initializer'
-import { CursorSelect } from './cursor-select'
+import { CursorHandToolbarItem } from './cursor-hand-toolbar-item'
+import { CursorSelectToolbarItem } from './cursor-select-toolbar-item'
 
 export enum CursorTool {
   SELECT = 0,
@@ -18,8 +18,8 @@ export type CursorPluginParams = {
 export class CursorPlugin extends Plugin<CursorPluginParams> {
   protected getToolbarItems() {
     return new Map<string, ToolbarItemType>([
-      ['cursor-hand', CursorHand],
-      ['cursor-select', CursorSelect],
+      ['cursor-hand', CursorHandToolbarItem],
+      ['cursor-select', CursorSelectToolbarItem],
     ])
   }
 

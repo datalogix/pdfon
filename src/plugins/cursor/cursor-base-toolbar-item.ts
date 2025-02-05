@@ -1,7 +1,7 @@
-import { CursorTool, type CursorPlugin } from '@/plugins'
 import { ToolbarAction } from '@/toolbar'
+import { type CursorPlugin, CursorTool } from './cursor-plugin'
 
-export abstract class CursorBase extends ToolbarAction {
+export abstract class CursorBaseToolbarItem extends ToolbarAction {
   protected abstract value: CursorTool
 
   get current() {
@@ -18,7 +18,9 @@ export abstract class CursorBase extends ToolbarAction {
 
   protected init() {
     this.on('cursortoolchanged', ({ disabled }) => {
-      if (!disabled) this.markAsActivated()
+      if (!disabled) {
+        this.markAsActivated()
+      }
     })
   }
 
