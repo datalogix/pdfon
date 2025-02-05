@@ -20,8 +20,13 @@ export abstract class ToolbarActionToggle extends ToolbarAction {
     return this._opened
   }
 
-  abstract open(): void
-  abstract close(): void
+  open() {
+    //
+  }
+
+  close() {
+    //
+  }
 
   protected execute() {
     this.opened = !this.opened
