@@ -1,6 +1,54 @@
 # Changelog
 
 
+## v0.0.6
+
+[compare changes](https://github.com/datalogix/pdfon/compare/v0.0.5...v0.0.6)
+
+### 🚀 Enhancements
+
+- Add annotations bar ([3e1eaa8](https://github.com/datalogix/pdfon/commit/3e1eaa8))
+- Move annotation editor to plugin ([814ed2c](https://github.com/datalogix/pdfon/commit/814ed2c))
+- Use custom serializer ([45371bb](https://github.com/datalogix/pdfon/commit/45371bb))
+- Add close plugin ([2a80760](https://github.com/datalogix/pdfon/commit/2a80760))
+- Support async toolbar items ([7d637d1](https://github.com/datalogix/pdfon/commit/7d637d1))
+
+### 🩹 Fixes
+
+- Annotation editor images ([582ed4d](https://github.com/datalogix/pdfon/commit/582ed4d))
+- Activated find bar ([984c88d](https://github.com/datalogix/pdfon/commit/984c88d))
+- When changing the rotation also use the parameter used in the pdf.js core ([2dd9564](https://github.com/datalogix/pdfon/commit/2dd9564))
+- Annotation editor storage ([eb7822e](https://github.com/datalogix/pdfon/commit/eb7822e))
+- Annotation editor storage ([44acfd7](https://github.com/datalogix/pdfon/commit/44acfd7))
+- Annotation editor toolbar ([f4d1bb2](https://github.com/datalogix/pdfon/commit/f4d1bb2))
+- Prevent having duplicate divisors or at the beginning and end of groups ([175fd98](https://github.com/datalogix/pdfon/commit/175fd98))
+
+### 💅 Refactors
+
+- Cursor file names ([4bfa053](https://github.com/datalogix/pdfon/commit/4bfa053))
+
+### 📦 Build
+
+- Usar a versão especifica do pdf.js ([4e29185](https://github.com/datalogix/pdfon/commit/4e29185))
+- Use pnpm 9 ([597590c](https://github.com/datalogix/pdfon/commit/597590c))
+
+### 🏡 Chore
+
+- Typo ([8640b3c](https://github.com/datalogix/pdfon/commit/8640b3c))
+- Formatting ([54101d6](https://github.com/datalogix/pdfon/commit/54101d6))
+- Update package manager ([783aad6](https://github.com/datalogix/pdfon/commit/783aad6))
+- Update deps ([20cb9a6](https://github.com/datalogix/pdfon/commit/20cb9a6))
+- Update deps ([d525e12](https://github.com/datalogix/pdfon/commit/d525e12))
+- Use npm temporality ([977d5f1](https://github.com/datalogix/pdfon/commit/977d5f1))
+- Remove netlify.toml ([e8dc2ac](https://github.com/datalogix/pdfon/commit/e8dc2ac))
+- Formatting ([7792a9e](https://github.com/datalogix/pdfon/commit/7792a9e))
+- Typo ([dec37de](https://github.com/datalogix/pdfon/commit/dec37de))
+- Update deps ([389048a](https://github.com/datalogix/pdfon/commit/389048a))
+
+### ❤️ Contributors
+
+- Ricardo Gobbo De Souza ([@ricardogobbosouza](http://github.com/ricardogobbosouza))
+
 ## v0.0.5
 
 [compare changes](https://github.com/datalogix/pdfon/compare/v0.0.4...v0.0.5)
