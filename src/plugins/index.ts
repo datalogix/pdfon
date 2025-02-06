@@ -1,5 +1,6 @@
 export * from './annotation-editor'
 export * from './bookmark'
+export * from './close'
 export * from './copy'
 export * from './cursor'
 export * from './download'

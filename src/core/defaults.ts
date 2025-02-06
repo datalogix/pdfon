@@ -4,6 +4,7 @@ import * as toolbar from '@/toolbar'
 export const DEFAULT_PLUGINS: plugins.PluginType[] = [
   plugins.AnnotationEditorPlugin,
   plugins.BookmarkPlugin,
+  plugins.ClosePlugin,
   plugins.CopyPlugin,
   plugins.CursorPlugin,
   plugins.DownloadPlugin,
@@ -31,7 +32,7 @@ export const DEFAULT_PLUGINS: plugins.PluginType[] = [
 export const DEFAULT_TOOLBAR = [
   'sidebar divider find divider paginate',
   'zoom-out zoom-in zoom-select',
-  'annotation-editor-group divider menu',
+  'annotation-editor-group divider menu divider close',
 ]
 
 export const DEFAULT_TOOLBAR_ITEMS = new Map<string, toolbar.ToolbarItemType>([
