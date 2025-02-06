@@ -5,25 +5,25 @@ import { AnnotationEditorBaseToolbarItem } from './annotation-editor-base-toolba
 export class AnnotationEditorHighlightToolbarItem extends AnnotationEditorBaseToolbarItem {
   protected value = AnnotationEditorType.HIGHLIGHT
 
-  protected buildAnnotationBar() {
+  protected buildAnnotationEditorBar() {
     const colorField = this.buildField({
-      label: this.l10n.get('annotation.highlight.color'),
+      label: this.l10n.get('annotation-editor.highlight.color'),
       input: createElement('div', 'colorPicker'),
     })
 
     const thicknessField = this.buildField({
-      label: this.l10n.get('annotation.highlight.thickness'),
+      label: this.l10n.get('annotation-editor.highlight.thickness'),
       inputProps: { type: 'range', value: 12, min: 8, max: 24, step: 1 },
       annotationEditorParamsType: AnnotationEditorParamsType.HIGHLIGHT_THICKNESS,
     })
 
     const showAllField = this.buildField({
-      label: this.l10n.get('annotation.highlight.show-all'),
+      label: this.l10n.get('annotation-editor.highlight.show-all'),
       inputProps: { type: 'checkbox', checked: true, className: 'switch' },
       annotationEditorParamsType: AnnotationEditorParamsType.HIGHLIGHT_SHOW_ALL,
     })
 
-    this.annotationBar.append(
+    this.annotationEditorBar.append(
       colorField.container,
       thicknessField.container,
       showAllField.container,

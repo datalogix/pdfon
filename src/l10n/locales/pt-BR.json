@@ -60,7 +60,7 @@
     },
     "currentpage": {
       "label": "Pagina atual",
-      "title": "ágina atual (ver URL da página atual)"
+      "title": "Página atual (ver URL da página atual)"
     },
     "firstpage": {
       "label": "Ir para a primeira página",
@@ -136,17 +136,21 @@
       "label": "Recursos",
       "title": "Recursos"
     },
-    "annotationfreetext": {
+    "annotationeditorfreetext": {
       "label": "Texto",
       "title": "Texto"
     },
-    "annotationhighlight": {
+    "annotationeditorhighlight": {
       "label": "Destaque",
       "title": "Destaque"
     },
-    "annotationink": {
+    "annotationeditorink": {
       "label": "Desenho",
       "title": "Desenho"
+    },
+    "close": {
+      "label": "Fechar",
+      "title": "Fechar"
     }
   },
   "sidebar": {
@@ -245,7 +249,7 @@
     "finish": "Inicializando...",
     "update": "Carregando... {{ percentage }}"
   },
-  "annotation": {
+  "annotation-editor": {
     "free-text": {
       "color": "Cor",
       "size": "Tamanho"
@@ -260,5 +264,8 @@
       "thickness": "Espessura",
       "show-all": "Mostrar todos"
     }
+  },
+  "close": {
+    "confirm": "Deseja realmente sair?"
   }
 }

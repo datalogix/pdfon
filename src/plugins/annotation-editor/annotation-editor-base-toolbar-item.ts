@@ -4,7 +4,7 @@ import { createElement } from '@/utils'
 
 export abstract class AnnotationEditorBaseToolbarItem extends ToolbarActionToggle {
   protected abstract value: number
-  protected annotationBar = createElement('div', 'annotation-editor-bar')
+  protected annotationEditorBar = createElement('div', 'annotation-editor-bar')
 
   get enabled() {
     return !!this.viewer.annotationEditorUIManager
@@ -31,19 +31,19 @@ export abstract class AnnotationEditorBaseToolbarItem extends ToolbarActionToggl
       this.markAsActivated()
 
       if (mode === this.value) {
-        this.annotationBar.classList.add('annotation-editor-bar-open')
+        this.annotationEditorBar.classList.add('annotation-editor-bar-open')
         this.opened = true
       } else {
-        this.annotationBar.classList.remove('annotation-editor-bar-open')
+        this.annotationEditorBar.classList.remove('annotation-editor-bar-open')
         this.opened = false
       }
     })
 
-    this.container.appendChild(this.annotationBar)
-    this.buildAnnotationBar()
+    this.container.appendChild(this.annotationEditorBar)
+    this.buildAnnotationEditorBar()
   }
 
-  protected abstract buildAnnotationBar(): void
+  protected abstract buildAnnotationEditorBar(): void
 
   protected buildField<T extends HTMLElement = HTMLInputElement>({ label, input, inputProps, annotationEditorParamsType }: {
     label: string
