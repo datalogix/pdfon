@@ -43,7 +43,7 @@ export class AnnotationEditorStorage extends Dispatcher {
   load() {
     if (!this.storage) return
 
-    this.annotationEditors = this.storage.get('annotation-editors')
+    this.annotationEditors = this.storage.get('annotation-editors', new Map())
   }
 
   save() {
@@ -53,11 +53,11 @@ export class AnnotationEditorStorage extends Dispatcher {
   }
 
   getByPage(pageIndex: number) {
-    const items: Map<string, AnnotationEditor> = new Map()
+    const items: Map<string, Record<string, any>> = new Map()
 
-    this.annotationEditors.entries().forEach(([key, annotationEditor]) => {
-      if (annotationEditor.pageIndex === pageIndex) {
-        items.set(key, annotationEditor)
+    this.annotationEditors.entries().forEach(([key, object]) => {
+      if (object.pageIndex === pageIndex) {
+        items.set(key, object)
       }
     })
 
@@ -66,9 +66,15 @@ export class AnnotationEditorStorage extends Dispatcher {
 
   addEditors(layer: AnnotationEditorLayer) {
     this.getByPage(layer.pageIndex).forEach(async (annotation) => {
+      // Fix annotation free HIGHLIGHT
+      if (annotation.annotationType === AnnotationEditorType.HIGHLIGHT && !annotation.quadPoints) {
+        annotation.inkLists = annotation.outlines.points
+      }
+
       const editor = await (layer.deserialize(annotation) as any as Promise<AnnotationEditor>)
       layer.addOrRebuild(editor)
-      editor.enableEditing()
+      editor.disableEditing()
+      editor.unselect()
     })
   }
 
