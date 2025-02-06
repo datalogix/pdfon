@@ -15,6 +15,12 @@ export abstract class AnnotationEditorBaseToolbarItem extends ToolbarActionToggl
   }
 
   protected init() {
+    this.on('documentdestroy', () => {
+      this.dispatch('switchannotationeditormode', {
+        mode: AnnotationEditorType.NONE,
+      })
+    })
+
     this.on(`${this.name}toggle`, () => {
       this.dispatch('switchannotationeditormode', {
         mode: this.opened ? this.value : AnnotationEditorType.NONE,
