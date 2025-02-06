@@ -44,13 +44,26 @@ export class Toolbar extends Dispatcher {
     return toolbarConfig.map((groupConfig) => {
       const items = new Set<ToolbarItem>()
       const validKeys = this.getValidNames(groupConfig)
-      validKeys.forEach(name => items.add(this.resolveToolbarItem(name)!))
+
+      let prev: string
+
+      validKeys.forEach((name) => {
+        if (name === 'divider' && (!prev || prev === name)) {
+          return
+        }
+
+        prev = name
+        items.add(this.resolveToolbarItem(name)!)
+      })
+
       return items
     })
   }
 
   protected getValidNames(groupConfig: string) {
-    return groupConfig.split(' ').filter(name => this.list.has(name))
+    return groupConfig.split(' ')
+      .filter(name => this.list.has(name))
+      .filter((name, index, list) => !((index === 0 || (index + 1 >= list.length)) && name === 'divider'))
   }
 
   resolveToolbarItem(name: string) {
