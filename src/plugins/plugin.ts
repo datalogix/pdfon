@@ -120,7 +120,7 @@ export abstract class Plugin<T = any> extends Dispatcher {
 
   }
 
-  protected getToolbarItems(): Map<string, ToolbarItemType> {
+  protected getToolbarItems(): Map<string, ToolbarItemType> | Promise<Map<string, ToolbarItemType>> {
     return new Map()
   }
 
@@ -133,7 +133,7 @@ export abstract class Plugin<T = any> extends Dispatcher {
   }
 
   async initialize() {
-    for (const [name, item] of this.getToolbarItems()) {
+    for (const [name, item] of await this.getToolbarItems()) {
       this.toolbar.register(name, item)
     }
 
