@@ -15,7 +15,9 @@ export class BookManager extends Dispatcher {
   }
 
   get available() {
-    return this.all.filter(book => book.id !== this.current?.id)
+    return this.all
+      .filter(book => book.id !== this.current?.id)
+      .filter(book => book.src !== undefined)
   }
 
   get all() {
