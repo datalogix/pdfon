@@ -66,6 +66,7 @@ export class TourGuidePlugin extends Plugin<TourGuidePluginParams> {
       steps: [this.firstStep(), this.lastStep()],
       prevLabel: this.l10n.get('tour-guide.prev'),
       nextLabel: this.l10n.get('tour-guide.next'),
+      finishLabel: this.l10n.get('tour-guide.finish'),
       dialogMaxWidth: 380,
     })
 

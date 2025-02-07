@@ -289,10 +289,11 @@
   "tour-guide": {
     "prev": "Anterior",
     "next": "Próximo",
+    "finish": "Finalizar",
     "dont-show-again": "Não mostrar novamente",
     "welcome": {
       "title": "👋 Bem-vindo",
-      "content": "<p>Este é um tour simplificado para mostrar um pouco do que ele pode fazer.</p><p class='tour-guide-text-small'>Use seu teclado ou clique no botão next para começar.</p>"
+      "content": "<p>Este é um tour simplificado para mostrar um pouco do que ele pode fazer.</p><p class='tour-guide-text-small'>Use seu teclado ou clique no botão próximo para começar.</p>"
     },
     "thanks": {
       "title": "Isso é tudo",
