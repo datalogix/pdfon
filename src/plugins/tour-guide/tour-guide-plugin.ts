@@ -62,7 +62,6 @@ export class TourGuidePlugin extends Plugin<TourGuidePluginParams> {
       showStepDots: false,
       targetPadding: 0,
       completeOnFinish: false,
-      dialogZ: 999999,
       steps: [this.firstStep(), this.lastStep()],
       prevLabel: this.l10n.get('tour-guide.prev'),
       nextLabel: this.l10n.get('tour-guide.next'),

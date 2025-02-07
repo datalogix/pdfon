@@ -1,3 +1,11 @@
+.tg-backdrop {
+  @apply z-999999999!;
+}
+
+.tg-dialog {
+  @apply z-9999999999!;
+}
+
 .tour-guide-content {
   p {
     @apply
