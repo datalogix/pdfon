@@ -51,6 +51,5 @@
     "vite": "^6.1.0",
     "vite-plugin-dts": "^4.5.0",
     "vite-plugin-eslint2": "^5.0.3"
-  },
-  "packageManager": "pnpm@10.2.0"
+  }
 }
