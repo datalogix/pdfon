@@ -98,7 +98,7 @@ export class EventBus<
   }
 }
 
-export type ListenerCallback = (...data: any) => Promise<void> | void
+export type ListenerCallback = (...data: any) => Promise<any> | any
 export type ListenerOptions = {
   external?: boolean
   once?: boolean

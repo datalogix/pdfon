@@ -9,15 +9,18 @@ export class PresentationPlugin extends Plugin {
     ])
   }
 
-  private presentationService?: PresentationService
+  private _presentationService?: PresentationService
+
+  get presentationService() {
+    return this._presentationService
+  }
 
   protected init() {
-    this.presentationService = new PresentationService(this.viewer)
-    this.on('presentationrequest', () => this.presentationService?.request())
+    this._presentationService = new PresentationService(this.viewer)
   }
 
   protected destroy() {
-    this.presentationService?.reset()
-    this.presentationService = undefined
+    this._presentationService?.reset()
+    this._presentationService = undefined
   }
 }

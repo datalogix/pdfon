@@ -1,13 +1,13 @@
 import * as pdfjs from '@/pdfjs'
 import { capitalize } from '@/utils'
-import { version } from '../../package.json'
+import { name, version } from '../../package.json'
 
 export class Logger {
   log(type: 'info' | 'warn' | 'error' = 'info', message: string, info?: any, header?: boolean) {
     const messages = []
 
     if (header) {
-      messages.push(`(PdfOn: ${version || '?'} - PDF.js: ${pdfjs.version || '?'} [${pdfjs.build || '?'}])`)
+      messages.push(`(${name}: ${version || '?'} - PDF.js: ${pdfjs.version || '?'} [${pdfjs.build || '?'}])`)
     }
 
     messages.push(message)

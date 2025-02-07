@@ -1,6 +1,6 @@
 import type { InitializerOptions } from '@/viewer'
-import { name } from '../../../package.json'
 import { deserialize, serialize } from '@/utils'
+import { name } from '../../../package.json'
 
 export class StorageService<TDatabase extends Record<string, any> = InitializerOptions> {
   private database: TDatabase = {} as TDatabase

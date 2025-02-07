@@ -2,7 +2,7 @@ import { createElement } from '@/utils'
 import { ToolbarItem } from './toolbar-item'
 
 export abstract class ToolbarAction extends ToolbarItem {
-  protected button?: HTMLButtonElement
+  private _button?: HTMLButtonElement
   protected onClickListener = this.onClick.bind(this)
 
   protected abstract execute(): Promise<void> | void
@@ -10,14 +10,14 @@ export abstract class ToolbarAction extends ToolbarItem {
   async initialize() {
     if (this.initialized) return
 
-    this.button = createElement('button', {
+    this._button = createElement('button', {
       type: 'button',
       innerHTML: `<span>${this.l10n.get(`toolbar.${this.name}.label`)}</span>`,
       title: this.l10n.get(`toolbar.${this.name}.title`),
     })
 
     this.container.classList.add('toolbar-action')
-    this.container.appendChild(this.button)
+    this.container.appendChild(this._button)
     this.disable()
 
     await super.initialize()
@@ -38,8 +38,8 @@ export abstract class ToolbarAction extends ToolbarItem {
 
     this.disable()
 
-    this.button?.remove()
-    this.button = undefined
+    this._button?.remove()
+    this._button = undefined
 
     await super.terminate()
   }
@@ -52,18 +52,22 @@ export abstract class ToolbarAction extends ToolbarItem {
     return false
   }
 
-  enable() {
-    if (!this.button) return
+  get button() {
+    return this._button
+  }
 
-    this.button.addEventListener('click', this.onClickListener)
-    this.button.disabled = false
+  enable() {
+    if (!this._button) return
+
+    this._button.addEventListener('click', this.onClickListener)
+    this._button.disabled = false
   }
 
   disable() {
-    if (!this.button) return
+    if (!this._button) return
 
-    this.button.removeEventListener('click', this.onClickListener)
-    this.button.disabled = true
+    this._button.removeEventListener('click', this.onClickListener)
+    this._button.disabled = true
   }
 
   toggle(value = this.enabled) {
@@ -76,9 +80,9 @@ export abstract class ToolbarAction extends ToolbarItem {
 
   protected markAsActivated(value = this.activated) {
     if (value) {
-      this.button?.classList.add('active')
+      this._button?.classList.add('active')
     } else {
-      this.button?.classList.remove('active')
+      this._button?.classList.remove('active')
     }
   }
 
