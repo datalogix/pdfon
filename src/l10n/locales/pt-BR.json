@@ -12,7 +12,8 @@
   "toolbar": {
     "menu": {
       "label": "Ferramentas",
-      "title": "Ferramentas"
+      "title": "Ferramentas",
+      "help": "Abre um menu com várias funcionalidades adicionais."
     },
     "spreadeven": {
       "label": "Estender pares",
@@ -72,23 +73,29 @@
     },
     "previouspage": {
       "label": "Anterior",
-      "title": "Página anterior"
+      "title": "Página anterior",
+      "help": "Volta para a página anterior."
     },
     "nextpage": {
       "label": "Próxima",
-      "title": "Próxima página"
+      "title": "Próxima página",
+      "help": "Avança para a próxima página."
     },
     "inputpage": {
-      "title": "Página",
-      "of-pages": "de {{ pagesCount }}"
+      "label": "Página atual e total de páginas",
+      "title": "Página atual e total de páginas",
+      "of-pages": "de {{ pagesCount }}",
+      "help": "Digite o número da página desejada para acessar diretamente."
     },
     "zoomout": {
       "label": "Reduzir",
-      "title": "Reduzir"
+      "title": "Reduzir",
+      "help": "Ajuste o tamanho da visualização, reduzindo a página."
     },
     "zoomin": {
       "label": "Ampliar",
-      "title": "Ampliar"
+      "title": "Ampliar",
+      "help": "Ajuste o tamanho da visualização, ampliando a página."
     },
     "zoomselect": {
       "title": "Zoom",
@@ -98,7 +105,8 @@
         "auto": "Zoom automático",
         "actual": "Tamanho real",
         "percent": "{{ value }}%"
-      }
+      },
+      "help": "Ajuste o tamanho da visualização, selecionando uma das opções."
     },
     "presentation": {
       "label": "Modo de apresentação",
@@ -118,11 +126,13 @@
     },
     "find": {
       "label": "Procurar",
-      "title": "Procurar no documento"
+      "title": "Procurar no documento",
+      "help": "Permite buscar palavras ou trechos específicos no conteúdo das páginas."
     },
     "sidebar": {
       "label": "Exibir/ocultar painel",
-      "title": "Exibir/ocultar painel lateral"
+      "title": "Exibir/ocultar painel lateral",
+      "help": "Clique aqui para visualizar diversas funcionalidades disponíveis."
     },
     "information": {
       "label": "Informações",
@@ -138,19 +148,27 @@
     },
     "annotationeditorfreetext": {
       "label": "Texto",
-      "title": "Texto"
+      "title": "Texto",
+      "help": "Escreva comentários ou observações diretamente nas páginas."
     },
     "annotationeditorhighlight": {
       "label": "Destaque",
-      "title": "Destaque"
+      "title": "Destaque",
+      "help": "Marque trechos importantes para facilitar futuras consultas."
     },
     "annotationeditorink": {
       "label": "Desenho",
-      "title": "Desenho"
+      "title": "Desenho",
+      "help": "Permite desenhar livremente sobre as páginas."
     },
     "close": {
       "label": "Fechar",
-      "title": "Fechar"
+      "title": "Fechar",
+      "help": "Use esse botão para voltar."
+    },
+    "tourguide": {
+      "label": "Guia",
+      "title": "Guia"
     }
   },
   "sidebar": {
@@ -267,5 +285,18 @@
   },
   "close": {
     "confirm": "Deseja realmente sair?"
+  },
+  "tour-guide": {
+    "prev": "Anterior",
+    "next": "Próximo",
+    "dont-show-again": "Não mostrar novamente",
+    "welcome": {
+      "title": "👋 Bem-vindo",
+      "content": "<p>Este é um tour simplificado para mostrar um pouco do que ele pode fazer.</p><p class='tour-guide-text-small'>Use seu teclado ou clique no botão next para começar.</p>"
+    },
+    "thanks": {
+      "title": "Isso é tudo",
+      "content": "<p>Parece que você está pronto para começar 🎉</p><p class='tour-guide-text-small'>Clique em qualquer lugar para sair do tour.</p>"
+    }
   }
 }

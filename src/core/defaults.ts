@@ -25,6 +25,7 @@ export const DEFAULT_PLUGINS: plugins.PluginType[] = [
   plugins.StatsPlugin,
   plugins.StoragePlugin,
   plugins.ThumbnailPlugin,
+  plugins.TourGuidePlugin,
   plugins.WatermarkPlugin,
   plugins.ZoomPlugin,
 ]
@@ -32,7 +33,7 @@ export const DEFAULT_PLUGINS: plugins.PluginType[] = [
 export const DEFAULT_TOOLBAR = [
   'sidebar divider find divider paginate',
   'zoom-out zoom-in zoom-select',
-  'annotation-editor-group divider menu divider close',
+  'annotation-editor-group divider tour-guide divider menu divider close',
 ]
 
 export const DEFAULT_TOOLBAR_ITEMS = new Map<string, toolbar.ToolbarItemType>([

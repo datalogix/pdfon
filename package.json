@@ -29,6 +29,7 @@
     "test": "pnpm lint"
   },
   "dependencies": {
+    "@sjmc11/tourguidejs": "^0.0.19",
     "@unocss/reset": "^65.4.3",
     "i18next": "^24.2.2",
     "i18next-browser-languagedetector": "^8.0.2",

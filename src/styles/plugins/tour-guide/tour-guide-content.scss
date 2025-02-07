@@ -1,0 +1,30 @@
+.tour-guide-content {
+  p {
+    @apply
+      mb-4
+    ;
+  }
+
+  .tour-guide-text-small {
+    @apply
+      text-sm
+      opacity-70
+    ;
+  }
+
+  button {
+    @apply
+      mt-6
+      block
+      mx-auto
+      px-3
+      py-2
+      rounded
+      bg-gray-100
+      border
+      text-gray-700
+      text-xs
+      hover:opacity-70
+    ;
+  }
+}
