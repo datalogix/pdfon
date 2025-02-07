@@ -1,6 +1,27 @@
 # Changelog
 
 
+## v0.0.7
+
+[compare changes](https://github.com/datalogix/pdfon/compare/v0.0.6...v0.0.7)
+
+### 🚀 Enhancements
+
+- Add `ToolbarGroup` ([101f643](https://github.com/datalogix/pdfon/commit/101f643))
+- Add TourGuide plugin ([7d25ec3](https://github.com/datalogix/pdfon/commit/7d25ec3))
+
+### 📦 Build
+
+- Remove packageManager ([368751e](https://github.com/datalogix/pdfon/commit/368751e))
+
+### 🏡 Chore
+
+- Formatting ([39faa2a](https://github.com/datalogix/pdfon/commit/39faa2a))
+
+### ❤️ Contributors
+
+- Ricardo Gobbo De Souza ([@ricardogobbosouza](http://github.com/ricardogobbosouza))
+
 ## v0.0.6
 
 [compare changes](https://github.com/datalogix/pdfon/compare/v0.0.5...v0.0.6)

@@ -1,6 +1,6 @@
 {
   "name": "pdfon",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "Modern and extensible PDF viewer library built on PDF.js with interactive features, resource management, and i18n support",
   "repository": "datalogix/pdfon",
   "license": "MIT",
@@ -25,7 +25,7 @@
     "dev": "vite",
     "preview": "pnpm build:demo && vite preview",
     "lint": "eslint",
-    "release": "pnpm build && changelogen --release --push && pnpm publish",
+    "release": "pnpm build && changelogen --release --push && pnpm publish --no-git-checks",
     "test": "pnpm lint"
   },
   "dependencies": {
