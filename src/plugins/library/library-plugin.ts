@@ -37,10 +37,18 @@ export class LibraryPlugin extends Plugin<LibraryPluginParams> {
     })
 
     this.on('book', ({ book, options }) => {
+      this.informationManager?.set([])
+
+      this.on('storagedestroy', () => {
+        this.dispatch('interactionload', { interactions: [] })
+        this.dispatch('resourceload', { resources: [] })
+      }, { once: true })
+
       if (!book) {
-        this.informationManager?.set([])
         return
       }
+
+      this.viewer.openDocument(book.src, book.name, options)
 
       this.on('documentinitialized', async () => {
         const interactions = await resolveValue(book.interactions, book)
@@ -50,8 +58,6 @@ export class LibraryPlugin extends Plugin<LibraryPluginParams> {
         this.dispatch('resourceload', { resources })
         this.dispatch('bookinitialized', { book })
       }, { once: true })
-
-      this.viewer.openDocument(book.src, book.name, options)
 
       const props = ['name', 'sku', 'author', 'description']
 
