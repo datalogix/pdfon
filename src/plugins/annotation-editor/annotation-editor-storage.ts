@@ -18,7 +18,7 @@ export class AnnotationEditorStorage extends Dispatcher {
       this.pdfDocument = pdfDocument
     })
 
-    this.on('storageinitialized', ({ source }) => {
+    this.on('storageinit', ({ source }) => {
       this.storage = source.storage
       this.load()
     })

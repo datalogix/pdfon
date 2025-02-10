@@ -35,7 +35,7 @@ export class StatsPlugin extends Plugin<StatsPluginParams> {
     this.on('documentdestroy', () => this._statsTracker?.stop())
     this.on('pagesloaded', () => this._statsTracker?.start())
 
-    this.on('storageinitialized', () => {
+    this.on('storageinit', () => {
       const pageViews = this.storage?.get('page-views', new Map())
 
       this.dispatch('statsload', {

@@ -37,7 +37,7 @@ export class InteractionPlugin extends Plugin<InteractionPluginParams> {
     this._interactionManager = new InteractionManager(this.eventBus)
 
     this.on('documentdestroy', () => this._interactionManager?.destroy())
-    this.on('storageinitialized', () => this.dispatch('interactionload'))
+    this.on('storageinit', () => this.dispatch('interactionload'))
     this.on('interactionclick', ({ interaction }) => this.setCurrentPage(interaction.page))
 
     this.on('interactionload', ({ interactions }) => {

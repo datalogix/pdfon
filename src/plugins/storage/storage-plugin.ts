@@ -22,11 +22,14 @@ export class StoragePlugin extends Plugin<StoragePluginParams> {
         options?.storagePrefix ?? (await this.params?.prefix),
       )
 
-      this.dispatch('storageinitialized', { storage: this.storage })
+      this.dispatch('storageinit', { storage: this.storage })
     })
 
     this.on('documentdestroy', () => {
+      const storage = this.storage
       this._storage = undefined
+
+      this.dispatch('storagedestroy', { storage })
     })
 
     this.on('storeonevent', params => this.storeOnEvent(params))
