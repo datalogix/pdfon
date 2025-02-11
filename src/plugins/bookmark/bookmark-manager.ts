@@ -1,5 +1,5 @@
 import { Dispatcher, EventBus } from '@/bus'
-import type { IL10n } from '@/l10n'
+import type { Translator } from '@/l10n'
 import type { Bookmark } from './bookmark'
 
 export class BookmarkManager extends Dispatcher {
@@ -7,7 +7,7 @@ export class BookmarkManager extends Dispatcher {
 
   constructor(
     readonly eventBus: EventBus,
-    readonly l10n: IL10n,
+    readonly translator: Translator,
   ) {
     super()
   }
@@ -23,7 +23,7 @@ export class BookmarkManager extends Dispatcher {
   set(bookmarks: Bookmark[]) {
     this.bookmarks.clear()
     bookmarks.forEach(bookmark => this.bookmarks.set(bookmark.page, bookmark))
-    this.dispatch('bookmarks', { bookmarks: this.all })
+    this.dispatch('Bookmarks', { bookmarks: this.all })
   }
 
   merge(bookmarks: Bookmark[]) {
@@ -44,18 +44,18 @@ export class BookmarkManager extends Dispatcher {
     const bookmark = this.get(page)
 
     if (bookmark) {
-      this.dispatch('bookmarkclick', { bookmark })
+      this.dispatch('BookmarkClick', { bookmark })
     }
   }
 
   add(bookmark: Bookmark) {
     this.bookmarks.set(bookmark.page, bookmark)
-    this.dispatch('bookmarkadded', { bookmark })
+    this.dispatch('BookmarkAdded', { bookmark })
   }
 
   toggle(page: number) {
     const bookmark = this.get(page)
-    const placeholder = this.l10n.get('bookmark.add-message', { page })
+    const placeholder = this.translator.translate('add-message', { page })
     const message = window.prompt(
       placeholder,
       bookmark?.message ?? placeholder,
@@ -79,12 +79,12 @@ export class BookmarkManager extends Dispatcher {
       return
     }
 
-    if (!window.confirm(this.l10n.get('bookmark.delete-confirm'))) {
+    if (!window.confirm(this.translator.translate('delete-confirm'))) {
       return
     }
 
     this.bookmarks.delete(page)
-    this.dispatch('bookmarkdeleted', { bookmark })
+    this.dispatch('BookmarkDeleted', { bookmark })
   }
 
   destroy() {

@@ -1,5 +1,5 @@
 import { ToolbarAction } from '@/toolbar'
-import { PresentationPlugin } from './presentation-plugin'
+import type { PresentationPlugin } from './presentation-plugin'
 
 export class PresentationToolbarItem extends ToolbarAction {
   get presentationService() {

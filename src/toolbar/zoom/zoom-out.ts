@@ -7,7 +7,7 @@ export class ZoomOut extends ToolbarAction {
   }
 
   protected init() {
-    this.on('scalechanging', () => this.toggle())
+    this.on('ScaleChanging', () => this.toggle())
   }
 
   protected execute() {

@@ -5,8 +5,12 @@ import type { InformationPlugin } from './information-plugin'
 import type { Information } from './information'
 
 export class InformationToolbarItem extends ToolbarActionToggle {
+  get informationPlugin() {
+    return this.viewer.getLayerProperty<InformationPlugin>('InformationPlugin')!
+  }
+
   get informationManager() {
-    return this.viewer.getLayerProperty<InformationPlugin>('InformationPlugin')?.informationManager
+    return this.informationPlugin.informationManager
   }
 
   get enabled() {
@@ -14,7 +18,7 @@ export class InformationToolbarItem extends ToolbarActionToggle {
   }
 
   protected init() {
-    this.on(['informations', 'informationadded', 'informationdeleted'], () => this.toggle())
+    this.on(['Informations', 'InformationAdded', 'InformationDeleted', 'InformationDestroy'], () => this.toggle())
   }
 
   open() {
@@ -24,7 +28,7 @@ export class InformationToolbarItem extends ToolbarActionToggle {
       .forEach(information => content.appendChild(this.item(information)))
 
     Modal.open(content, {
-      title: this.l10n.get('information.title'),
+      title: this.informationPlugin.translate('title'),
       backdrop: 'overlay',
       onClose: () => this.execute(),
     }).classList.add('information-modal')

@@ -14,22 +14,22 @@ export class AnnotationEditorStorage extends Dispatcher {
   }
 
   private init() {
-    this.on('documentinit', ({ pdfDocument }) => {
+    this.on('DocumentInit', ({ pdfDocument }) => {
       this.pdfDocument = pdfDocument
     })
 
-    this.on('storageinit', ({ source }) => {
+    this.on('StorageInit', ({ source }) => {
       this.storage = source.storage
       this.load()
     })
 
-    this.on('annotationeditorlayerbuilderrender', ({ source }) => {
+    this.on('AnnotationEditorLayerBuilderRender', ({ source }) => {
       this.addEditors(source.annotationEditorLayer)
     })
 
     let i: NodeJS.Timeout
 
-    this.on('switchannotationeditormode', ({ mode }) => {
+    this.on('SwitchAnnotationEditorMode', ({ mode }) => {
       clearInterval(i)
 
       if (mode === AnnotationEditorType.NONE) {

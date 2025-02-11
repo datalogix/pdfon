@@ -9,12 +9,20 @@ export interface IL10n {
   getDirection(): 'ltr' | 'rtl'
 }
 
+export type Translator = {
+  translate: (key: string, options?: object) => string
+}
+
+export type Translatable = {
+  translator: Translator
+}
+
 export class L10n implements IL10n {
   constructor() {
     i18next
       .use(LanguageDetector)
       .init({
-        // debug: true,
+        debug: true,
         fallbackLng: 'pt-BR',
         resources: {
           'pt-BR': {

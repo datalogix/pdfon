@@ -12,23 +12,23 @@ export class ZoomSelect extends ToolbarItem {
 
   protected init() {
     this.select = createElement('select', {
-      title: this.l10n.get('toolbar.zoomselect.title'),
+      title: this.translate('title'),
       oncontextmenu: preventDefault(),
     })
     this.container.appendChild(this.select)
     this.disable()
     this.createOptions()
 
-    this.on('pagesinit', () => {
+    this.on('PagesInit', () => {
       this.selectOption()
       this.enable()
     })
 
-    this.on('pagesdestroy', () => {
+    this.on('PagesDestroy', () => {
       this.disable()
     })
 
-    this.on('scalechanging', () => this.selectOption())
+    this.on('ScaleChanging', () => this.selectOption())
   }
 
   protected destroy() {
@@ -43,23 +43,23 @@ export class ZoomSelect extends ToolbarItem {
     }
 
     const options: Map<string, string> = new Map([
-      [this.l10n.get('toolbar.zoomselect.options.auto'), 'auto'],
-      [this.l10n.get('toolbar.zoomselect.options.actual'), 'page-actual'],
-      [this.l10n.get('toolbar.zoomselect.options.fit'), 'page-fit'],
-      [this.l10n.get('toolbar.zoomselect.options.width'), 'page-width'],
-      [this.l10n.get('toolbar.zoomselect.options.percent', { value: 50 }), '0.5'],
-      [this.l10n.get('toolbar.zoomselect.options.percent', { value: 75 }), '0.75'],
-      [this.l10n.get('toolbar.zoomselect.options.percent', { value: 100 }), '1'],
-      [this.l10n.get('toolbar.zoomselect.options.percent', { value: 125 }), '1.25'],
-      [this.l10n.get('toolbar.zoomselect.options.percent', { value: 150 }), '1.5'],
-      [this.l10n.get('toolbar.zoomselect.options.percent', { value: 200 }), '2'],
-      [this.l10n.get('toolbar.zoomselect.options.percent', { value: 300 }), '3'],
-      [this.l10n.get('toolbar.zoomselect.options.percent', { value: 400 }), '4'],
+      [this.translate('options.auto'), 'auto'],
+      [this.translate('options.actual'), 'page-actual'],
+      [this.translate('options.fit'), 'page-fit'],
+      [this.translate('options.width'), 'page-width'],
+      [this.translate('options.percent', { value: 50 }), '0.5'],
+      [this.translate('options.percent', { value: 75 }), '0.75'],
+      [this.translate('options.percent', { value: 100 }), '1'],
+      [this.translate('options.percent', { value: 125 }), '1.25'],
+      [this.translate('options.percent', { value: 150 }), '1.5'],
+      [this.translate('options.percent', { value: 200 }), '2'],
+      [this.translate('options.percent', { value: 300 }), '3'],
+      [this.translate('options.percent', { value: 400 }), '4'],
     ])
 
     options.forEach((value, text) => this.select?.options.add(createElement('option', { value, text })))
 
-    this.customOption.text = this.l10n.get('toolbar.zoomselect.options.percent', { value: 0 })
+    this.customOption.text = this.translate('options.percent', { value: 0 })
     this.select?.options.add(this.customOption)
   }
 
@@ -78,8 +78,8 @@ export class ZoomSelect extends ToolbarItem {
 
     if (!predefinedValueFound) {
       this.customOption.selected = true
-      this.customOption.text = this.l10n.get(
-        'toolbar.zoomselect.options.percent',
+      this.customOption.text = this.translate(
+        'options.percent',
         { value: (Math.round(this.viewer.currentScale * 10000) / 100) },
       )
     }

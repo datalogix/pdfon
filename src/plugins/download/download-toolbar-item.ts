@@ -3,7 +3,7 @@ import { DownloadPlugin } from './download-plugin'
 
 export class DownloadToolbarItem extends ToolbarAction {
   get downloadPlugin() {
-    return this.viewer.getLayerProperty<DownloadPlugin>('DownloadPlugin')
+    return this.viewer.getLayerProperty<DownloadPlugin>('DownloadPlugin')!
   }
 
   get enabled() {
@@ -11,6 +11,6 @@ export class DownloadToolbarItem extends ToolbarAction {
   }
 
   protected execute() {
-    this.downloadPlugin?.downloadOrSave()
+    this.downloadPlugin.downloadOrSave()
   }
 }

@@ -21,7 +21,7 @@ export abstract class SidebarItem extends Dispatcher {
 
   get name() {
     if (!this._name) {
-      this._name = this.constructor.name.toLowerCase().replace('sidebaritem', '')
+      this._name = this.constructor.name.toLowerCase().replace('SidebarItem'.toLowerCase(), '')
     }
 
     return this._name
@@ -41,10 +41,6 @@ export abstract class SidebarItem extends Dispatcher {
 
   get signal() {
     return this.abortController?.signal
-  }
-
-  get l10n() {
-    return this.sidebarManager!.l10n
   }
 
   abstract build(): Node

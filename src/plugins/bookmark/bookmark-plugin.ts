@@ -28,28 +28,28 @@ export class BookmarkPlugin extends Plugin<BookmarkPluginParams> {
   }
 
   protected init() {
-    this._bookmarkManager = new BookmarkManager(this.eventBus, this.l10n)
+    this._bookmarkManager = new BookmarkManager(this.eventBus, this.translator)
 
-    this.on('documentdestroy', () => this._bookmarkManager?.destroy())
-    this.on('storageinit', () => this.dispatch('bookmarkload'))
-    this.on('bookmarkclick', ({ bookmark }) => this.setCurrentPage(bookmark.page))
+    this.on('DocumentDestroy', () => this._bookmarkManager?.destroy())
+    this.on('StorageInit', () => this.dispatch('BookmarkLoad'))
+    this.on('BookmarkClick', ({ bookmark }) => this.setCurrentPage(bookmark.page))
 
-    this.on('bookmarkload', ({ bookmarks }) => {
+    this.on('BookmarkLoad', ({ bookmarks }) => {
       this._bookmarkManager?.merge(this.storage?.get('bookmarks') ?? [])
       this._bookmarkManager?.merge(bookmarks ?? [])
     })
 
-    this.on(['bookmarks', 'bookmarkupdated'], () => this.storage?.set('bookmarks', this._bookmarkManager?.all))
-    this.on(['bookmarkadded', 'bookmarkdeleted'], () => this.dispatch('bookmarkupdated'))
-    this.on('bookmarkadded', ({ bookmark }) => this.dispatch(`bookmarkadded${bookmark.page}`, { bookmark }))
-    this.on('bookmarkdeleted', ({ bookmark }) => this.dispatch(`bookmarkdeleted${bookmark.page}`, { bookmark }))
+    this.on(['Bookmarks', 'BookmarkUpdated'], () => this.storage?.set('bookmarks', this._bookmarkManager?.all))
+    this.on(['BookmarkAdded', 'BookmarkDeleted'], () => this.dispatch('BookmarkUpdated'))
+    this.on('BookmarkAdded', ({ bookmark }) => this.dispatch(`BookmarkAdded${bookmark.page}`, { bookmark }))
+    this.on('BookmarkDeleted', ({ bookmark }) => this.dispatch(`BookmarkDeleted${bookmark.page}`, { bookmark }))
   }
 
-  protected onLoad(params?: BookmarkPluginParams) {
+  protected onLoad() {
     this.sidebarManager?.add(this.bookmarkSidebarItem)
 
-    if (params?.bookmarks) {
-      this._bookmarkManager?.set(params?.bookmarks)
+    if (this.resolvedParams?.bookmarks) {
+      this._bookmarkManager?.set(this.resolvedParams.bookmarks)
     }
   }
 

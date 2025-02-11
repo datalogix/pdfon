@@ -12,8 +12,8 @@ export abstract class ToolbarAction extends ToolbarItem {
 
     this._button = createElement('button', {
       type: 'button',
-      innerHTML: `<span>${this.l10n.get(`toolbar.${this.name}.label`)}</span>`,
-      title: this.l10n.get(`toolbar.${this.name}.title`),
+      innerHTML: `<span>${this.translate('label')}</span>`,
+      title: this.translate('title'),
     })
 
     this.container.classList.add('toolbar-action')
@@ -22,12 +22,12 @@ export abstract class ToolbarAction extends ToolbarItem {
 
     await super.initialize()
 
-    this.on('pagesinit', () => {
+    this.on('PagesInit', () => {
       this.toggle()
       this.markAsActivated()
     })
 
-    this.on('pagesdestroy', () => {
+    this.on('PagesDestroy', () => {
       this.toggle(false)
       this.markAsActivated(false)
     })

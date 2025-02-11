@@ -5,6 +5,8 @@ import { apiPageLayoutToViewerModes } from '@/utils'
 import type { ViewerType } from '@/viewer'
 import { Scripting } from './scripting'
 
+const UPDATE_FROM_SANDBOX_EVENT_NAME = 'UpdateFromSandbox'.toLowerCase()
+
 export class ScriptingManager extends Dispatcher {
   private closeCapability?: PromiseWithResolvers<void>
   private destroyCapability?: PromiseWithResolvers<void>
@@ -19,8 +21,8 @@ export class ScriptingManager extends Dispatcher {
   constructor(protected readonly viewer: ViewerType) {
     super()
 
-    window.addEventListener('updatefromsandbox', (e) => {
-      this.dispatch('updatefromsandbox', {
+    window.addEventListener(UPDATE_FROM_SANDBOX_EVENT_NAME, (e) => {
+      this.dispatch(UPDATE_FROM_SANDBOX_EVENT_NAME, {
         source: window,
         detail: (e as CustomEvent).detail,
       })
@@ -35,16 +37,18 @@ export class ScriptingManager extends Dispatcher {
     return this.eventAbortController?.signal
   }
 
-  async setDocument(pdfDocument?: PDFDocumentProxy) {
+  async clearDocument() {
     if (this.pdfDocument) {
       await this.destroyScripting()
     }
 
-    this.pdfDocument = pdfDocument
+    this.pdfDocument = undefined
+  }
 
-    if (!pdfDocument) {
-      return
-    }
+  async setDocument(pdfDocument: PDFDocumentProxy) {
+    await this.clearDocument()
+
+    this.pdfDocument = pdfDocument
 
     const [objects, calculationOrder, docActions] = await Promise.all([
       pdfDocument.getFieldObjects(),
@@ -72,17 +76,17 @@ export class ScriptingManager extends Dispatcher {
 
     this.eventAbortController = new AbortController()
 
-    this.on('updatefromsandbox', (e) => {
+    this.on(UPDATE_FROM_SANDBOX_EVENT_NAME, (e) => {
       if (e?.source === window) {
         this.updateFromSandbox(e.detail)
       }
     })
 
-    this.on('dispatcheventinsandbox', (e) => {
+    this.on('DispatchEventInSandbox', (e) => {
       this.scripting?.dispatchEventInSandbox(e.detail)
     })
 
-    this.on('pagechanging', ({ pageNumber, previous }) => {
+    this.on('PageChanging', ({ pageNumber, previous }) => {
       if (pageNumber === previous) {
         return
       }
@@ -91,7 +95,7 @@ export class ScriptingManager extends Dispatcher {
       this.dispatchPageOpen(pageNumber)
     })
 
-    this.on('pagerendered', ({ pageNumber }) => {
+    this.on('PageRendered', ({ pageNumber }) => {
       if (!this.pageOpenPending.has(pageNumber)) {
         return
       }
@@ -103,7 +107,7 @@ export class ScriptingManager extends Dispatcher {
       this.dispatchPageOpen(pageNumber)
     })
 
-    this.on('pagesdestroy', async () => {
+    this.on('PagesDestroy', async () => {
       await this.dispatchPageClose(this.viewer.currentPageNumber)
 
       await this.scripting?.dispatchEventInSandbox({
@@ -139,7 +143,7 @@ export class ScriptingManager extends Dispatcher {
         },
       })
 
-      this.dispatch('sandboxcreated')
+      this.dispatch('SandboxCreated')
     } catch (ex) {
       console.error('setDocument:', ex)
 
@@ -240,7 +244,7 @@ export class ScriptingManager extends Dispatcher {
           break
         case 'print':
           await this.viewer.pagesPromise
-          this.dispatch('print')
+          this.dispatch('Print')
           break
         case 'println':
           console.log(value)
@@ -251,7 +255,7 @@ export class ScriptingManager extends Dispatcher {
           }
           break
         case 'SaveAs':
-          this.dispatch('download')
+          this.dispatch('Download')
           break
         case 'FirstPage':
           this.viewer.currentPageNumber = 1
@@ -296,7 +300,7 @@ export class ScriptingManager extends Dispatcher {
         `[data-element-id="${elementId}"]`,
       )
       if (element) {
-        element.dispatchEvent(new CustomEvent('updatefromsandbox', { detail }))
+        element.dispatchEvent(new CustomEvent(UPDATE_FROM_SANDBOX_EVENT_NAME, { detail }))
       } else {
         this.pdfDocument?.annotationStorage.setValue(elementId, detail)
       }

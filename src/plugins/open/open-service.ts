@@ -1,5 +1,5 @@
+import type { Translator } from '@/l10n'
 import { stopEvent } from '@/pdfjs'
-import { IL10n } from '@/l10n'
 import { createElement } from '@/utils'
 
 export class OpenService {
@@ -9,7 +9,7 @@ export class OpenService {
 
   constructor(
     readonly container: HTMLDivElement,
-    readonly l10n: IL10n,
+    readonly translator: Translator,
   ) {
     this.setupFileInput()
     this.setupDropzone()
@@ -74,7 +74,7 @@ export class OpenService {
 
   protected setupDropzone() {
     const dropzone = this.dropzone = this.container.appendChild(createElement('div', 'open-dropzone'))
-    const span = createElement('span', { innerText: this.l10n.get('open.description') })
+    const span = createElement('span', { innerText: this.translator.translate('description') })
     span.addEventListener('click', () => this.fileInput?.click())
     dropzone.appendChild(span)
 

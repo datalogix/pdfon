@@ -1,4 +1,5 @@
 import { Dispatcher } from '@/bus'
+import type { Translator } from '@/l10n'
 import type { PDFDocumentProxy } from '@/pdfjs'
 import { getVisibleElements, scrollIntoView, watchScroll, type VisibleElements } from '@/utils'
 import { isValidRotation, Renderable, ViewerType } from '@/viewer'
@@ -19,6 +20,7 @@ export class ThumbnailViewer extends Dispatcher implements Renderable {
   constructor(
     protected readonly container: HTMLDivElement,
     protected readonly viewer: ViewerType,
+    protected readonly translator: Translator,
     protected readonly abortSignal?: AbortSignal,
   ) {
     super()
@@ -179,7 +181,7 @@ export class ThumbnailViewer extends Dispatcher implements Renderable {
           const thumbnail = new Thumbnail({
             container: this.container,
             eventBus: this.eventBus,
-            l10n: this.viewer.l10n,
+            translator: this.translator,
             layerProperties: this.viewer.layerPropertiesManager,
             id: pageNum,
             viewport: viewport.clone(),

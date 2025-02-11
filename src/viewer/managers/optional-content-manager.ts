@@ -31,7 +31,7 @@ export class OptionalContentManager extends Manager {
     this._optionalContentConfig = promise
 
     if (!isEmpty) {
-      this.dispatch('optionalcontentconfigchanged', { promise })
+      this.dispatch('OptionalContentConfigChanged', { promise })
       this.viewer.refresh(false, { optionalContentConfigPromise: promise })
     }
   }

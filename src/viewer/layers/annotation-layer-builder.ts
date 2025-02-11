@@ -73,10 +73,10 @@ export class AnnotationLayerBuilder extends LayerBuilder {
 
     if (!this.abortController) {
       this.abortController = new AbortController()
-      this.on('presentationmodechanged', ({ state }) => this.updatePresentationModeState(state))
+      this.on('PresentationModeChanged', ({ state }) => this.updatePresentationModeState(state))
     }
 
-    this.dispatch('render')
+    this.dispatch('Render')
   }
 
   hasEditableAnnotations() {

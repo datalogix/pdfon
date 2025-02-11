@@ -39,7 +39,7 @@ export class InteractionManager extends Dispatcher {
     })
 
     this.resetGroupedByPageCache()
-    this.dispatch('interactions', { interactions: this.interactions })
+    this.dispatch('Interactions', { interactions: this.interactions })
   }
 
   getGroupedByPage() {
@@ -75,24 +75,19 @@ export class InteractionManager extends Dispatcher {
 
     this.markAsCompleted(interaction)
     this.openContent(interaction)
-    this.dispatch('interactionclick', { interaction })
+    this.dispatch('InteractionClick', { interaction })
   }
 
   markAsCompleted(interaction: Interaction) {
     interaction.completed = true
     this.resetGroupedByPageCache()
 
-    this.dispatch(`interactionupdated${interaction.id}`, { interaction })
-    this.dispatch('interactionupdated', { interaction })
+    this.dispatch(`InteractionUpdated${interaction.id}`, { interaction })
+    this.dispatch('InteractionUpdated', { interaction })
   }
 
   private resetGroupedByPageCache() {
     this.groupedByPageCache = undefined
-  }
-
-  destroy() {
-    this.resetGroupedByPageCache()
-    this.interactions = []
   }
 
   openContent({ content }: Interaction) {
@@ -135,5 +130,11 @@ export class InteractionManager extends Dispatcher {
       draggable: !isIframe,
       backdrop: isIframe ? 'blur' : false,
     }).classList.add('interaction-modal')
+  }
+
+  destroy() {
+    this.resetGroupedByPageCache()
+    this.interactions = []
+    this.dispatch('InteractionDestroy')
   }
 }

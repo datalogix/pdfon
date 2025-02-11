@@ -6,7 +6,7 @@ export class PreviousPage extends ToolbarAction {
   }
 
   protected init() {
-    this.on('pagechanging', () => this.toggle())
+    this.on('PageChanging', () => this.toggle())
   }
 
   protected execute() {

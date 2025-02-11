@@ -6,7 +6,7 @@ export class PresentationManager extends Manager {
 
   init() {
     this._presentationModeState = PresentationModeState.UNKNOWN
-    this.on('presentationmodechanged', ({ state }) => this._presentationModeState = state)
+    this.on('PresentationModeChanged', ({ state }) => this._presentationModeState = state)
   }
 
   get presentationModeState() {

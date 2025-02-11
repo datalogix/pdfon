@@ -20,6 +20,6 @@ export class ScrollGroup extends ToolbarActionGroup {
   }
 
   protected init() {
-    this.on('scrollmodechanged', () => this.markAsActivated())
+    this.on('ScrollModeChanged', () => this.markAsActivated())
   }
 }

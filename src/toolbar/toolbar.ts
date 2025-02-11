@@ -18,8 +18,10 @@ export class Toolbar extends Dispatcher {
     readonly options?: ToolbarOptions,
   ) {
     super()
+
     this.container = options?.container ?? createElement('div')
     this.container.classList.add('toolbar')
+    this.hide()
   }
 
   get rootContainer() {
@@ -95,7 +97,18 @@ export class Toolbar extends Dispatcher {
       this.container.appendChild(group)
     }
 
-    this.dispatch('toolbarinit')
+    this.show()
+    this.dispatch('ToolbarInit')
+  }
+
+  hide() {
+    this.container.classList.add('hidden')
+    this.container.hidden = true
+  }
+
+  show() {
+    this.container.classList.remove('hidden')
+    this.container.hidden = false
   }
 
   render() {
@@ -108,6 +121,6 @@ export class Toolbar extends Dispatcher {
     }
 
     this.container.remove()
-    this.dispatch('toolbardestroy')
+    this.dispatch('ToolbarDestroy')
   }
 }

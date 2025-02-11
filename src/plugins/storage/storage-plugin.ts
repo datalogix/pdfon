@@ -16,23 +16,17 @@ export class StoragePlugin extends Plugin<StoragePluginParams> {
   }
 
   protected init() {
-    this.on('documentinit', async ({ pdfDocument, options }) => {
+    this.on('DocumentInit', ({ pdfDocument, options }) => {
       this._storage = new StorageService(
-        options?.storageId ?? (await this.params?.fingerprint) ?? pdfDocument.fingerprints[0] as string,
-        options?.storagePrefix ?? (await this.params?.prefix),
+        options?.storageId ?? (this.resolvedParams?.fingerprint) ?? pdfDocument.fingerprints[0] as string,
+        options?.storagePrefix ?? (this.resolvedParams?.prefix),
       )
 
-      this.dispatch('storageinit', { storage: this.storage })
+      this.dispatch('StorageInit', { storage: this._storage })
     })
 
-    this.on('documentdestroy', () => {
-      const storage = this.storage
-      this._storage = undefined
-
-      this.dispatch('storagedestroy', { storage })
-    })
-
-    this.on('storeonevent', params => this.storeOnEvent(params))
+    this.on('DocumentDestroy', () => this.destroy())
+    this.on('StoreOnEvent', options => this.storeOnEvent(options))
   }
 
   storeOnEvent({ eventName, key, parameter, validate }: { eventName: string, key?: string, parameter: string | ((eventData: any) => any), validate?: () => boolean }) {
@@ -53,5 +47,12 @@ export class StoragePlugin extends Plugin<StoragePluginParams> {
         this.storage?.set(value)
       }
     })
+  }
+
+  protected destroy() {
+    const storage = this.storage
+    this._storage = undefined
+
+    this.dispatch('StorageDestroy', { storage })
   }
 }

@@ -67,7 +67,7 @@ export class TextLayerBuilder extends LayerBuilder {
     this.bindMouse(endOfContent)
     this.layersPage.add(this.div, 1)
 
-    this.dispatch('render')
+    this.dispatch('Render')
 
     this.textAccessibilityManager.setTextMapping(this._textLayer.textDivs)
     queueMicrotask(() => this.textAccessibilityManager.enable())

@@ -23,20 +23,20 @@ export class SidebarPlugin extends Plugin<SidebarPluginParams> {
     return this._sidebarManager
   }
 
-  protected async init() {
-    this._sidebarManager = new SidebarManager(this.eventBus, this.viewer, this.l10n)
+  protected init() {
+    this._sidebarManager = new SidebarManager(this.eventBus, this.viewer, this.translator)
 
-    this.on('sidebaradd', ({ item, order }) => this._sidebarManager?.add(item, order))
-    this.on('sidebardelete', ({ item }) => this._sidebarManager?.delete(item))
+    this.on('SidebarAdd', ({ item, order }) => this._sidebarManager?.add(item, order))
+    this.on('SidebarDelete', ({ item }) => this._sidebarManager?.delete(item))
   }
 
-  protected onLoad(params?: SidebarPluginParams) {
-    if (params?.items) {
-      params?.items.forEach(item => this._sidebarManager?.add(item))
+  protected onLoad() {
+    if (this.resolvedParams?.items) {
+      this.resolvedParams.items.forEach(item => this._sidebarManager?.add(item))
     }
 
-    if (params?.current) {
-      this._sidebarManager?.select(params?.current)
+    if (this.resolvedParams?.current) {
+      queueMicrotask(() => this._sidebarManager?.select(this.resolvedParams?.current))
     }
   }
 

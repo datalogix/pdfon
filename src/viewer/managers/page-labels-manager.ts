@@ -4,7 +4,7 @@ export class PageLabelsManager extends Manager {
   private _pageLabels?: string[]
 
   init() {
-    this.on('documentinit', () => this.getPageLabels())
+    this.on('DocumentInit', () => this.getPageLabels())
   }
 
   reset() {
@@ -103,6 +103,6 @@ export class PageLabelsManager extends Manager {
     }
 
     this.pageLabels = labels
-    this.dispatch('pagelabels', { labels })
+    this.dispatch('PageLabels', { labels })
   }
 }

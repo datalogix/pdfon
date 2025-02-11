@@ -1,16 +1,16 @@
 import { ToolbarAction } from '@/toolbar'
-import { PrintPlugin } from './print-plugin'
+import type { PrintPlugin } from './print-plugin'
 
 export class PrintToolbarItem extends ToolbarAction {
   get printPlugin() {
-    return this.viewer.getLayerProperty<PrintPlugin>('PrintPlugin')
+    return this.viewer.getLayerProperty<PrintPlugin>('PrintPlugin')!
   }
 
   get enabled() {
-    return !!this.printPlugin?.supportsPrinting
+    return !!this.printPlugin.supportsPrinting
   }
 
   protected execute() {
-    this.printPlugin?.triggerPrint()
+    this.printPlugin.triggerPrint()
   }
 }

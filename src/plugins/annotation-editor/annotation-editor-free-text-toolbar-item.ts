@@ -6,13 +6,13 @@ export class AnnotationEditorFreeTextToolbarItem extends AnnotationEditorBaseToo
 
   protected buildAnnotationEditorBar() {
     const colorField = this.buildField({
-      label: this.l10n.get('annotation-editor.free-text.color'),
+      label: this.annotationEditorPlugin.translate('free-text.color'),
       inputProps: { type: 'color' },
       annotationEditorParamsType: AnnotationEditorParamsType.FREETEXT_COLOR,
     })
 
     const sizeField = this.buildField({
-      label: this.l10n.get('annotation-editor.free-text.size'),
+      label: this.annotationEditorPlugin.translate('free-text.size'),
       inputProps: { type: 'range', value: 10, min: 5, max: 100, step: 1 },
       annotationEditorParamsType: AnnotationEditorParamsType.FREETEXT_SIZE,
     })

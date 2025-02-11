@@ -60,7 +60,7 @@ export class LocationManager extends Manager {
       openParams,
     }
 
-    this.dispatch('updateviewarea', { location: this._location })
+    this.dispatch('UpdateViewArea', { location: this._location })
   }
 
   getAnchorUrl(anchor = this._location?.openParams) {

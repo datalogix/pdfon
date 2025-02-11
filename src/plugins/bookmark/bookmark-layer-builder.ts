@@ -16,13 +16,13 @@ export class BookmarkLayerBuilder extends LayerBuilder {
       button.classList.add('selected')
     }
 
-    this.on('bookmarks', () => {
+    this.on('Bookmarks', () => {
       if (this.bookmarkManager?.has(this.id)) {
         button.classList.add('selected')
       }
     })
 
-    this.on(`bookmarkadded${this.id}`, () => button.classList.add('selected'))
-    this.on(`bookmarkdeleted${this.id}`, () => button.classList.remove('selected'))
+    this.on(`BookmarkAdded${this.id}`, () => button.classList.add('selected'))
+    this.on(`BookmarkDeleted${this.id}`, () => button.classList.remove('selected'))
   }
 }

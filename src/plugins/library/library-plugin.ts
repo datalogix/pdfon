@@ -30,40 +30,32 @@ export class LibraryPlugin extends Plugin<LibraryPluginParams> {
   protected init() {
     this._bookManager = new BookManager(this.eventBus)
 
-    this.on('documentopen', ({ documentType }) => {
+    this.on('DocumentOpen', ({ documentType }) => {
       if (this._bookManager && documentType !== this._bookManager.current?.src) {
         this._bookManager.select(undefined)
       }
     })
 
-    this.on('book', ({ book, options }) => {
-      this.informationManager?.set([])
+    this.on('Book', ({ book }) => {
+      this.viewer.openDocument(book.src, book.name, {
+        storageId: book.id,
+        ...book.options,
+      })
 
-      this.on('storagedestroy', () => {
-        this.dispatch('interactionload', { interactions: [] })
-        this.dispatch('resourceload', { resources: [] })
-      }, { once: true })
-
-      if (!book) {
-        return
-      }
-
-      this.viewer.openDocument(book.src, book.name, options)
-
-      this.on('documentinitialized', async () => {
+      this.on('DocumentInitialized', async () => {
         const interactions = await resolveValue(book.interactions, book)
         const resources = await resolveValue(book.resources, book)
 
-        this.dispatch('interactionload', { interactions })
-        this.dispatch('resourceload', { resources })
-        this.dispatch('bookinitialized', { book })
+        this.dispatch('InteractionLoad', { interactions })
+        this.dispatch('ResourceLoad', { resources })
+        this.dispatch('BookInit', { book })
       }, { once: true })
 
       const props = ['name', 'sku', 'author', 'description']
 
       props.forEach((key, index) => {
         this.informationManager?.add({
-          name: this.l10n.get(`library.book.${key}`),
+          name: this.translate(`book.${key}`),
           value: book[key],
           order: index + 1,
         })
@@ -71,13 +63,13 @@ export class LibraryPlugin extends Plugin<LibraryPluginParams> {
     })
   }
 
-  protected onLoad(params?: LibraryPluginParams) {
-    if (params?.books) {
-      this.bookManager?.set(params.books)
+  protected onLoad() {
+    if (this.resolvedParams?.books) {
+      this.bookManager?.set(this.resolvedParams.books)
     }
 
-    if (params?.bookId) {
-      this.on('documentempty', () => this._bookManager?.select(params.bookId), { once: true })
+    if (this.resolvedParams?.bookId) {
+      this.on('DocumentEmpty', () => this._bookManager?.select(this.resolvedParams?.bookId), { once: true })
     }
   }
 

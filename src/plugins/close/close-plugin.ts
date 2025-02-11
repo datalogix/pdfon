@@ -1,4 +1,3 @@
-import { resolveObject } from '@/utils'
 import { Plugin, ToolbarItemType } from '../plugin'
 import { CloseToolbarItem } from './close-toolbar-item'
 
@@ -9,13 +8,26 @@ export type ClosePluginParams = {
 }
 
 export class ClosePlugin extends Plugin<ClosePluginParams> {
-  protected async getToolbarItems() {
-    if (!this.params?.url) {
-      return super.getToolbarItems()
+  protected readonly closeToolbarItem = new CloseToolbarItem()
+
+  protected getToolbarItems() {
+    return new Map<string, ToolbarItemType>([
+      ['close', this.closeToolbarItem],
+    ])
+  }
+
+  protected onLoad() {
+    this.closeToolbarItem.toggle()
+  }
+
+  close() {
+    const confirm = !(this.resolvedParams?.confirm ?? true)
+      || window.confirm(this.resolvedParams?.confirmMessage ?? this.translate('confirm'))
+
+    if (!confirm) {
+      return
     }
 
-    return new Map<string, ToolbarItemType>([
-      ['close', new CloseToolbarItem(await resolveObject(this.params))],
-    ])
+    window.location.href = String(this.resolvedParams?.url)
   }
 }

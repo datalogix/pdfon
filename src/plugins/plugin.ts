@@ -1,15 +1,14 @@
 import { Dispatcher } from '@/bus'
+import type { Translatable } from '@/l10n'
 import type { Toolbar, ToolbarItemType } from '@/toolbar'
 import { createResolvedObject, resolveObject, type ResolvedParams } from '@/utils'
 import type { Initializer, InitializerType, LayerBuilderType, ViewerType } from '@/viewer'
 
-export {
-  ToolbarItemType,
-}
+export { ToolbarItemType }
 
 export type PluginType = (Plugin | (new (params?: any) => Plugin))
 
-export abstract class Plugin<T = any> extends Dispatcher {
+export abstract class Plugin<T = any> extends Dispatcher implements Translatable {
   private _name?: string
   private _toolbar?: Toolbar
   private _viewer?: ViewerType
@@ -18,6 +17,7 @@ export abstract class Plugin<T = any> extends Dispatcher {
   protected layerBuilders: LayerBuilderType[] = []
   private _initializers: Initializer[] = []
   private _layerBuilders: LayerBuilderType[] = []
+  private _resolvedParams?: T
   readonly params
 
   constructor(params?: ResolvedParams<T>) {
@@ -92,12 +92,22 @@ export abstract class Plugin<T = any> extends Dispatcher {
     this.viewer.currentPageNumber = val
   }
 
-  setCurrentPage(page: number) {
-    this.page = page
-  }
-
   get initialized() {
     return this.viewer.initialized
+  }
+
+  get resolvedParams() {
+    return this._resolvedParams
+  }
+
+  get translator() {
+    return {
+      translate: this.translate.bind(this),
+    }
+  }
+
+  translate(key: string, options?: object) {
+    return this.l10n.get(`plugins.${this.name}.${key}`.toLowerCase(), options)
   }
 
   setToolbar(toolbar: Toolbar) {
@@ -108,11 +118,15 @@ export abstract class Plugin<T = any> extends Dispatcher {
     this._viewer = viewer
   }
 
+  setCurrentPage(page: number) {
+    this.page = page
+  }
+
   protected init(): Promise<void> | void {
 
   }
 
-  protected onLoad(_params?: T): Promise<void> | void {
+  protected onLoad(_resolvedParams?: T): Promise<void> | void {
 
   }
 
@@ -133,6 +147,10 @@ export abstract class Plugin<T = any> extends Dispatcher {
   }
 
   async initialize() {
+    if (this.params) {
+      this._resolvedParams = await resolveObject(this.params) as T
+    }
+
     for (const [name, item] of await this.getToolbarItems()) {
       this.toolbar.register(name, item)
     }
@@ -149,9 +167,12 @@ export abstract class Plugin<T = any> extends Dispatcher {
     this._initializers.forEach(initialize => this.viewer.addInitializer(initialize))
     this._layerBuilders.forEach(layerBuilder => this.viewer.addLayerBuilder(layerBuilder))
 
-    this.dispatch(`plugin${this.name}init`)
+    this.dispatch(`Plugin${this.name}Init`)
+  }
 
-    setTimeout(async () => this.onLoad(this.params ? await resolveObject(this.params) as T : undefined), 0)
+  async load() {
+    this.onLoad(this._resolvedParams)
+    this.dispatch(`Plugin${this.name}Loaded`)
   }
 
   async terminate() {
@@ -164,6 +185,6 @@ export abstract class Plugin<T = any> extends Dispatcher {
     this._initializers.forEach(initialize => this.viewer.removeInitializer(initialize))
     this._layerBuilders.forEach(layerBuilder => this.viewer.removeLayerBuilder(layerBuilder))
 
-    this.dispatch(`plugin${this.name}destroy`)
+    this.dispatch(`Plugin${this.name}Destroy`)
   }
 }

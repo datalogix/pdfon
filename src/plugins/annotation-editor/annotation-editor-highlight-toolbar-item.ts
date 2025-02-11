@@ -7,18 +7,18 @@ export class AnnotationEditorHighlightToolbarItem extends AnnotationEditorBaseTo
 
   protected buildAnnotationEditorBar() {
     const colorField = this.buildField({
-      label: this.l10n.get('annotation-editor.highlight.color'),
+      label: this.annotationEditorPlugin.translate('highlight.color'),
       input: createElement('div', 'colorPicker'),
     })
 
     const thicknessField = this.buildField({
-      label: this.l10n.get('annotation-editor.highlight.thickness'),
+      label: this.annotationEditorPlugin.translate('highlight.thickness'),
       inputProps: { type: 'range', value: 12, min: 8, max: 24, step: 1 },
       annotationEditorParamsType: AnnotationEditorParamsType.HIGHLIGHT_THICKNESS,
     })
 
     const showAllField = this.buildField({
-      label: this.l10n.get('annotation-editor.highlight.show-all'),
+      label: this.annotationEditorPlugin.translate('highlight.show-all'),
       inputProps: { type: 'checkbox', checked: true, className: 'switch' },
       annotationEditorParamsType: AnnotationEditorParamsType.HIGHLIGHT_SHOW_ALL,
     })
@@ -29,7 +29,7 @@ export class AnnotationEditorHighlightToolbarItem extends AnnotationEditorBaseTo
       showAllField.container,
     )
 
-    this.on('annotationeditorparamschanged', (event) => {
+    this.on('AnnotationEditorParamsChanged', (event) => {
       for (const [type, value] of event.details) {
         switch (type) {
           case AnnotationEditorParamsType.HIGHLIGHT_FREE:
@@ -39,7 +39,7 @@ export class AnnotationEditorHighlightToolbarItem extends AnnotationEditorBaseTo
       }
     })
 
-    this.on('annotationeditoruimanager', ({ uiManager }) => {
+    this.on('AnnotationEditorUIManager', ({ uiManager }) => {
       const cp = new ColorPicker({ uiManager })
       uiManager.setMainHighlightColorPicker(cp)
       colorField.field.append(cp.renderMainDropdown())

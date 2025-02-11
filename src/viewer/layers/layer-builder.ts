@@ -114,7 +114,7 @@ export abstract class LayerBuilder<T = any> extends Dispatcher {
   }
 
   init(): Promise<void> | void {
-    this.dispatch('init')
+    this.dispatch('Init')
   }
 
   protected create(name: string, position: number) {
@@ -125,15 +125,15 @@ export abstract class LayerBuilder<T = any> extends Dispatcher {
   }
 
   process(params: PageUpdate) {
-    this.dispatch('process', params)
+    this.dispatch('Process', params)
   }
 
   update(params: PageUpdate) {
-    this.dispatch('update', params)
+    this.dispatch('Update', params)
   }
 
   updateOptionalContentConfig(optionalContentConfig: OptionalContentConfig) {
-    this.dispatch('updateoptionalcontentconfig', { optionalContentConfig })
+    this.dispatch('UpdateOptionalContentConfig', { optionalContentConfig })
   }
 
   cancel() {
@@ -141,21 +141,21 @@ export abstract class LayerBuilder<T = any> extends Dispatcher {
     this.abortController?.abort()
     this.abortController = undefined
 
-    this.dispatch('cancel')
+    this.dispatch('Cancel')
   }
 
   hide(_keep?: boolean) {
     if (!this.div) return
 
     this.div.hidden = true
-    this.dispatch('hide')
+    this.dispatch('Hide')
   }
 
   show() {
     if (!this.div) return
 
     this.div.hidden = false
-    this.dispatch('show')
+    this.dispatch('Show')
   }
 
   async render(_postponeDrawing?: boolean) {
@@ -171,7 +171,7 @@ export abstract class LayerBuilder<T = any> extends Dispatcher {
 
     await this.build()
 
-    this.dispatch('render')
+    this.dispatch('Render')
   }
 
   protected build(): Promise<void> | void {
@@ -179,7 +179,7 @@ export abstract class LayerBuilder<T = any> extends Dispatcher {
   }
 
   finish(_renderTask: RenderTask) {
-    this.dispatch('finish')
+    this.dispatch('Finish')
   }
 
   protected updateLayerDimensions(viewport?: PageViewport) {

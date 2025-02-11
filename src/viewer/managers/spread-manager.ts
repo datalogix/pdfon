@@ -31,7 +31,7 @@ export class SpreadManager extends Manager {
     }
 
     this._spreadMode = mode
-    this.dispatch('spreadmodechanged', { mode })
+    this.dispatch('SpreadModeChanged', { mode })
     this.updateSpreadMode(this.currentPageNumber)
   }
 

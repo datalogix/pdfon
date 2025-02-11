@@ -18,25 +18,28 @@ export class FindPlugin extends Plugin<FindPluginParams> {
   private findController?: FindController
   private findHighlighters = new Map<number, FindHighlighter>()
 
-  protected async init() {
-    this.findController = new FindController(this.viewer, await this.params?.updateMatchesCountOnProgress)
+  protected init() {
+    this.findController = new FindController(
+      this.viewer,
+      this.resolvedParams?.updateMatchesCountOnProgress,
+    )
 
-    this.on('onepagerendered', () => this.findController?.init())
-    this.on('find', params => this.findController?.find(params))
-    this.on('findbarclose', () => this.findController?.close())
-    this.on('pagesdestroy', () => this.destroy())
+    this.on('OnePageRendered', () => this.findController?.init())
+    this.on('Find', params => this.findController?.find(params))
+    this.on('FindBarClose', () => this.findController?.close())
+    this.on('PagesDestroy', () => this.destroy())
 
-    this.on('textlayerbuildershow', ({ source }) => this.getFindHighlighter(source)?.enable())
-    this.on('textlayerbuilderhide', ({ source }) => this.getFindHighlighter(source)?.disable())
-    this.on('textlayerbuildercancel', ({ source }) => this.getFindHighlighter(source)?.disable())
-    this.on('textlayerbuilderrender', ({ source }) => {
+    this.on('TextLayerBuilderShow', ({ source }) => this.getFindHighlighter(source)?.enable())
+    this.on('TextLayerBuilderHide', ({ source }) => this.getFindHighlighter(source)?.disable())
+    this.on('TextLayerBuilderCancel', ({ source }) => this.getFindHighlighter(source)?.disable())
+    this.on('TextLayerBuilderRender', ({ source }) => {
       const findHighlighter = this.getFindHighlighter(source)
       findHighlighter?.setTextMapping(source.textLayer.textDivs, source.textLayer.textContentItemsStr)
       queueMicrotask(() => findHighlighter?.enable())
     })
 
-    this.on('xfalayerbuildercancel', ({ source }) => this.getFindHighlighter(source)?.disable())
-    this.on('xfalayerbuilderrender', ({ source, textDivs, items }) => {
+    this.on('XfaLayerBuilderCancel', ({ source }) => this.getFindHighlighter(source)?.disable())
+    this.on('XfaLayerBuilderRender', ({ source, textDivs, items }) => {
       const findHighlighter = this.getFindHighlighter(source)
       findHighlighter?.setTextMapping(textDivs, items)
       queueMicrotask(() => findHighlighter?.enable())

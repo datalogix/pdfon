@@ -45,7 +45,7 @@ export class XfaLayerBuilder extends LayerBuilder {
       }
     }
 
-    this.dispatch('render', { textDivs, items })
+    this.dispatch('Render', { textDivs, items })
 
     if (this.div) {
       this.layersPage.add(this.div, 3)

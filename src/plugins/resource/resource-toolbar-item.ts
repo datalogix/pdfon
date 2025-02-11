@@ -14,12 +14,12 @@ export class ResourceToolbarItem extends ToolbarActionToggle {
   }
 
   protected init() {
-    this.on('resources', () => this.toggle())
+    this.on(['Resources', 'ResourceDestroy'], () => this.toggle())
   }
 
   open() {
     Modal.open(this.item(this.resourceManager?.all ?? []), {
-      title: this.l10n.get('resource.title'),
+      title: this.translate('title'),
       backdrop: 'overlay',
       onClose: () => this.execute(),
     }).classList.add('resource-modal')

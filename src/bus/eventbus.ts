@@ -30,7 +30,8 @@ export class EventBus<
     name: NameT,
     ...data: Parameters<InferCallback<ListenersT, NameT>>
   ) {
-    const eventListeners = this.listeners.get(name)
+    const key = name.toLowerCase() as ListenerNameT
+    const eventListeners = this.listeners.get(key)
     if (!eventListeners) return
 
     const { internalListeners, externalListeners } = eventListeners.reduce<{
@@ -69,7 +70,8 @@ export class EventBus<
       options.signal.addEventListener('abort', onAbort)
     }
 
-    const eventListeners = this.listeners.get(name) || []
+    const key = name.toLowerCase() as ListenerNameT
+    const eventListeners = this.listeners.get(key) || []
     eventListeners.push({
       listener,
       external: options.external ?? true,
@@ -77,17 +79,18 @@ export class EventBus<
       rmAbort,
     })
 
-    this.listeners.set(name, eventListeners)
+    this.listeners.set(key, eventListeners)
   }
 
   off<NameT extends ListenerNameT>(
     name: NameT,
     listener?: InferCallback<ListenersT, NameT>,
   ) {
-    const eventListeners = this.listeners.get(name)
+    const key = name.toLowerCase() as ListenerNameT
+    const eventListeners = this.listeners.get(key)
     if (!eventListeners) return
 
-    this.listeners.set(name, eventListeners.filter((evt) => {
+    this.listeners.set(key, eventListeners.filter((evt) => {
       if (evt.listener === listener) {
         evt.rmAbort?.()
         return false

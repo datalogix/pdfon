@@ -174,4 +174,8 @@ export abstract class Manager extends Dispatcher {
   get location() {
     return this.locationManager.location
   }
+
+  translate(key: string, options?: object) {
+    return this.l10n.get(key.toLowerCase(), options)
+  }
 }

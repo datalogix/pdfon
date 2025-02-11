@@ -4,8 +4,14 @@ import { SidebarItem } from '../sidebar'
 import type { InteractionPlugin } from './interaction-plugin'
 
 export class InteractionSidebarItem extends SidebarItem {
+  private renderAbortController?: AbortController
+
+  get interactionPlugin() {
+    return this.viewer.getLayerProperty<InteractionPlugin>('InteractionPlugin')!
+  }
+
   get interactionManager() {
-    return this.viewer.getLayerProperty<InteractionPlugin>('InteractionPlugin')?.interactionManager
+    return this.interactionPlugin.interactionManager
   }
 
   get order() {
@@ -14,7 +20,7 @@ export class InteractionSidebarItem extends SidebarItem {
 
   build() {
     const container = createElement('div', 'interaction-sidebar')
-    this.on('interactions', () => this.renderList(container))
+    this.on(['Interactions', 'InteractionDestroy'], () => this.renderList(container))
     this.renderList(container)
     return container
   }
@@ -22,33 +28,41 @@ export class InteractionSidebarItem extends SidebarItem {
   protected renderList(container: HTMLElement) {
     container.innerHTML = ''
 
+    if (this.renderAbortController) {
+      this.renderAbortController.abort()
+    }
+
+    this.renderAbortController = new AbortController()
+
     const progressBar = new ProgressBar(
       this.interactionManager?.length,
       this.interactionManager?.completed.length ?? 0,
     )
 
-    this.on('interactionupdated', () => {
+    this.on('InteractionUpdated', () => {
       progressBar.value = this.interactionManager?.completed.length ?? 0
-      summaryValue.innerText = this.l10n.get('interaction.progress', {
+      summaryValue.innerText = this.interactionPlugin.translate('progress', {
         value: progressBar.value,
         total: progressBar.total,
       })
-    })
+    }, { signal: this.renderAbortController.signal })
 
     const summary = createElement('div', 'interaction-summary')
     const summaryValue = createElement('span', 'interaction-summary-value', {
-      innerText: this.l10n.get('interaction.progress', {
+      innerText: this.interactionPlugin.translate('progress', {
         value: progressBar.value,
         total: progressBar.total,
       }),
     })
 
-    summary.appendChild(createElement('span', 'interaction-summary-title', { innerText: this.l10n.get('interaction.title') }))
+    summary.appendChild(createElement('span', 'interaction-summary-title', {
+      innerText: this.interactionPlugin.translate('title'),
+    }))
     summary.appendChild(summaryValue)
 
     const filter = createElement('label', 'interaction-filter')
     const input = createElement('input', [], { type: 'checkbox' })
-    const span = createElement('span', [], { innerText: this.l10n.get('interaction.filter') })
+    const span = createElement('span', [], { innerText: this.interactionPlugin.translate('filter') })
 
     filter.appendChild(input)
     filter.appendChild(span)
@@ -75,7 +89,9 @@ export class InteractionSidebarItem extends SidebarItem {
         const content = createElement('span', 'interaction-content')
         const header = createElement('span', 'interaction-header')
         header.appendChild(createElement('i', 'interaction-icon'))
-        header.appendChild(createElement('span', 'interaction-page', { innerText: this.l10n.get('interaction.page', { page: interaction.page }) }))
+        header.appendChild(createElement('span', 'interaction-page', {
+          innerText: this.interactionPlugin.translate('page', { page: interaction.page }),
+        }))
 
         content.appendChild(header)
         if (interaction.title) content.appendChild(createElement('span', 'interaction-title', { innerText: interaction.title }))
@@ -84,10 +100,10 @@ export class InteractionSidebarItem extends SidebarItem {
         button.appendChild(createElement('span', 'interaction-animation'))
         button.addEventListener('click', () => this.interactionManager?.select(interaction))
 
-        this.on(`interactionupdated${interaction.id}`, () => {
+        this.on(`InteractionUpdated${interaction.id}`, () => {
           button.classList.remove('interaction-uncompleted')
           button.classList.add('interaction-completed')
-        })
+        }, { signal: this.renderAbortController?.signal })
 
         const li = createElement('li')
         li.appendChild(button)

@@ -131,7 +131,7 @@ export abstract class RenderView extends Dispatcher implements pdfjs.IRenderable
 
     if (!dispatchEvent) return
 
-    this.dispatch(`${this.name}rendered`, {
+    this.dispatch(`${this.name}Rendered`, {
       pageNumber: this.id,
       cssTransform: false,
       timestamp: performance.now(),
@@ -222,7 +222,7 @@ export abstract class RenderView extends Dispatcher implements pdfjs.IRenderable
       )
 
       return resultPromise.finally(() => {
-        this.dispatch(`${this.name}render`, {
+        this.dispatch(`${this.name}Render`, {
           pageNumber: this.id,
         })
       })

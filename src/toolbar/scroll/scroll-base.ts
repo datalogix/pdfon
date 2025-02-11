@@ -14,7 +14,7 @@ export abstract class ScrollBase extends ToolbarAction {
   }
 
   protected init() {
-    this.on('scrollmodechanged', () => this.markAsActivated())
+    this.on('ScrollModeChanged', () => this.markAsActivated())
   }
 
   protected execute() {

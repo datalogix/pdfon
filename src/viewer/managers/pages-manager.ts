@@ -30,8 +30,8 @@ export class PagesManager extends Manager {
   }
 
   init() {
-    this.on('documentinit', ({ pdfDocument }) => this.setupPages(pdfDocument))
-    this.on('documentdestroy', () => this.dispatch('pagesdestroy'), { signal: this.options.abortSignal })
+    this.on('DocumentInit', ({ pdfDocument }) => this.setupPages(pdfDocument))
+    this.on('DocumentDestroy', () => this.dispatch('PagesDestroy'), { signal: this.options.abortSignal })
   }
 
   reset() {
@@ -121,7 +121,7 @@ export class PagesManager extends Manager {
     const previous = this.currentPageNumber
 
     this._currentPageNumber = val
-    this.dispatch('pagechanging', {
+    this.dispatch('PageChanging', {
       pageNumber: val,
       pageLabel: this.pageLabelsManager.pageLabels?.[val - 1] ?? null,
       previous,
@@ -337,11 +337,11 @@ export class PagesManager extends Manager {
     if (pagesCount > constants.FORCE_SCROLL_MODE_PAGE) {
       this.logger.warn('Forcing PAGE-scrolling for performance reasons, given the length of the document.')
       const mode = this.scrollManager.scrollMode = ScrollMode.PAGE
-      this.dispatch('scrollmodechanged', { mode })
+      this.dispatch('ScrollModeChanged', { mode })
     }
 
     this.pagesCapability.promise.then(() => {
-      this.dispatch('pagesloaded', { pagesCount })
+      this.dispatch('PagesLoaded', { pagesCount })
     }, () => { })
 
     const onBeforeDraw = (evt: { pageNumber: number }) => {
@@ -353,11 +353,11 @@ export class PagesManager extends Manager {
     const onAfterDraw = (evt: { cssTransform: boolean, timestamp: number }) => {
       if (evt.cssTransform) return
       this.onePageRenderedCapability.resolve({ timestamp: evt.timestamp })
-      this.off('pagerendered', onAfterDraw)
+      this.off('PageRendered', onAfterDraw)
     }
 
-    this.on('pagerender', onBeforeDraw, { signal })
-    this.on('pagerendered', onAfterDraw, { signal })
+    this.on('PageRender', onBeforeDraw, { signal })
+    this.on('PageRendered', onAfterDraw, { signal })
 
     Promise.all([firstPagePromise, permissionsPromise]).then(([firstPdfPage, permissions]) => {
       if (pdfDocument !== this.pdfDocument) {
@@ -370,7 +370,7 @@ export class PagesManager extends Manager {
       const params = initializePermissions(permissions ?? undefined, this.options)
       const viewport = firstPdfPage.getViewport({ scale: this.currentScale * pdfjs.PixelsPerInch.PDF_TO_CSS_UNITS })
 
-      this.dispatch('firstpageloaded', { pdfDocument, firstPdfPage, viewport, ...params })
+      this.dispatch('FirstPageLoaded', { pdfDocument, firstPdfPage, viewport, ...params })
 
       const layerBuilders = this.layerBuildersManager.layersToArray()
       const container = this.scrollMode === ScrollMode.PAGE ? undefined : this.viewerContainer
@@ -419,7 +419,7 @@ export class PagesManager extends Manager {
           return
         }
 
-        this.dispatch('onepagerendered', { pdfDocument, firstPdfPage, viewport, ...params })
+        this.dispatch('OnePageRendered', { pdfDocument, firstPdfPage, viewport, ...params })
 
         if (pdfDocument.loadingParams.disableAutoFetch || pagesCount > constants.FORCE_LAZY_PAGE_INIT) {
           this.pagesCapability.resolve()
@@ -455,7 +455,7 @@ export class PagesManager extends Manager {
         }
       })
 
-      this.dispatch('pagesinit', { pdfDocument })
+      this.dispatch('PagesInit', { pdfDocument })
       queueMicrotask(() => this.viewer.update())
     }).catch((reason) => {
       this.logger.error('Unable to initialize viewer', reason)

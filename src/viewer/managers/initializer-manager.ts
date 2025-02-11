@@ -25,11 +25,8 @@ export class InitializerManager extends Manager {
   }
 
   init() {
-    this.on('documentinit', ({ pdfDocument, options }) => this.setupInitializer(pdfDocument, options))
-    this.on('documentinitialview', ({ options }) => this.executeInitializers(options))
-    this.on('documentinitialized', () => {
-      this._initialized = true
-    })
+    this.on('DocumentInit', async ({ pdfDocument, options }) => await this.setupInitializer(pdfDocument, options))
+    this.on('DocumentInitialView', async ({ options }) => await this.executeInitializers(options))
   }
 
   reset() {
@@ -55,7 +52,7 @@ export class InitializerManager extends Manager {
       this.applyInitialView(options)
     } finally {
       this.viewer.update()
-      this.dispatch('documentinitialized')
+      this.dispatch('DocumentInitialized')
     }
   }
 
@@ -90,7 +87,7 @@ export class InitializerManager extends Manager {
         this.pagesManager.currentPageNumber = options.page
       }
 
-      this.dispatch('documentinitialview', { options })
+      this.dispatch('DocumentInitialView', { options })
     })
   }
 
@@ -125,9 +122,10 @@ export class InitializerManager extends Manager {
       }
     }
 
-    this.on('documentinitialized', () => {
+    this.on('DocumentInitialized', async () => {
       handlers.forEach(handler => handler(options))
-      this.finishInitializers(options)
+      await this.finishInitializers(options)
+      this._initialized = true
     })
   }
 

@@ -17,30 +17,25 @@ export class TourGuidePlugin extends Plugin<TourGuidePluginParams> {
   }
 
   private _tourGuide?: TourGuideClient
-  private storageKey?: string
 
   get tourGuide() {
     return this._tourGuide
   }
 
   protected init() {
-    this.on('toolbarinit', () => this.resolveToolbarItems())
-    this.on('documentinitialized', () => this.buildTourGuide(), { once: true })
-  }
-
-  protected onLoad(params?: TourGuidePluginParams) {
-    this.storageKey = params?.storageKey ?? `${name}-tour-guide`
+    this.on('ToolbarInit', () => this.resolveToolbarItems())
+    this.on('DocumentInitialized', () => this.buildTourGuide(), { once: true })
   }
 
   protected disableTourGuide() {
-    localStorage.setItem(this.storageKey!, 'disabled')
+    localStorage.setItem(this.resolvedParams?.storageKey ?? `${name}-tour-guide`, 'disabled')
     this._tourGuide?.exit()
   }
 
   protected resolveToolbarItems() {
     const setAttributes = (item: ToolbarItem) => {
-      item.render().setAttribute('data-tg-title', this.l10n.get(`toolbar.${item.name}.title`))
-      item.render().setAttribute('data-tg-tour', this.l10n.get(`toolbar.${item.name}.help`))
+      item.render().setAttribute('data-tg-title', item.translate('title'))
+      item.render().setAttribute('data-tg-tour', item.translate('help'))
     }
 
     this.toolbar.items.forEach((item) => {
@@ -63,27 +58,27 @@ export class TourGuidePlugin extends Plugin<TourGuidePluginParams> {
       targetPadding: 0,
       completeOnFinish: false,
       steps: [this.firstStep(), this.lastStep()],
-      prevLabel: this.l10n.get('tour-guide.prev'),
-      nextLabel: this.l10n.get('tour-guide.next'),
-      finishLabel: this.l10n.get('tour-guide.finish'),
+      prevLabel: this.translate('prev'),
+      nextLabel: this.translate('next'),
+      finishLabel: this.translate('finish'),
       dialogMaxWidth: 380,
     })
 
-    if (localStorage.getItem(this.storageKey!) !== 'disabled') {
+    if (localStorage.getItem(this.resolvedParams?.storageKey ?? `${name}-tour-guide`) !== 'disabled') {
       this._tourGuide?.start()
     }
   }
 
   protected firstStep() {
-    const button = createElement('button', { type: 'button', innerText: this.l10n.get('tour-guide.dont-show-again') })
+    const button = createElement('button', { type: 'button', innerText: this.translate('dont-show-again') })
     button.addEventListener('click', () => this.disableTourGuide())
 
     const container = createElement('div', 'tour-guide-content')
-    container.appendChild(createElement('div', { innerHTML: this.l10n.get('tour-guide.welcome.content') }))
+    container.appendChild(createElement('div', { innerHTML: this.translate('welcome.content') }))
     container.appendChild(button)
 
     return {
-      title: this.l10n.get('tour-guide.welcome.title'),
+      title: this.translate('welcome.title'),
       content: container,
       order: 0,
     }
@@ -91,8 +86,8 @@ export class TourGuidePlugin extends Plugin<TourGuidePluginParams> {
 
   protected lastStep() {
     return {
-      title: this.l10n.get('tour-guide.thanks.title'),
-      content: createElement('div', 'tour-guide-content', { innerHTML: this.l10n.get('tour-guide.thanks.content') }),
+      title: this.translate('thanks.title'),
+      content: createElement('div', 'tour-guide-content', { innerHTML: this.translate('thanks.content') }),
       order: 999999,
     }
   }

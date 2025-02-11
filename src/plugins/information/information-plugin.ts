@@ -23,15 +23,15 @@ export class InformationPlugin extends Plugin<InformationPluginParams> {
   protected init() {
     this._informationManager = new InformationManager(this.eventBus)
 
-    this.on('documentdestroy', () => this._informationManager?.destroy())
-    this.on('informationload', ({ informations }) => this._informationManager?.set(informations))
-    this.on('informationadd', ({ information }) => this._informationManager?.add(information))
-    this.on('informationdelete', ({ information }) => this._informationManager?.delete(information))
+    this.on('DocumentDestroy', () => this._informationManager?.destroy())
+    this.on('InformationLoad', ({ informations }) => this._informationManager?.set(informations))
+    this.on('InformationAdd', ({ information }) => this._informationManager?.add(information))
+    this.on('InformationDelete', ({ information }) => this._informationManager?.delete(information))
   }
 
-  protected onLoad(params?: InformationPluginParams) {
-    if (params?.informations) {
-      this._informationManager?.set(params.informations)
+  protected onLoad() {
+    if (this.resolvedParams?.informations) {
+      this._informationManager?.set(this.resolvedParams.informations)
     }
   }
 

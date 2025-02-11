@@ -67,7 +67,7 @@ export class LayersPage extends Dispatcher {
 
         error = ex
       } finally {
-        this.dispatch(`${key.toLowerCase()}rendered`, { error })
+        this.dispatch(`${key}Rendered`, { error })
       }
     }
   }

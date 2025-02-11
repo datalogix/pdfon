@@ -11,12 +11,12 @@ export class ScriptingPlugin extends Plugin {
   protected init() {
     this._scriptingManager = new ScriptingManager(this.viewer)
 
-    this.on('onepagerendered', ({ pdfDocument }) => this._scriptingManager?.setDocument(pdfDocument))
-    this.on('documentclose', () => this._scriptingManager?.setDocument())
+    this.on('OnePageRendered', ({ pdfDocument }) => this._scriptingManager?.setDocument(pdfDocument))
+    this.on('DocumentClose', () => this._scriptingManager?.clearDocument())
   }
 
   protected destroy() {
-    this._scriptingManager?.setDocument()
+    this._scriptingManager?.clearDocument()
     this._scriptingManager = undefined
   }
 }

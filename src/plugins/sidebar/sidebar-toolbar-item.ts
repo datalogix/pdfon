@@ -11,11 +11,11 @@ export class SidebarToolbarItem extends ToolbarActionToggle {
   }
 
   protected init() {
-    this.on('sidebaropen', () => {
+    this.on('SidebarOpen', () => {
       this.opened = true
     })
 
-    this.on('sidebarclose', () => {
+    this.on('SidebarClose', () => {
       this.opened = false
     })
   }

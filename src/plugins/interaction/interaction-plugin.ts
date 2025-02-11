@@ -36,11 +36,11 @@ export class InteractionPlugin extends Plugin<InteractionPluginParams> {
   protected init() {
     this._interactionManager = new InteractionManager(this.eventBus)
 
-    this.on('documentdestroy', () => this._interactionManager?.destroy())
-    this.on('storageinit', () => this.dispatch('interactionload'))
-    this.on('interactionclick', ({ interaction }) => this.setCurrentPage(interaction.page))
+    this.on('DocumentDestroy', () => this._interactionManager?.destroy())
+    this.on('StorageInit', () => this.dispatch('InteractionLoad'))
+    this.on('InteractionClick', ({ interaction }) => this.setCurrentPage(interaction.page))
 
-    this.on('interactionload', ({ interactions }) => {
+    this.on('InteractionLoad', ({ interactions }) => {
       const stored: Interaction[] | undefined = this.storage?.get('interactions')
 
       if (interactions && stored) {
@@ -53,10 +53,10 @@ export class InteractionPlugin extends Plugin<InteractionPluginParams> {
       this._interactionManager?.set(interactions ?? stored ?? [])
     })
 
-    this.on(['interactions', 'interactionupdated'], () => {
+    this.on(['Interactions', 'InteractionUpdated'], () => {
       this.storage?.set('interactions', this._interactionManager?.all)
       this.informationManager?.add({
-        name: this.l10n.get('interaction.title'),
+        name: this.translate('title'),
         value: this._interactionManager?.completed.length || 0,
         total: this._interactionManager?.length,
         order: 4,
@@ -64,15 +64,15 @@ export class InteractionPlugin extends Plugin<InteractionPluginParams> {
     })
   }
 
-  protected onLoad(params?: InteractionPluginParams) {
+  protected onLoad() {
     this.sidebarManager?.add(this.interactionSidebarItem)
 
-    if (params?.interactions) {
-      this._interactionManager?.set(params.interactions)
+    if (this.resolvedParams?.interactions) {
+      this._interactionManager?.set(this.resolvedParams.interactions)
     }
 
-    if (params?.interactionId) {
-      this.on('interactions', () => this._interactionManager?.select(params.interactionId), { once: true })
+    if (this.resolvedParams?.interactionId) {
+      queueMicrotask(() => this._interactionManager?.select(this.resolvedParams?.interactionId))
     }
   }
 

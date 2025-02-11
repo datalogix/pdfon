@@ -87,7 +87,7 @@ export class ScaleManager extends Manager {
 
     if (this.isSameScale(newScale)) {
       if (options?.preset) {
-        this.dispatch('scalechanging', {
+        this.dispatch('ScaleChanging', {
           scale: newScale,
           presetValue: newValue,
         })
@@ -140,7 +140,7 @@ export class ScaleManager extends Manager {
       }
     }
 
-    this.dispatch('scalechanging', {
+    this.dispatch('ScaleChanging', {
       scale: newScale,
       presetValue: options?.preset ? newValue : undefined,
     })

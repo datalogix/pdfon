@@ -65,13 +65,13 @@ export class Viewer extends Dispatcher {
   }
 
   start() {
-    this.dispatch('started')
+    this.dispatch('Started')
 
     return this
   }
 
   render() {
-    this.dispatch('rendered')
+    this.dispatch('Rendered')
 
     return this.containerManager.container
   }
@@ -101,6 +101,6 @@ export class Viewer extends Dispatcher {
   }
 
   private expose(manager: managers.Manager) {
-    expose(this, manager, ['constructor', 'canExpose', 'init', 'reset', 'refresh', 'update', 'signal'])
+    expose(this, manager, ['constructor', 'canExpose', 'init', 'reset', 'refresh', 'update', 'signal', 'translate'])
   }
 }

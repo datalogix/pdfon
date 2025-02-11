@@ -1,5 +1,5 @@
 import { Initializer, type Location, type InitializerOptions } from '@/viewer'
-import { StoragePlugin } from './storage-plugin'
+import type { StoragePlugin } from './storage-plugin'
 
 export class StorageInitializer extends Initializer {
   get storage() {
@@ -17,13 +17,13 @@ export class StorageInitializer extends Initializer {
 
   finish() {
     const isNotPresentationMode = () => !this.viewer.isInPresentationMode
-    this.dispatch('storeonevent', { eventName: 'pagechanging', key: 'page', parameter: 'pageNumber' })
-    this.dispatch('storeonevent', { eventName: 'rotationchanging', key: 'rotation', parameter: 'rotation', validate: isNotPresentationMode })
-    this.dispatch('storeonevent', { eventName: 'scalechanging', key: 'scale', parameter: 'scale', validate: isNotPresentationMode })
-    this.dispatch('storeonevent', { eventName: 'scrollmodechanged', key: 'scroll', parameter: 'mode', validate: isNotPresentationMode })
-    this.dispatch('storeonevent', { eventName: 'spreadmodechanged', key: 'spread', parameter: 'mode', validate: isNotPresentationMode })
-    this.dispatch('storeonevent', {
-      eventName: 'updateviewarea',
+    this.dispatch('StoreOnEvent', { eventName: 'PageChanging', key: 'page', parameter: 'pageNumber' })
+    this.dispatch('StoreOnEvent', { eventName: 'RotationChanging', key: 'rotation', parameter: 'rotation', validate: isNotPresentationMode })
+    this.dispatch('StoreOnEvent', { eventName: 'ScaleChanging', key: 'scale', parameter: 'scale', validate: isNotPresentationMode })
+    this.dispatch('StoreOnEvent', { eventName: 'ScrollModeChanged', key: 'scroll', parameter: 'mode', validate: isNotPresentationMode })
+    this.dispatch('StoreOnEvent', { eventName: 'SpreadModeChanged', key: 'spread', parameter: 'mode', validate: isNotPresentationMode })
+    this.dispatch('StoreOnEvent', {
+      eventName: 'UpdateViewArea',
       parameter: ({ location }: { location: Location }) => ({
         page: location.pageNumber,
         scale: location.scale,

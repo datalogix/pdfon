@@ -13,7 +13,7 @@ export abstract class ToolbarItem extends Dispatcher {
 
   get name() {
     if (!this._name) {
-      this._name = this.constructor.name.toLowerCase().replace('toolbaritem', '')
+      this._name = this.constructor.name.toLowerCase().replace('ToolbarItem'.toLowerCase(), '')
     }
 
     return this._name
@@ -47,6 +47,10 @@ export abstract class ToolbarItem extends Dispatcher {
     return this.viewer.logger
   }
 
+  translate(key: string, options?: object) {
+    return this.l10n.get(`toolbar.${this.name}.${key}`.toLowerCase(), options)
+  }
+
   setToolbar(toolbar: Toolbar) {
     this._toolbar = toolbar
   }
@@ -60,7 +64,7 @@ export abstract class ToolbarItem extends Dispatcher {
 
     await this.init()
 
-    this.dispatch(`toolbaritem${this.name}init`)
+    this.dispatch(`ToolbarItem${this.name}Init`)
   }
 
   async terminate() {
@@ -71,7 +75,7 @@ export abstract class ToolbarItem extends Dispatcher {
 
     await this.destroy()
 
-    this.dispatch(`toolbaritem${this.name}destroy`)
+    this.dispatch(`ToolbarItem${this.name}Destroy`)
 
     this.abortController?.abort()
     this.abortController = undefined

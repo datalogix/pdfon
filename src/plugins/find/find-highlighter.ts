@@ -41,7 +41,7 @@ export class FindHighlighter {
 
     if (!this.abortController) {
       this.abortController = new AbortController()
-      this.findController?.on('updatetextlayermatches', ({ pageIndex }: { pageIndex: number }) => {
+      this.findController?.on('UpdateTextLayerMatches', ({ pageIndex }: { pageIndex: number }) => {
         if (pageIndex === this.pageIndex || pageIndex === -1) {
           this.updateMatches()
         }

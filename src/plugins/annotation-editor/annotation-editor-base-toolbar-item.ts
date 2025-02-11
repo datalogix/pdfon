@@ -1,10 +1,15 @@
 import { AnnotationEditorType } from '@/pdfjs'
 import { ToolbarActionToggle } from '@/toolbar'
 import { createElement } from '@/utils'
+import type { AnnotationEditorPlugin } from './annotation-editor-plugin'
 
 export abstract class AnnotationEditorBaseToolbarItem extends ToolbarActionToggle {
   protected abstract value: number
   protected annotationEditorBar = createElement('div', 'annotation-editor-bar')
+
+  get annotationEditorPlugin() {
+    return this.viewer.getLayerProperty<AnnotationEditorPlugin>('AnnotationEditorPlugin')!
+  }
 
   get enabled() {
     return !!this.viewer.annotationEditorUIManager
@@ -15,19 +20,19 @@ export abstract class AnnotationEditorBaseToolbarItem extends ToolbarActionToggl
   }
 
   protected init() {
-    this.on('documentdestroy', () => {
-      this.dispatch('switchannotationeditormode', {
+    this.on('DocumentDestroy', () => {
+      this.dispatch('SwitchAnnotationEditorMode', {
         mode: AnnotationEditorType.NONE,
       })
     })
 
-    this.on(`${this.name}toggle`, () => {
-      this.dispatch('switchannotationeditormode', {
+    this.on(`${this.name}Toggle`, () => {
+      this.dispatch('SwitchAnnotationEditorMode', {
         mode: this.opened ? this.value : AnnotationEditorType.NONE,
       })
     })
 
-    this.on('annotationeditormodechanged', ({ mode }) => {
+    this.on('AnnotationEditorModeChanged', ({ mode }) => {
       this.markAsActivated()
 
       if (mode === this.value) {
@@ -59,7 +64,7 @@ export abstract class AnnotationEditorBaseToolbarItem extends ToolbarActionToggl
 
     if (annotationEditorParamsType && field instanceof HTMLInputElement) {
       field.addEventListener('input', () => {
-        this.dispatch('switchannotationeditorparams', {
+        this.dispatch('SwitchAnnotationEditorParams', {
           type: annotationEditorParamsType,
           value: field.type === 'range' || field.type === 'number'
             ? field.valueAsNumber
@@ -67,7 +72,7 @@ export abstract class AnnotationEditorBaseToolbarItem extends ToolbarActionToggl
         })
       })
 
-      this.on('annotationeditorparamschanged', (event) => {
+      this.on('AnnotationEditorParamsChanged', (event) => {
         for (const [type, value] of event.details) {
           if (type === annotationEditorParamsType) {
             field.value = value

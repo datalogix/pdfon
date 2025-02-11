@@ -17,7 +17,7 @@ export abstract class CursorBaseToolbarItem extends ToolbarAction {
   }
 
   protected init() {
-    this.on('cursortoolchanged', ({ disabled }) => {
+    this.on('CursorToolChanged', ({ disabled }) => {
       if (!disabled) {
         this.markAsActivated()
       }
@@ -25,6 +25,6 @@ export abstract class CursorBaseToolbarItem extends ToolbarAction {
   }
 
   protected execute() {
-    this.dispatch('switchcursortool', { tool: this.value })
+    this.dispatch('SwitchCursorTool', { tool: this.value })
   }
 }

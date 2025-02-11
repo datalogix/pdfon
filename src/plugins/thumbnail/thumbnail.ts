@@ -1,10 +1,10 @@
 import type { EventBus } from '@/bus'
-import type { IL10n } from '@/l10n'
+import type { Translator } from '@/l10n'
 import type { OptionalContentConfig, PageViewport } from '@/pdfjs'
 import { createElement } from '@/utils'
-import { LayerPropertiesManager, type Page, type PageColors, type RenderingQueue, RenderView } from '@/viewer'
+import { type LayerPropertiesManager, type Page, type PageColors, type RenderingQueue, RenderView } from '@/viewer'
 import { createScaledCanvasContext, reduceImage } from './helpers'
-import { ThumbnailLayerBuilder } from './thumbnail-layer-builder'
+import type { ThumbnailLayerBuilder } from './thumbnail-layer-builder'
 
 const DRAW_UPSCALE_FACTOR = 2
 const MAX_NUM_SCALING_STEPS = 3
@@ -24,7 +24,7 @@ export class Thumbnail extends RenderView {
   constructor(readonly options: {
     container: HTMLDivElement
     eventBus: EventBus
-    l10n: IL10n
+    translator: Translator
     layerProperties: LayerPropertiesManager
     id: number
     viewport: PageViewport
@@ -37,12 +37,12 @@ export class Thumbnail extends RenderView {
   }) {
     super(options)
 
-    this.anchor.setAttribute('title', options.l10n.get('thumbnail.title', { page: this.pageLabel ?? this.id }))
+    this.anchor.setAttribute('title', options.translator.translate('title', { page: this.pageLabel ?? this.id }))
     this.anchor.setAttribute('href', options.layerProperties.locationManager.getAnchorUrl(`#page=${options.id}`))
     this.anchor.addEventListener('click', (e) => {
       e.preventDefault()
       options.layerProperties.pagesManager.currentPageNumber = options.id
-      this.dispatch('thumbnailclick', { pageNumber: options.id })
+      this.dispatch('ThumbnailClick', { pageNumber: options.id })
     })
 
     this.div.append(this.placeholderImg)
@@ -104,7 +104,7 @@ export class Thumbnail extends RenderView {
 
     this.image = createElement('img', 'thumbnail-image', {
       'src': reducedCanvas.toDataURL(),
-      'aria-label': this.options.l10n.get('thumbnail.image', { page: this.pageLabel ?? this.id }),
+      'aria-label': this.options.translator.translate('image', { page: this.pageLabel ?? this.id }),
       'onload': () => this.markAsLoaded(),
     })
 
@@ -146,7 +146,7 @@ export class Thumbnail extends RenderView {
       return
     }
 
-    const canvas = page.layersPage.find<ThumbnailLayerBuilder>(ThumbnailLayerBuilder)?.thumbnailCanvas
+    const canvas = page.layersPage.find<ThumbnailLayerBuilder>('ThumbnailLayerBuilder')?.thumbnailCanvas
 
     if (!canvas) {
       return
@@ -169,7 +169,7 @@ export class Thumbnail extends RenderView {
 
     this.anchor.setAttribute(
       'title',
-      this.options.l10n.get('thumbnail.title', { page: this.pageLabel ?? this.id }),
+      this.options.translator.translate('title', { page: this.pageLabel ?? this.id }),
     )
 
     if (!this.isRenderingFinished) {
@@ -178,7 +178,7 @@ export class Thumbnail extends RenderView {
 
     this.image?.setAttribute(
       'aria-label',
-      this.options.l10n.get('thumbnail.image', { page: this.pageLabel ?? this.id }),
+      this.options.translator.translate('image', { page: this.pageLabel ?? this.id }),
     )
   }
 }

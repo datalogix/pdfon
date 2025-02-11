@@ -11,7 +11,7 @@ export class InputPage extends ToolbarItem {
     this.input = createElement('input', {
       type: 'number',
       min: '1',
-      title: this.l10n.get('toolbar.inputpage.title'),
+      title: this.translate('title'),
     })
     this.container.appendChild(this.input)
     this.total = createElement('span')
@@ -19,15 +19,9 @@ export class InputPage extends ToolbarItem {
 
     this.disable()
 
-    this.on('pagesinit', () => {
-      this.enable()
-    })
-
-    this.on('pagesdestroy', () => {
-      this.disable()
-    })
-
-    this.on('pagechanging', () => {
+    this.on('PagesInit', () => this.enable())
+    this.on('PagesDestroy', () => this.disable())
+    this.on('PageChanging', () => {
       if (!this.input) return
 
       this.input.value = this.viewer.currentPageNumber.toString()
@@ -54,7 +48,7 @@ export class InputPage extends ToolbarItem {
     this.input.value = this.viewer.currentPageNumber.toString()
 
     if (this.total) {
-      this.total.innerText = this.l10n.get('toolbar.inputpage.of-pages', { pagesCount: this.viewer.pagesCount })
+      this.total.innerText = this.translate('of-pages', { pagesCount: this.viewer.pagesCount })
     }
   }
 

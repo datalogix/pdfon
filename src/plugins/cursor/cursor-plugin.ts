@@ -27,16 +27,16 @@ export class CursorPlugin extends Plugin<CursorPluginParams> {
   private prevActive?: CursorTool
   private handTool?: HandTool
 
-  protected async getInitializers() {
+  protected getInitializers() {
     return [
-      new CursorInitializer(await this.params?.cursorToolOnLoad),
+      new CursorInitializer(this.resolvedParams?.cursorToolOnLoad),
     ]
   }
 
   protected init() {
     this.handTool = new HandTool(this.viewerContainer)
 
-    this.on('switchcursortool', (evt: { reset: boolean, tool: CursorTool }) => {
+    this.on('SwitchCursorTool', (evt: { reset: boolean, tool: CursorTool }) => {
       if (!evt.reset) {
         if (this.prevActive) {
           return
@@ -73,7 +73,7 @@ export class CursorPlugin extends Plugin<CursorPluginParams> {
       }
     }
 
-    this.on('annotationeditormodechanged', ({ mode }) => {
+    this.on('AnnotationEditorModeChanged', ({ mode }) => {
       annotationEditorMode = mode
 
       if (mode === AnnotationEditorType.NONE) {
@@ -83,7 +83,7 @@ export class CursorPlugin extends Plugin<CursorPluginParams> {
       }
     })
 
-    this.on('presentationmodechanged', ({ state }) => {
+    this.on('PresentationModeChanged', ({ state }) => {
       presentationModeState = state
 
       if (state === PresentationModeState.NORMAL) {
@@ -107,7 +107,7 @@ export class CursorPlugin extends Plugin<CursorPluginParams> {
     if (tool === this.active) {
       if (this.prevActive) {
         // Ensure that the `disabled`-attribute of the buttons will be updated.
-        this.dispatch('cursortoolchanged', {
+        this.dispatch('CursorToolChanged', {
           source: this,
           tool,
           disabled,
@@ -140,6 +140,6 @@ export class CursorPlugin extends Plugin<CursorPluginParams> {
     }
 
     this.active = tool
-    this.dispatch('cursortoolchanged', { tool, disabled })
+    this.dispatch('CursorToolChanged', { tool, disabled })
   }
 }

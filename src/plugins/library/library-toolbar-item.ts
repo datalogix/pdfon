@@ -1,14 +1,18 @@
 import { ToolbarActionToggle } from '@/toolbar'
 import { Modal } from '@/tools'
 import { createElement } from '@/utils'
-import { LibraryPlugin } from './library-plugin'
 import type { Book } from './book'
+import type { LibraryPlugin } from './library-plugin'
 
 export class LibraryToolbarItem extends ToolbarActionToggle {
   protected persist = false
 
+  get libraryPlugin() {
+    return this.viewer.getLayerProperty<LibraryPlugin>('LibraryPlugin')!
+  }
+
   get bookManager() {
-    return this.viewer.getLayerProperty<LibraryPlugin>('LibraryPlugin')?.bookManager
+    return this.libraryPlugin.bookManager
   }
 
   get enabled() {
@@ -16,13 +20,13 @@ export class LibraryToolbarItem extends ToolbarActionToggle {
   }
 
   init() {
-    this.on('books', () => {
+    this.on('Books', () => {
       this.toggle()
       this.markAsActivated()
     })
 
-    this.on('documentempty', () => {
-      this.on('books', () => {
+    this.on('DocumentEmpty', () => {
+      this.on('Books', () => {
         this.openPersist()
       })
 
@@ -43,7 +47,7 @@ export class LibraryToolbarItem extends ToolbarActionToggle {
     this.bookManager?.available.forEach(book => content.appendChild(this.item(book)))
 
     Modal.open(content, {
-      title: this.l10n.get('library.title'),
+      title: this.libraryPlugin.translate('title'),
       backdrop: 'overlay',
       persist: this.persist,
       onClose: () => this.execute(),
@@ -59,10 +63,10 @@ export class LibraryToolbarItem extends ToolbarActionToggle {
     const info = createElement('div', 'info')
     const ul = createElement('ul')
 
-    if (book.sku) ul.append(createElement('li', { innerHTML: `${this.l10n.get('library.book.sku')}: <b>${book.sku}</b>` }))
-    if (book.isbn) ul.append(createElement('li', { innerHTML: `${this.l10n.get('library.book.isbn')}: <b>${book.isbn}</b>` }))
-    if (book.interactions) ul.append(createElement('li', { innerHTML: `${this.l10n.get('library.book.interactions')}: <b>${book.interactions.length}</b>` }))
-    if (book.author) ul.append(createElement('li', { innerHTML: `${this.l10n.get('library.book.author')}: <b>${book.author}</b>` }))
+    if (book.sku) ul.append(createElement('li', { innerHTML: `${this.libraryPlugin.translate('book.sku')}: <b>${book.sku}</b>` }))
+    if (book.isbn) ul.append(createElement('li', { innerHTML: `${this.libraryPlugin.translate('book.isbn')}: <b>${book.isbn}</b>` }))
+    if (book.interactions) ul.append(createElement('li', { innerHTML: `${this.libraryPlugin.translate('book.interactions')}: <b>${book.interactions.length}</b>` }))
+    if (book.author) ul.append(createElement('li', { innerHTML: `${this.libraryPlugin.translate('book.author')}: <b>${book.author}</b>` }))
     if (book.description) ul.append(createElement('li', 'description', { innerHTML: book.description }))
 
     info.appendChild(createElement('h2', { innerText: book.name }))

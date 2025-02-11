@@ -1,23 +1,16 @@
 import { ToolbarAction } from '@/toolbar'
-import { ClosePluginParams } from './close-plugin'
+import { type ClosePlugin } from './close-plugin'
 
 export class CloseToolbarItem extends ToolbarAction {
-  constructor(readonly options: ClosePluginParams) {
-    super()
+  get closePlugin() {
+    return this.viewer.getLayerProperty<ClosePlugin>('closePlugin')!
   }
 
   get enabled() {
-    return !!this.options.url
+    return !!this.closePlugin.resolvedParams?.url
   }
 
   protected execute() {
-    const confirm = !(this.options.confirm ?? true)
-      || window.confirm(this.options.confirmMessage ?? this.l10n.get('close.confirm'))
-
-    if (!confirm) {
-      return
-    }
-
-    window.location.href = String(this.options.url)
+    this.closePlugin.close()
   }
 }

@@ -18,7 +18,7 @@ export class SpreadGroup extends ToolbarActionGroup {
   }
 
   protected init() {
-    this.on('scrollmodechanged', () => this.toggle())
-    this.on('spreadmodechanged', () => this.markAsActivated())
+    this.on('ScrollModeChanged', () => this.toggle())
+    this.on('SpreadModeChanged', () => this.markAsActivated())
   }
 }

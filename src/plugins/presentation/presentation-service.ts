@@ -140,7 +140,7 @@ export class PresentationService {
 
   private notifyStateChange(state: PresentationModeState) {
     this.state = state
-    this.viewer.dispatch('presentationmodechanged', { state })
+    this.viewer.dispatch('PresentationModeChanged', { state })
   }
 
   private enter() {

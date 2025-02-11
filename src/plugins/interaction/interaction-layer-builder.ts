@@ -9,12 +9,13 @@ export class InteractionLayerBuilder extends LayerBuilder {
 
   protected build() {
     this.create('interaction-layer', 5)
-    this.on('interactions', () => this.renderInteractions())
+    this.on('Interactions', () => this.renderInteractions())
+    this.on('InteractionDestroy', () => this.clearInteractions())
     this.renderInteractions()
   }
 
   protected renderInteractions() {
-    this.div!.innerHTML = ''
+    this.clearInteractions()
 
     this.interactionManager?.getByPage(this.id)?.forEach((interaction) => {
       const button = createElement('button', [
@@ -28,12 +29,16 @@ export class InteractionLayerBuilder extends LayerBuilder {
       button.addEventListener('click', () => this.interactionManager?.select(interaction))
       button.appendChild(createElement('span', 'interaction-animation'))
 
-      this.on(`interactionupdated${interaction.id}`, () => {
+      this.on(`InteractionUpdated${interaction.id}`, () => {
         button.classList.remove('interaction-uncompleted')
         button.classList.add('interaction-completed')
       })
 
       this.div!.appendChild(button)
     })
+  }
+
+  protected clearInteractions() {
+    this.div!.innerHTML = ''
   }
 }

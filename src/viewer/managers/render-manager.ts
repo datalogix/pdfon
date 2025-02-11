@@ -41,7 +41,7 @@ export class RenderManager extends Manager implements Renderable {
     }
 
     this.pdfDocument.cleanup()
-    this.dispatch('rendercleanup')
+    this.dispatch('RenderCleanup')
   }
 
   cancelRendering() {
@@ -85,7 +85,7 @@ export class RenderManager extends Manager implements Renderable {
 
     this.ensurePdfPageLoaded(page as Page)
       .then(() => this.renderingQueue.renderView(page))
-      .catch(reason => this.logger.error(this.l10n.get('error.rendering'), reason))
+      .catch(reason => this.logger.error(this.translate('error.rendering'), reason))
 
     return true
   }

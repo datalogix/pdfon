@@ -26,7 +26,7 @@ export class InformationManager extends Dispatcher {
       ...information,
     }))
 
-    this.dispatch('informations', { informations })
+    this.dispatch('Informations', { informations })
   }
 
   add(information: Information) {
@@ -35,17 +35,18 @@ export class InformationManager extends Dispatcher {
       ...information,
     })
 
-    this.dispatch('informationadded', { information })
+    this.dispatch('InformationAdded', { information })
   }
 
   delete(information: Information) {
     if (!this.informations.has(information.name)) return
 
     this.informations.delete(information.name)
-    this.dispatch('informationdeleted', { information })
+    this.dispatch('InformationDeleted', { information })
   }
 
   destroy() {
-    this.set([])
+    this.informations.clear()
+    this.dispatch('InformationDestroy')
   }
 }

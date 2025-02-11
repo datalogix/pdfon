@@ -1,6 +1,6 @@
-import { ZoomTouchManager } from './zoom-touch-manager'
 import { normalizeWheelEventDirection } from '@/utils'
 import { Plugin } from '../plugin'
+import { ZoomTouchManager } from './zoom-touch-manager'
 
 export class ZoomPlugin extends Plugin {
   private zoomTouchManager?: ZoomTouchManager

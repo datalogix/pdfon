@@ -49,14 +49,14 @@ export class Pdfon extends Dispatcher {
   protected async initializePlugins(toolbar: Toolbar, viewer: ViewerType, params?: Record<string, any>) {
     const plugins = this.resolvePlugins(params)
 
-    for (const plugin of plugins) {
+    await Promise.all(plugins.map((plugin) => {
       plugin.setToolbar(toolbar)
       plugin.setViewer(viewer)
 
-      await plugin.initialize()
-    }
+      return plugin.initialize()
+    }))
 
-    this.dispatch('pluginsinit', { plugins })
+    this.dispatch('PluginsInit', { plugins })
 
     return plugins
   }
@@ -102,8 +102,12 @@ export class Pdfon extends Dispatcher {
     container.appendChild(toolbar.render())
     container.appendChild(viewer.render())
 
-    await this.initializePlugins(toolbar, viewer, opts.plugins)
+    const plugins = await this.initializePlugins(toolbar, viewer, opts.plugins)
     await this.initializeToolbar(toolbar)
+
+    //
+    await Promise.all(plugins.map(plugin => plugin.load()))
+    this.dispatch('PluginsLoaded', { plugins })
 
     return viewer.start()
   }

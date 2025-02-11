@@ -80,14 +80,14 @@ export class StructTreeLayerBuilder extends LayerBuilder {
     if (!this.treeDom || this.treeDom.hidden) return
 
     this.treeDom.hidden = true
-    this.dispatch('hide')
+    this.dispatch('Hide')
   }
 
   show() {
     if (!this.treeDom?.hidden) return
 
     this.treeDom.hidden = false
-    this.dispatch('show')
+    this.dispatch('Show')
   }
 
   private setAttributes(structElement: StructTreeNode | StructTreeContent, htmlElement: HTMLElement) {

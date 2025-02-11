@@ -9,10 +9,10 @@ export class DocumentManager extends Manager {
   private loadingTask?: pdfjs.PDFDocumentLoadingTask
 
   init() {
-    this.on('started', () => {
-      waitOnEventOrTimeout(this.eventBus, 'documentopen', WAIT_LOAD_DOCUMENT).then((type) => {
+    this.on('Started', () => {
+      waitOnEventOrTimeout(this.eventBus, 'DocumentOpen', WAIT_LOAD_DOCUMENT).then((type) => {
         if (type === 'timeout') {
-          this.dispatch('documentempty')
+          this.dispatch('DocumentEmpty')
         }
       })
     }, { once: true })
@@ -31,10 +31,10 @@ export class DocumentManager extends Manager {
       return
     }
 
-    this.dispatch('documentclose', { pdfDocument: this.pdfDocument })
+    this.dispatch('DocumentClose', { pdfDocument: this.pdfDocument })
 
     if (this.pdfDocument) {
-      this.dispatch('documentdestroy', { pdfDocument: this.pdfDocument })
+      this.dispatch('DocumentDestroy', { pdfDocument: this.pdfDocument })
       this.viewer.reset()
     }
 
@@ -48,22 +48,22 @@ export class DocumentManager extends Manager {
   async openDocument(documentType?: pdfjs.DocumentType, documentFilename?: string, options: InitializerOptions = {}) {
     defineWorker()
 
-    this.dispatch('documentopen', { documentType, documentFilename, options })
+    this.dispatch('DocumentOpen', { documentType, documentFilename, options })
 
     await this.closeDocument()
 
-    this.dispatch('documentload', { documentType, documentFilename, options })
+    this.dispatch('DocumentLoad', { documentType, documentFilename, options })
 
     const loadingTask = this.loadingTask = pdfjs.getDocument(documentType)
 
     loadingTask.onProgress = ({ loaded, total }: { loaded: number, total: number }) => {
-      this.dispatch('documentprogress', { loaded, total })
+      this.dispatch('DocumentProgress', { loaded, total })
     }
 
     try {
       const pdfDocument = await loadingTask.promise
       this._pdfDocument = pdfDocument
-      this.dispatch('documentinit', { pdfDocument, documentType, documentFilename, options })
+      this.dispatch('DocumentInit', { pdfDocument, documentType, documentFilename, options })
     } catch (reason) {
       if (loadingTask !== this.loadingTask) {
         return
@@ -79,7 +79,7 @@ export class DocumentManager extends Manager {
         key = 'error.unexpected-response'
       }
 
-      this.dispatch('documenterror', { message: this.l10n.get(key), reason })
+      this.dispatch('DocumentError', { message: this.translate(key), reason })
 
       throw reason
     }

@@ -12,16 +12,16 @@ export class OpenPlugin extends Plugin {
   private openService?: OpenService
 
   protected init() {
-    this.openService = new OpenService(this.container, this.l10n)
+    this.openService = new OpenService(this.container, this.translator)
     this.openService.onChooseFile((file, blob) => {
       if (this.viewer.isInPresentationMode) return
 
       this.viewer.openDocument(blob, file.name)
     })
 
-    this.on('openfile', () => this.openService?.chooseFile())
-    this.on('documentopen', () => this.openService?.hideDropzone())
-    this.on(['documentempty', 'documenterror'], () => this.openService?.showDropzone())
+    this.on('OpenFile', () => this.openService?.chooseFile())
+    this.on('DocumentOpen', () => this.openService?.hideDropzone())
+    this.on(['DocumentEmpty', 'DocumentError'], () => this.openService?.showDropzone())
   }
 
   protected destroy() {

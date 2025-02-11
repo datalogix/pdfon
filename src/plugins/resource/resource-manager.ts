@@ -18,10 +18,11 @@ export class ResourceManager extends Dispatcher {
 
   set(resources: Resource[]) {
     this.resources = resources
-    this.dispatch('resources', { resources })
+    this.dispatch('Resources', { resources })
   }
 
   destroy() {
     this.resources = []
+    this.dispatch('ResourceDestroy')
   }
 }

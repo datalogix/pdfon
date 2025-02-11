@@ -1,9 +1,9 @@
 import { Dispatcher, type EventBus } from '@/bus'
-import type { IL10n } from '@/l10n'
-import { createElement } from '@/utils'
-import type { SidebarItem } from './sidebar-item'
+import type { Translator } from '@/l10n'
 import type { ViewerType } from '@/viewer'
 import { Drawer } from '@/tools'
+import { createElement } from '@/utils'
+import type { SidebarItem } from './sidebar-item'
 
 export class SidebarManager extends Dispatcher {
   protected container = createElement('div', 'sidebar')
@@ -19,7 +19,7 @@ export class SidebarManager extends Dispatcher {
   constructor(
     readonly eventBus: EventBus,
     readonly viewer: ViewerType,
-    readonly l10n: IL10n,
+    readonly translator: Translator,
   ) {
     super()
 
@@ -45,7 +45,7 @@ export class SidebarManager extends Dispatcher {
     }
 
     this.drawer.open()
-    this.dispatch('sidebaropen')
+    this.dispatch('SidebarOpen')
   }
 
   close() {
@@ -55,7 +55,7 @@ export class SidebarManager extends Dispatcher {
       this.items.get(this.current)?.hide()
     }
 
-    this.dispatch('sidebarclose')
+    this.dispatch('SidebarClose')
   }
 
   add(item: SidebarItem, order?: number) {
@@ -78,8 +78,8 @@ export class SidebarManager extends Dispatcher {
     this.close()
   }
 
-  select(name: string) {
-    if (!this.items.has(name)) return
+  select(name?: string) {
+    if (!name || !this.items.has(name)) return
 
     if (name !== this.current) {
       this.deselectCurrent()
@@ -90,7 +90,7 @@ export class SidebarManager extends Dispatcher {
       }
 
       this.current = name
-      this.dispatch('sidebarselected', { sidebar: name })
+      this.dispatch('SidebarSelected', { sidebar: name })
     }
 
     queueMicrotask(() => {
@@ -112,8 +112,8 @@ export class SidebarManager extends Dispatcher {
   private createButton(item: SidebarItem, order?: number): HTMLButtonElement {
     const button = createElement('button', ['sidebar-item', `sidebar-item-${item.name}`], {
       type: 'button',
-      innerHTML: `<span>${this.l10n.get(`sidebar.${item.name}.label`)}</span>`,
-      title: this.l10n.get(`sidebar.${item.name}.title`),
+      innerHTML: `<span>${this.translator.translate(`${item.name}.label`)}</span>`,
+      title: this.translator.translate(`${item.name}.title`),
     })
 
     if (order) button.dataset.order = order.toString()

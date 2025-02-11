@@ -161,7 +161,7 @@ export class FindController extends Dispatcher {
 
     this._state = state
 
-    if (type !== 'highlightallchange') {
+    if (type !== 'HighlightAllChange') {
       this.updateUIState(FindState.PENDING)
     }
 
@@ -174,7 +174,7 @@ export class FindController extends Dispatcher {
 
       this.extractText()
 
-      const findbarClosed = !this._highlightMatches
+      const findBarClosed = !this._highlightMatches
       const pendingTimeout = !!this.findTimeout
 
       if (this.findTimeout) {
@@ -199,19 +199,19 @@ export class FindController extends Dispatcher {
         return
       }
 
-      if (type === 'again') {
+      if (type === 'Again') {
         this.nextMatch()
 
         // When the find bar was previously closed, and `highlightAll` is set,
         // ensure that the matches on all active pages are highlighted again.
-        if (findbarClosed && this._state?.highlightAll) {
+        if (findBarClosed && this._state?.highlightAll) {
           this.updateAllPages()
         }
 
         return
       }
 
-      if (type === 'highlightallchange') {
+      if (type === 'HighlightAllChange') {
         // If there was a pending search operation, synchronously trigger a new
         // search *first* to ensure that the correct matches are highlighted.
         if (pendingTimeout) {
@@ -230,7 +230,7 @@ export class FindController extends Dispatcher {
 
   close() {
     // Since searching is asynchronous, ensure that the removal of highlighted
-    // matches (from the UI) is async too such that the 'updatetextlayermatches'
+    // matches (from the UI) is async too such that the 'UpdateTextLayerMatches'
     // events will always be dispatched in the expected order.
     this.firstPageCapability?.promise.then(() => {
       // Only update the UI if the document is open, and is the current one.
@@ -327,7 +327,7 @@ export class FindController extends Dispatcher {
     }
 
     switch (state.type) {
-      case 'again': {
+      case 'Again': {
         const pageNumber = this._selected.pageIndex + 1
 
         return pageNumber >= 1
@@ -336,7 +336,7 @@ export class FindController extends Dispatcher {
           && !this.getVisiblePages().ids.has(pageNumber)
       }
 
-      case 'highlightallchange':
+      case 'HighlightAllChange':
         return false
     }
 
@@ -381,12 +381,12 @@ export class FindController extends Dispatcher {
     this.matchesCountTotal += pageMatchesCount
     if (this.updateMatchesCountOnProgress) {
       if (pageMatchesCount > 0) {
-        this.dispatch('updatefindmatchescount', { matchesCount: this.requestMatchesCount() })
+        this.dispatch('UpdateFindMatchesCount', { matchesCount: this.requestMatchesCount() })
       }
     } else if (++this.visitedPagesCount === this.pagesCount) {
       // For example, in GeckoView we want to have only the final update because
       // the Java side provides only one object to update the counts.
-      this.dispatch('updatefindmatchescount', { matchesCount: this.requestMatchesCount() })
+      this.dispatch('UpdateFindMatchesCount', { matchesCount: this.requestMatchesCount() })
     }
   }
 
@@ -488,11 +488,11 @@ export class FindController extends Dispatcher {
       this.page = index + 1
     }
 
-    this.dispatch('updatetextlayermatches', { pageIndex: index })
+    this.dispatch('UpdateTextLayerMatches', { pageIndex: index })
   }
 
   protected updateAllPages() {
-    this.dispatch('updatetextlayermatches', { pageIndex: -1 })
+    this.dispatch('UpdateTextLayerMatches', { pageIndex: -1 })
   }
 
   protected nextMatch() {
@@ -688,7 +688,7 @@ export class FindController extends Dispatcher {
       return
     }
 
-    this.dispatch('updatefindcontrolstate', {
+    this.dispatch('UpdateFindControlState', {
       state,
       previous,
       entireWord: this._state?.entireWord,

@@ -1,6 +1,7 @@
 import { ToolbarActionToggle } from '@/toolbar'
 import { createElement } from '@/utils'
 import { FindState } from './find-controller'
+import type { FindPlugin } from './find-plugin'
 
 const MATCHES_COUNT_LIMIT = 1000
 
@@ -16,22 +17,26 @@ export class FindToolbarItem extends ToolbarActionToggle {
   protected findPreviousButton?: HTMLButtonElement
   protected findNextButton?: HTMLButtonElement
 
+  get findPlugin() {
+    return this.viewer.getLayerProperty<FindPlugin>('findPlugin')!
+  }
+
   init() {
     this.bar = createElement('div', 'find-bar')
     this.findField = this.bar.appendChild(createElement('input', {
       type: 'text',
-      title: this.l10n.get('find.field.title'),
-      placeholder: this.l10n.get('find.field.placeholder'),
+      title: this.findPlugin.translate('field.title'),
+      placeholder: this.findPlugin.translate('field.placeholder'),
     }))
     this.findPreviousButton = createElement('button', 'find-previous', {
       type: 'button',
-      title: this.l10n.get('find.previous.title'),
-      innerHtml: `<span>${this.l10n.get('find.previous.label')}</span>`,
+      title: this.findPlugin.translate('previous.title'),
+      innerHtml: `<span>${this.findPlugin.translate('previous.label')}</span>`,
     })
     this.findNextButton = createElement('button', 'find-next', {
       type: 'button',
-      title: this.l10n.get('find.next.title'),
-      innerHtml: `<span>${this.l10n.get('find.next.label')}</span>`,
+      title: this.findPlugin.translate('next.title'),
+      innerHtml: `<span>${this.findPlugin.translate('next.label')}</span>`,
     })
     this.findHighlightAll = createElement('input', { type: 'checkbox' })
     this.findCaseSensitive = createElement('input', { type: 'checkbox' })
@@ -41,16 +46,16 @@ export class FindToolbarItem extends ToolbarActionToggle {
     this.findResultsCount = createElement('span', 'find-results')
 
     const checkedInputs = new Map([
-      [this.findHighlightAll, 'highlightallchange'],
-      [this.findCaseSensitive, 'casesensitivitychange'],
-      [this.findMatchDiacritics, 'diacriticmatchingchange'],
-      [this.findEntireWord, 'entirewordchange'],
+      [this.findHighlightAll, 'HighlightAllChange'],
+      [this.findCaseSensitive, 'CaseSensitivityChange'],
+      [this.findMatchDiacritics, 'DiacriticMatchingChange'],
+      [this.findEntireWord, 'EntireWordChange'],
     ])
 
     this.bar.addEventListener('keydown', ({ key, shiftKey, target }) => {
       if (key == 'Enter') {
         if (target === this.findField) {
-          this.dispatchEvent('again', shiftKey)
+          this.dispatchEvent('Again', shiftKey)
         } else if (target instanceof HTMLInputElement && checkedInputs.has(target)) {
           target.checked = !target.checked
           this.dispatchEvent(checkedInputs.get(target))
@@ -63,24 +68,32 @@ export class FindToolbarItem extends ToolbarActionToggle {
     })
 
     this.findField.addEventListener('input', () => this.dispatchEvent(), { signal: this.signal })
-    this.findPreviousButton.addEventListener('click', () => this.dispatchEvent('again', true), { signal: this.signal })
-    this.findNextButton.addEventListener('click', () => this.dispatchEvent('again', false), { signal: this.signal })
+    this.findPreviousButton.addEventListener('click', () => this.dispatchEvent('Again', true), { signal: this.signal })
+    this.findNextButton.addEventListener('click', () => this.dispatchEvent('Again', false), { signal: this.signal })
 
     for (const [elem, evtName] of checkedInputs) {
       elem.addEventListener('click', () => this.dispatchEvent(evtName), { signal: this.signal })
     }
 
     const labelHighlightAll = createElement('label', 'find-checkbox')
-    labelHighlightAll.append(this.findHighlightAll, createElement('span', { innerText: this.l10n.get('find.highlight-all') }))
+    labelHighlightAll.append(this.findHighlightAll, createElement('span', {
+      innerText: this.findPlugin.translate('highlight-all'),
+    }))
 
     const labelCaseSensitive = createElement('label', 'find-checkbox')
-    labelCaseSensitive.append(this.findCaseSensitive, createElement('span', { innerText: this.l10n.get('find.case-sensitive') }))
+    labelCaseSensitive.append(this.findCaseSensitive, createElement('span', {
+      innerText: this.findPlugin.translate('case-sensitive'),
+    }))
 
     const labelEntireWord = createElement('label', 'find-checkbox')
-    labelEntireWord.append(this.findEntireWord, createElement('span', { innerText: this.l10n.get('find.entire-word') }))
+    labelEntireWord.append(this.findEntireWord, createElement('span', {
+      innerText: this.findPlugin.translate('entire-word'),
+    }))
 
     const labelMatchDiacritics = createElement('label', 'find-checkbox')
-    labelMatchDiacritics.append(this.findMatchDiacritics, createElement('span', { innerText: this.l10n.get('find.match-diacritics') }))
+    labelMatchDiacritics.append(this.findMatchDiacritics, createElement('span', {
+      innerText: this.findPlugin.translate('match-diacritics'),
+    }))
 
     const findField = createElement('div', 'find-field')
     findField.append(this.findField)
@@ -97,9 +110,9 @@ export class FindToolbarItem extends ToolbarActionToggle {
     this.bar.append(findFieldContainer, findOptionsContainer, findMessageContainer)
     this.container.append(this.bar)
 
-    this.on('updatefindmatchescount', ({ matchesCount }) => this.updateResultsCount(matchesCount))
-    this.on('updatefindcontrolstate', ({ state, previous, matchesCount }) => this.updateUIState(state, previous, matchesCount))
-    this.on('documentdestroy', () => this.reset())
+    this.on('UpdateFindMatchesCount', ({ matchesCount }) => this.updateResultsCount(matchesCount))
+    this.on('UpdateFindControlState', ({ state, previous, matchesCount }) => this.updateUIState(state, previous, matchesCount))
+    this.on('DocumentDestroy', () => this.reset())
   }
 
   destroy() {
@@ -114,7 +127,7 @@ export class FindToolbarItem extends ToolbarActionToggle {
   }
 
   dispatchEvent(type = '', findPrevious?: boolean) {
-    this.dispatch('find', {
+    this.dispatch('Find', {
       type,
       query: this.findField?.value,
       caseSensitive: this.findCaseSensitive?.checked,
@@ -138,11 +151,11 @@ export class FindToolbarItem extends ToolbarActionToggle {
         status = 'pending'
         break
       case FindState.NOT_FOUND:
-        message = this.l10n.get('find.not-found')
+        message = this.findPlugin.translate('not-found')
         status = 'not-found'
         break
       case FindState.WRAPPED:
-        message = this.l10n.get(previous ? 'find.reached.top' : 'find.reached.bottom')
+        message = this.findPlugin.translate(previous ? 'reached.top' : 'reached.bottom')
         break
     }
 
@@ -165,8 +178,8 @@ export class FindToolbarItem extends ToolbarActionToggle {
     const limit = MATCHES_COUNT_LIMIT
 
     this.findResultsCount.textContent = total > limit
-      ? this.l10n.get('find.match.count-limit', { count: limit })
-      : this.l10n.get('find.match.count', { current, count: total })
+      ? this.findPlugin.translate('match.count-limit', { count: limit })
+      : this.findPlugin.translate('match.count', { current, count: total })
   }
 
   open() {
@@ -189,6 +202,6 @@ export class FindToolbarItem extends ToolbarActionToggle {
     this.bar.classList.remove('find-bar-open')
     this.bar.hidden = true
 
-    this.dispatch('findbarclose')
+    this.dispatch('FindBarClose')
   }
 }

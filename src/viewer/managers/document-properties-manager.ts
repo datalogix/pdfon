@@ -66,7 +66,7 @@ export class DocumentPropertiesManager extends Manager {
   }
 
   init() {
-    this.on('documentinit', ({ pdfDocument, documentType, documentFilename }) => {
+    this.on('DocumentInit', ({ pdfDocument, documentType, documentFilename }) => {
       this.setupDocumentProperties(pdfDocument, documentType, documentFilename)
     })
   }
@@ -91,12 +91,12 @@ export class DocumentPropertiesManager extends Manager {
 
     if ((this.options.enableTitleUpdate ?? true) && !isEmbedded() && this.documentTitle) {
       document.title = this.documentTitle
-      this.dispatch('documenttitleupdated', { title: this.documentTitle })
+      this.dispatch('DocumentTitleUpdated', { title: this.documentTitle })
     }
 
     pdfDocument.getDownloadInfo().then(({ length }) => {
       this._documentFilesize = length
-      this.pagesManager.firstPagePromise?.then(() => this.dispatch('documentloaded'))
+      this.pagesManager.firstPagePromise?.then(() => this.dispatch('DocumentLoaded'))
     })
 
     pdfDocument.getMetadata().then((data) => {
@@ -132,7 +132,7 @@ export class DocumentPropertiesManager extends Manager {
         this.logger.warn('Warning: Digital signatures validation is not supported')
       }
 
-      this.dispatch('metadataloaded', data)
+      this.dispatch('MetadataLoaded', data)
     })
   }
 }

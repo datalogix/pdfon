@@ -16,10 +16,6 @@ export class DownloadPlugin extends Plugin<DownloadPluginParams> {
   readonly downloadManager = new DownloadManager()
   private saveInProgress = false
 
-  async getDownloadFileName() {
-    return await this.params?.filename || this.viewer.documentFilename
-  }
-
   async downloadOrSave() {
     this.rootContainer.classList.add('wait')
 
@@ -40,8 +36,11 @@ export class DownloadPlugin extends Plugin<DownloadPluginParams> {
       // When the PDF document isn't ready, simply download using the URL.
     }
 
-    const filename = await this.getDownloadFileName()
-    this.downloadManager.download(data, this.viewer.baseUrl, filename)
+    this.downloadManager.download(
+      data,
+      this.viewer.baseUrl,
+      this.resolvedParams?.filename || this.viewer.documentFilename,
+    )
   }
 
   async save() {
@@ -53,8 +52,11 @@ export class DownloadPlugin extends Plugin<DownloadPluginParams> {
 
     try {
       const data = await this.pdfDocument.saveDocument()
-      const filename = await this.getDownloadFileName()
-      this.downloadManager.download(data, this.viewer.baseUrl, filename)
+      this.downloadManager.download(
+        data,
+        this.viewer.baseUrl,
+        this.resolvedParams?.filename || this.viewer.documentFilename,
+      )
     } catch (reason: any) {
       this.logger.error('Error when saving the document', reason)
       await this.download()

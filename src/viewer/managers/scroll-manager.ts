@@ -318,7 +318,7 @@ export class ScrollManager extends Manager {
     this.previousScrollMode = this.scrollMode
     this._scrollMode = mode
 
-    this.dispatch('scrollmodechanged', { mode })
+    this.dispatch('ScrollModeChanged', { mode })
     this.updateScrollMode(this.currentPageNumber)
   }
 

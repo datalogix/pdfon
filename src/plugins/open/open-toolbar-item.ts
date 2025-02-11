@@ -6,11 +6,12 @@ export class OpenToolbarItem extends ToolbarAction {
   }
 
   protected init() {
-    this.on('documenterror', () => this.enable())
+    this.on('DocumentError', () => this.enable())
+
     this.enable()
   }
 
   protected execute() {
-    this.dispatch('openfile')
+    this.dispatch('OpenFile')
   }
 }

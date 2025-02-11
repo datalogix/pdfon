@@ -1,5 +1,4 @@
 import { Dispatcher, type EventBus } from '@/bus'
-import type { InitializerOptions } from '@/viewer'
 import type { Book, BookId } from './book'
 
 export class BookManager extends Dispatcher {
@@ -30,14 +29,14 @@ export class BookManager extends Dispatcher {
 
   set(books: Book[]) {
     this.books = books
-    this.dispatch('books', { books })
+    this.dispatch('Books', { books })
   }
 
   find(bookId: BookId) {
     return this.books.find(book => book.id.toString() === bookId.toString())
   }
 
-  select(book?: Book | BookId, options?: InitializerOptions) {
+  select(book?: Book | BookId) {
     book = typeof book === 'number' || typeof book === 'string'
       ? this.find(book)
       : book
@@ -47,11 +46,15 @@ export class BookManager extends Dispatcher {
     }
 
     this.currentBook = book
-    this.dispatch('book', { book, options })
+
+    if (book) {
+      this.dispatch('Book', { book })
+    }
   }
 
   destroy() {
     this.books = []
     this.currentBook = undefined
+    this.dispatch('BookDestroy')
   }
 }

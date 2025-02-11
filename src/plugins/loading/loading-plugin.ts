@@ -5,12 +5,13 @@ export class LoadingPlugin extends Plugin {
   private loadingService?: LoadingService
 
   protected init() {
-    this.loadingService = new LoadingService(this.rootContainer, this.l10n)
+    this.loadingService = new LoadingService(this.translator)
+    this.loadingService.render(this.rootContainer)
 
-    this.on('documentopen', () => this.loadingService?.init())
-    this.on('documentprogress', ({ loaded, total }) => this.loadingService?.update(loaded, total))
-    this.on('documentloaded', () => this.loadingService?.finish())
-    this.on(['documentinitialized', 'documenterror', 'documentempty'], () => this.loadingService?.complete())
+    this.on('DocumentOpen', () => this.loadingService?.init())
+    this.on('DocumentProgress', ({ loaded, total }) => this.loadingService?.update(loaded, total))
+    this.on('DocumentLoaded', () => this.loadingService?.finish())
+    this.on(['DocumentInitialized', 'DocumentError', 'DocumentEmpty'], () => this.loadingService?.complete())
   }
 
   protected destroy() {

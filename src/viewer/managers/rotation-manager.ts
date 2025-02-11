@@ -8,7 +8,7 @@ export class RotationManager extends Manager {
   private _rotation = 0
 
   init() {
-    this.on('rotationchanging', ({ pageNumber }) => {
+    this.on('RotationChanging', ({ pageNumber }) => {
       this.renderManager.forceRendering()
 
       // Ensure that the active page doesn't change during rotation.
@@ -52,7 +52,7 @@ export class RotationManager extends Manager {
       this.scaleManager.setScale(this.currentScaleValue, { noScroll: true })
     }
 
-    this.dispatch('rotationchanging', {
+    this.dispatch('RotationChanging', {
       rotation,
       pagesRotation: rotation,
       pageNumber,

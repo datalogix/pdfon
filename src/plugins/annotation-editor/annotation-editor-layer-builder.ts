@@ -56,7 +56,7 @@ export class AnnotationEditorLayerBuilder extends LayerBuilder {
     })
 
     this.show()
-    this.dispatch('render')
+    this.dispatch('Render')
   }
 
   cancel() {

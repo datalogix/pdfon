@@ -39,7 +39,7 @@ enum CharacterType {
   HAN_LETTER = 3,
   KATAKANA_LETTER = 4,
   HIRAGANA_LETTER = 5,
-  HALFWIDTH_KATAKANA_LETTER = 6,
+  HALF_WIDTH_KATAKANA_LETTER = 6,
   THAI_LETTER = 7,
 }
 
@@ -52,7 +52,7 @@ export function getCharacterType(charCode: number) {
   const isHan = (charCode: number) => ((charCode >= 0x3400 && charCode <= 0x9fff) || (charCode >= 0xf900 && charCode <= 0xfaff))
   const isKatakana = (charCode: number) => charCode >= 0x30a0 && charCode <= 0x30ff
   const isHiragana = (charCode: number) => charCode >= 0x3040 && charCode <= 0x309f
-  const isHalfwidthKatakana = (charCode: number) => charCode >= 0xff60 && charCode <= 0xff9f
+  const isHalfWidthKatakana = (charCode: number) => charCode >= 0xff60 && charCode <= 0xff9f
   const isThai = (charCode: number) => (charCode & 0xff80) === 0x0e00
 
   if (isAlphabeticalScript(charCode)) {
@@ -95,8 +95,8 @@ export function getCharacterType(charCode: number) {
     return CharacterType.HIRAGANA_LETTER
   }
 
-  if (isHalfwidthKatakana(charCode)) {
-    return CharacterType.HALFWIDTH_KATAKANA_LETTER
+  if (isHalfWidthKatakana(charCode)) {
+    return CharacterType.HALF_WIDTH_KATAKANA_LETTER
   }
 
   return CharacterType.ALPHA_LETTER
@@ -118,7 +118,7 @@ export function convertToRegExpString(query: string, matchDiacritics?: boolean, 
       p5, /* letters */
     ) => {
       if (p1) {
-        // Escape characters like *+?... to not interfer with regexp syntax.
+        // Escape characters like *+?... to not interver with regexp syntax.
         return `[ ]*\\${p1}[ ]*`
       }
       if (p2) {

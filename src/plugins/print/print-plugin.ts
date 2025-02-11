@@ -32,9 +32,9 @@ export class PrintPlugin extends Plugin<PrintPluginParams> {
   }
 
   protected init() {
-    this.on('beforeprint', async () => await this.onBeforePrint())
-    this.on('afterprint', () => this.onAfterPrint())
-    this.on('print', () => this.triggerPrint())
+    this.on('BeforePrint', () => this.onBeforePrint())
+    this.on('AfterPrint', () => this.onAfterPrint())
+    this.on('Print', () => this.triggerPrint())
 
     if ('onbeforeprint' in window) {
       // Do not propagate before/afterprint events when they are not triggered
@@ -48,8 +48,8 @@ export class PrintPlugin extends Plugin<PrintPluginParams> {
       window.addEventListener('afterprint', stopPropagationIfNeeded, { signal: this.signal })
     }
 
-    window.addEventListener('beforeprint', () => this.dispatch('beforeprint'), { signal: this.signal })
-    window.addEventListener('afterprint', () => this.dispatch('afterprint'), { signal: this.signal })
+    window.addEventListener('beforeprint', () => this.dispatch('BeforePrint'), { signal: this.signal })
+    window.addEventListener('afterprint', () => this.dispatch('AfterPrint'), { signal: this.signal })
     window.addEventListener('keydown', (e) => {
       if (e.key.toLowerCase() === 'p' && (e.ctrlKey || e.metaKey) && !e.altKey && !e.shiftKey) {
         this.triggerPrint()
@@ -74,7 +74,7 @@ export class PrintPlugin extends Plugin<PrintPluginParams> {
 
   triggerPrint() {
     if (!this.supportsPrinting) {
-      this.dispatch('notify', { type: 'warn', key: 'print.not-supported' })
+      this.dispatch('Notify', { type: 'warn', message: this.translate('not-supported') })
       return
     }
 
@@ -91,7 +91,7 @@ export class PrintPlugin extends Plugin<PrintPluginParams> {
     }
   }
 
-  private async onBeforePrint() {
+  private onBeforePrint() {
     this.printAnnotationStoragePromise = this.scriptingManager?.dispatchWillPrint()
       .catch(() => {})
       .then(() => this.pdfDocument?.annotationStorage.print)
@@ -110,14 +110,14 @@ export class PrintPlugin extends Plugin<PrintPluginParams> {
     // The beforePrint is a sync method and we need to know layout before
     // returning from this method. Ensure that we can get sizes of the pages.
     if (!this.viewer.pagesReady) {
-      this.dispatch('notify', { type: 'warn', key: 'print.not-ready' })
+      this.dispatch('Notify', { type: 'warn', message: this.translate('not-ready') })
       return
     }
 
     this.printService = new PrintService(
       this.pdfDocument,
       this.viewer.getPagesOverview(),
-      await this.params?.resolution,
+      this.resolvedParams?.resolution,
       this.printAnnotationStoragePromise,
     )
 
@@ -126,14 +126,14 @@ export class PrintPlugin extends Plugin<PrintPluginParams> {
 
     const cancelButton = createElement('button', { type: 'button' })
     cancelButton.addEventListener('click', () => this.abortPrint())
-    cancelButton.innerText = this.l10n.get('print.cancel-button')
+    cancelButton.innerText = this.translate('cancel-button')
 
     const content = createElement('div', 'print-content')
     content.appendChild(progressBar.render())
     content.appendChild(cancelButton)
 
     Modal.open(content, {
-      title: this.l10n.get('print.progress-title'),
+      title: this.translate('progress-title'),
       backdrop: 'blur',
       persist: true,
     }).classList.add('modal-printing')
@@ -201,7 +201,7 @@ export class PrintPlugin extends Plugin<PrintPluginParams> {
       }
     },
     (reason) => {
-      this.dispatch('notify', { type: 'error', key: 'error.loading', info: reason })
+      this.dispatch('Notify', { type: 'error', key: 'error.loading', info: reason })
     })
   }
 }

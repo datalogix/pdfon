@@ -41,7 +41,7 @@ export class ContainerManager extends Manager {
       { once: true },
     )
 
-    this.on('firstpageloaded', ({ pdfDocument, viewport }) => {
+    this.on('FirstPageLoaded', ({ pdfDocument, viewport }) => {
       this.setScaleFactor(viewport.scale)
       applyHighlightHCMFilter(this.viewerContainer, this.viewer.pageColors, pdfDocument.filterFactory)
 
@@ -50,13 +50,13 @@ export class ContainerManager extends Manager {
       }
     })
 
-    this.on('metadataloaded', ({ info }) => {
+    this.on('MetadataLoaded', ({ info }) => {
       if ('Language' in info && info.Language) {
         this.viewerContainer.lang = String(info.Language)
       }
     })
 
-    this.on('rendered', () => {
+    this.on('Rendered', () => {
       this.rootContainer.dir = this.l10n.getDirection()
     })
   }

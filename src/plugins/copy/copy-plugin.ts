@@ -11,7 +11,7 @@ export class CopyPlugin extends Plugin {
   private textLayerMode?: TextLayerMode
 
   protected init() {
-    this.on('firstpageloaded', ({ textLayerMode }) => {
+    this.on('FirstPageLoaded', ({ textLayerMode }) => {
       this.textLayerMode = textLayerMode
       if (this.textLayerMode === TextLayerMode.DISABLE) return
 
@@ -21,7 +21,7 @@ export class CopyPlugin extends Plugin {
       document.addEventListener('copy', this.onCopyListener, { signal: this.viewer.pagesManager.signal })
     })
 
-    this.on('pagesdestroy', () => this.destroy())
+    this.on('PagesDestroy', () => this.destroy())
   }
 
   protected destroy() {

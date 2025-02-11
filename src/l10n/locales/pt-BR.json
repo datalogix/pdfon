@@ -1,13 +1,13 @@
 {
-  "page": {
-    "title": "Pagina {{ page }}"
-  },
   "error": {
     "loading": "Ocorreu um erro ao carregar o PDF.",
     "invalid-file": "Arquivo PDF corrompido ou inválido.",
     "missing-file": "Arquivo PDF ausente.",
     "unexpected-response": "Resposta inesperada do servidor.",
     "rendering": "Ocorreu um erro ao renderizar a página."
+  },
+  "page": {
+    "title": "Pagina {{ page }}"
   },
   "toolbar": {
     "menu": {
@@ -171,133 +171,137 @@
       "title": "Guia"
     }
   },
-  "sidebar": {
-    "thumbnail": {
-      "label": "Miniaturas",
-      "title": "Mostrar miniaturas"
+  "plugins": {
+    "annotationeditor": {
+      "free-text": {
+        "color": "Cor",
+        "size": "Tamanho"
+      },
+      "ink": {
+        "color": "Cor",
+        "thickness": "Espessura",
+        "opacity": "Opacidade"
+      },
+      "highlight": {
+        "color": "Cor",
+        "thickness": "Espessura",
+        "show-all": "Mostrar todos"
+      }
     },
     "bookmark": {
-      "label": "Marcadores de páginas",
-      "title": "Mostrar marcadores de páginas"
+      "page": "Página {{ page }}",
+      "add-message": "Marcar página {{ page }}",
+      "delete-confirm": "Deseja realmente remover esse marcador ?"
+    },
+    "close": {
+      "confirm": "Deseja realmente sair?"
+    },
+    "find": {
+      "field": {
+        "title": "Procurar",
+        "placeholder": "Faça sua pesquisa..."
+      },
+      "previous": {
+        "title": "Procurar a ocorrência anterior da frase",
+        "label": "Anterior"
+      },
+      "next": {
+        "title": "Procurar a próxima ocorrência da frase",
+        "label": "Próxima"
+      },
+      "highlight-all": "Destacar tudo",
+      "case-sensitive": "Diferenciar maiúsculas/minúsculas",
+      "entire-word": "Palavras completas",
+      "match-diacritics": "Considerar acentuação",
+      "reached": {
+        "top": "Início do documento alcançado, continuando do fim",
+        "bottom": "Fim do documento alcançado, continuando do início"
+      },
+      "match": {
+        "count-limit_one": "Mais de {{ count }} ocorrência",
+        "count-limit_other": "Mais de {{ count }} ocorrências",
+        "count_one": "{{ current }} de {{ count }} ocorrência",
+        "count_other": "{{ current }} de {{ count }} ocorrências"
+      },
+      "not-found": "Não encontrado"
+    },
+    "information": {
+      "title": "Informações"
     },
     "interaction": {
-      "label": "Interações",
-      "title": "Interações"
-    }
-  },
-  "find": {
-    "field": {
-      "title": "Procurar",
-      "placeholder": "Faça sua pesquisa..."
+      "title": "Interações",
+      "progress": "{{ value }} de {{ total }}",
+      "filter": "Apenas não finalizadas",
+      "page": "Página {{ page }}"
     },
-    "previous": {
-      "title": "Procurar a ocorrência anterior da frase",
-      "label": "Anterior"
+    "library": {
+      "title": "Biblioteca",
+      "book": {
+        "name": "Nome do livro",
+        "sku": "SKU",
+        "isbn": "ISBN",
+        "author": "Autor",
+        "description": "Descrição",
+        "interactions": "Interações"
+      }
     },
-    "next": {
-      "title": "Procurar a próxima ocorrência da frase",
-      "label": "Próxima"
+    "loading": {
+      "init": "Preparando...",
+      "update": "Carregando... {{ percentage }}",
+      "finish": "Inicializando..."
     },
-    "highlight-all": "Destacar tudo",
-    "case-sensitive": "Diferenciar maiúsculas/minúsculas",
-    "entire-word": "Palavras completas",
-    "match-diacritics": "Considerar acentuação",
-    "reached": {
-      "top": "Início do documento alcançado, continuando do fim",
-      "bottom": "Fim do documento alcançado, continuando do início"
+    "notify": {
+      "error": "Erro",
+      "warn": "Aviso",
+      "info": "Informação"
     },
-    "match": {
-      "count-limit_one": "Mais de {{ count }} ocorrência",
-      "count-limit_other": "Mais de {{ count }} ocorrências",
-      "count_one": "{{ current }} de {{ count }} ocorrência",
-      "count_other": "{{ current }} de {{ count }} ocorrências"
+    "open": {
+      "description": "Arraste e solte o PDF"
     },
-    "not-found": "Não encontrado"
-  },
-  "thumbnail": {
-    "title": "Pagina {{ page }}",
-    "image": "Miniatura da página {{ page }}"
-  },
-  "print": {
-    "progress-title": "Preparando documento para impressão…",
-    "cancel-button": "Cancelar",
-    "not-supported": "A impressão não é totalmente suportada neste navegador.",
-    "not-ready": "O PDF não está totalmente carregado para impressão."
-  },
-  "notify": {
-    "error": "Erro",
-    "warn": "Aviso",
-    "info": "Informação"
-  },
-  "bookmark": {
-    "page": "Página {{ page }}",
-    "add-message": "Marcar página {{ page }}",
-    "delete-confirm": "Deseja realmente remover esse marcador ?"
-  },
-  "information": {
-    "title": "Informações",
-    "page-views": "Páginas visualizadas",
-    "usage-time": "Tempo de utilização"
-  },
-  "library": {
-    "title": "Biblioteca",
-    "book": {
-      "name": "Nome do livro",
-      "sku": "SKU",
-      "isbn": "ISBN",
-      "author": "Autor",
-      "description": "Descrição",
-      "interactions": "Interações"
-    }
-  },
-  "interaction": {
-    "title": "Interações",
-    "progress": "{{ value }} de {{ total }}",
-    "filter": "Apenas não finalizadas",
-    "page": "Página {{ page }}"
-  },
-  "resource": {
-    "title": "Recursos"
-  },
-  "open": {
-    "description": "Arraste e solte o PDF"
-  },
-  "loading": {
-    "init": "Carregando...",
-    "finish": "Inicializando...",
-    "update": "Carregando... {{ percentage }}"
-  },
-  "annotation-editor": {
-    "free-text": {
-      "color": "Cor",
-      "size": "Tamanho"
+    "print": {
+      "progress-title": "Preparando documento para impressão…",
+      "cancel-button": "Cancelar",
+      "not-supported": "A impressão não é totalmente suportada neste navegador.",
+      "not-ready": "O PDF não está totalmente carregado para impressão."
     },
-    "ink": {
-      "color": "Cor",
-      "thickness": "Espessura",
-      "opacity": "Opacidade"
+    "resource": {
+      "title": "Recursos"
     },
-    "highlight": {
-      "color": "Cor",
-      "thickness": "Espessura",
-      "show-all": "Mostrar todos"
-    }
-  },
-  "close": {
-    "confirm": "Deseja realmente sair?"
-  },
-  "tour-guide": {
-    "prev": "Anterior",
-    "next": "Próximo",
-    "finish": "Finalizar",
-    "dont-show-again": "Não mostrar novamente",
-    "welcome": {
-      "title": "👋 Bem-vindo",
-      "content": "<p>Este é um tour simplificado para mostrar um pouco do que ele pode fazer.</p><p class='tour-guide-text-small'>Use seu teclado ou clique no botão próximo para começar.</p>"
+    "sidebar": {
+      "thumbnail": {
+        "label": "Miniaturas",
+        "title": "Mostrar miniaturas"
+      },
+      "bookmark": {
+        "label": "Marcadores de páginas",
+        "title": "Mostrar marcadores de páginas"
+      },
+      "interaction": {
+        "label": "Interações",
+        "title": "Interações"
+      }
     },
-    "thanks": {
-      "title": "Isso é tudo",
-      "content": "<p>Parece que você está pronto para começar 🎉</p><p class='tour-guide-text-small'>Clique em qualquer lugar para sair do tour.</p>"
+    "stats": {
+      "page-views": "Páginas visualizadas",
+      "usage-time": "Tempo de utilização"
+    },
+    "thumbnail": {
+      "title": "Pagina {{ page }}",
+      "image": "Miniatura da página {{ page }}"
+    },
+    "tourguide": {
+      "prev": "Anterior",
+      "next": "Próximo",
+      "finish": "Finalizar",
+      "dont-show-again": "Não mostrar novamente",
+      "welcome": {
+        "title": "👋 Bem-vindo",
+        "content": "<p>Este é um tour simplificado para mostrar um pouco do que ele pode fazer.</p><p class='tour-guide-text-small'>Use seu teclado ou clique no botão próximo para começar.</p>"
+      },
+      "thanks": {
+        "title": "Isso é tudo",
+        "content": "<p>Parece que você está pronto para começar 🎉</p><p class='tour-guide-text-small'>Clique em qualquer lugar para sair do tour.</p>"
+      }
     }
   }
 }

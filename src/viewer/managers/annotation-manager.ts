@@ -21,17 +21,17 @@ export class AnnotationManager extends Manager {
     this._annotationMode = this.options.annotationMode ?? AnnotationMode.ENABLE_FORMS
     this._annotationEditorMode = this.options.annotationEditorMode ?? AnnotationEditorType.NONE
 
-    this.on('firstpageloaded', ({ annotationEditorMode }) => {
+    this.on('FirstPageLoaded', ({ annotationEditorMode }) => {
       this.initAnnotationEditorUIManager(annotationEditorMode)
     })
 
-    this.on('onepagerendered', ({ annotationEditorMode }) => {
+    this.on('OnePageRendered', ({ annotationEditorMode }) => {
       if (this.annotationEditorUIManager) {
-        this.dispatch('annotationeditormodechanged', { mode: annotationEditorMode })
+        this.dispatch('AnnotationEditorModeChanged', { mode: annotationEditorMode })
       }
     })
 
-    this.on('switchannotationeditormode', (params) => {
+    this.on('SwitchAnnotationEditorMode', (params) => {
       if (this.annotationEditorUIManager) {
         this.annotationEditorMode = params
       }
@@ -73,7 +73,7 @@ export class AnnotationManager extends Manager {
       this.options.supportsPinchToZoom ?? true,
     )
 
-    this.dispatch('annotationeditoruimanager', { uiManager: this._annotationEditorUIManager })
+    this.dispatch('AnnotationEditorUIManager', { uiManager: this._annotationEditorUIManager })
 
     if (mode === AnnotationEditorType.NONE) {
       return
@@ -124,7 +124,7 @@ export class AnnotationManager extends Manager {
       this.cleanupSwitchAnnotationEditorMode()
       this._annotationEditorMode = mode
       this._annotationEditorUIManager?.updateMode(mode, editId, isFromKeyboard)
-      this.dispatch('annotationeditormodechanged', { mode })
+      this.dispatch('AnnotationEditorModeChanged', { mode })
     }
 
     if (mode === AnnotationEditorType.NONE || this._annotationEditorMode === AnnotationEditorType.NONE) {
@@ -145,7 +145,7 @@ export class AnnotationManager extends Manager {
         this.switchAnnotationEditorModeAbortController = new AbortController()
 
         this.on(
-          'pagerendered',
+          'PageRendered',
           ({ pageNumber }) => {
             idsToRefresh.delete(pageNumber)
             if (idsToRefresh.size === 0) {
