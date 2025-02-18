@@ -1,6 +1,6 @@
 import { resolve } from 'path'
 import { defineConfig } from 'vite'
-import { transformerDirectives, presetUno, presetIcons } from 'unocss'
+import { presetWind3, presetIcons, transformerDirectives } from 'unocss'
 import unocss from 'unocss/vite'
 import { name } from './package.json'
 import eslint from 'vite-plugin-eslint2'
@@ -16,7 +16,7 @@ export default defineConfig({
     }),
     unocss({
       presets: [
-        presetUno(),
+        presetWind3(),
         presetIcons(),
       ],
       transformers: [
