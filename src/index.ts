@@ -2,7 +2,6 @@ import 'virtual:uno.css'
 import '@unocss/reset/tailwind.css'
 import './styles/index.scss'
 
-export * from './api'
 export * from './bus'
 export * from './config'
 export * from './enums'
