@@ -22,7 +22,7 @@ export abstract class Initializer extends Dispatcher {
   private _pdfDocument?: PDFDocumentProxy
   private _viewer?: ViewerType
 
-  get priority() {
+  get order() {
     return 0
   }
 
@@ -36,6 +36,14 @@ export abstract class Initializer extends Dispatcher {
 
   get eventBus() {
     return this.viewer.eventBus
+  }
+
+  get l10n() {
+    return this.viewer.l10n
+  }
+
+  get logger() {
+    return this.viewer.logger
   }
 
   init(pdfDocument: PDFDocumentProxy, viewer: ViewerType) {

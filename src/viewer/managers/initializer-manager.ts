@@ -16,6 +16,10 @@ export class InitializerManager extends Manager {
     return this._initialized
   }
 
+  get initializersOrdered() {
+    return this.initializers.sort((a, b) => a.order - b.order)
+  }
+
   addInitializer(initializer: Initializer) {
     this.initializers.push(initializer)
   }
@@ -93,9 +97,8 @@ export class InitializerManager extends Manager {
 
   private async prepareInitializers(pdfDocument: PDFDocumentProxy) {
     let options: InitializerOptions = {}
-    const initializers = this.initializers.sort((a, b) => b.priority - a.priority)
 
-    for (const initializer of initializers) {
+    for (const initializer of this.initializersOrdered) {
       try {
         initializer.init(pdfDocument, this.viewer as ViewerType)
         options = await initializer.prepare(options)
@@ -108,10 +111,9 @@ export class InitializerManager extends Manager {
   }
 
   private async executeInitializers(options: InitializerOptions) {
-    const initializers = this.initializers.sort((a, b) => b.priority - a.priority)
     const handlers: ((options: InitializerOptions) => void)[] = []
 
-    for (const initializer of initializers) {
+    for (const initializer of this.initializersOrdered) {
       try {
         const handler = await initializer.execute(options)
         if (handler) {
@@ -130,9 +132,7 @@ export class InitializerManager extends Manager {
   }
 
   private async finishInitializers(options: InitializerOptions) {
-    const initializers = this.initializers.sort((a, b) => b.priority - a.priority)
-
-    for (const initializer of initializers) {
+    for (const initializer of this.initializersOrdered) {
       try {
         await initializer.finish(options)
       } catch (reason) {
