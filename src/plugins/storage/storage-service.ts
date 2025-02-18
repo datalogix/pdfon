@@ -1,42 +1,77 @@
 import type { InitializerOptions } from '@/viewer'
 import { deserialize, serialize } from '@/utils'
-import { name } from '../../../package.json'
+import type { StorageDriver } from './storage-driver'
 
-export class StorageService<TDatabase extends Record<string, any> = InitializerOptions> {
-  private database: TDatabase = {} as TDatabase
-  private key: string = ''
+export type StorageServiceOptions = {
+  key: string
+  drivers: StorageDriver[]
+  onLoaded?: (deserialized: any) => void
+  onUpdated?: (serialized: string) => void
+  onError?: (e: any) => void
+}
 
-  constructor(
-    fingerprint: string,
-    prefix: string = name,
-    private driver: Storage = localStorage,
-  ) {
-    this.setKey(fingerprint, prefix)
+export class StorageService<Data extends Record<string, any> = InitializerOptions> {
+  private key!: string
+  private _loaded: boolean = false
+  private data: Data = {} as Data
+
+  constructor(readonly options: StorageServiceOptions) {
+    this.setKey(options.key)
   }
 
-  private write() {
-    this.driver.setItem(this.key, serialize(this.database))
+  get loaded() {
+    return this._loaded
   }
 
-  setKey(fingerprint: string, prefix: string = name) {
-    this.key = `${prefix}-${fingerprint}`
-    this.database = deserialize(this.driver.getItem(this.key) ?? '{}')
+  getKey() {
+    return this.key
   }
 
-  all() {
-    return this.database
+  setKey(key: string) {
+    this.key = key
   }
 
-  get<K extends keyof TDatabase>(key: K, defaultValue?: TDatabase[K]) {
-    return key in this.database ? this.database[key] : defaultValue
-  }
-
-  set<K extends keyof TDatabase>(keyOrProperties: K | Partial<TDatabase>, value?: TDatabase[K]) {
-    if (typeof keyOrProperties === 'string') {
-      this.database[keyOrProperties as K] = value!
-    } else {
-      Object.assign(this.database, keyOrProperties)
+  async load() {
+    try {
+      const values = await Promise.all(this.options.drivers.map(driver => driver.load(this.key)))
+      this.data = values.reduce((prev, value) => ({ ...prev, ...deserialize(value) }), {} as Data)
+    } catch (e) {
+      this.options.onError?.(e)
+    } finally {
+      this._loaded = true
+      this.options.onLoaded?.(this.data)
     }
-    this.write()
+
+    return this.data
+  }
+
+  async save() {
+    if (!this._loaded) return
+
+    const serialized = serialize(this.data)
+
+    try {
+      await Promise.all(this.options.drivers.map(driver => driver.save(this.key, serialized, this.data)))
+    } catch (e) {
+      this.options.onError?.(e)
+    } finally {
+      this.options.onUpdated?.(serialized)
+    }
+  }
+
+  get<K extends keyof Data>(key: K, defaultValue?: Data[K]) {
+    return key in this.data ? this.data[key] : defaultValue
+  }
+
+  set<K extends keyof Data>(keyOrProperties: K | Partial<Data>, value?: Data[K]) {
+    if (!this._loaded) return
+
+    if (typeof keyOrProperties === 'string') {
+      this.data[keyOrProperties as K] = value!
+    } else {
+      Object.assign(this.data, keyOrProperties)
+    }
+
+    this.save()
   }
 }

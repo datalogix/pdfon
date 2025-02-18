@@ -4,7 +4,7 @@ export type StatsTrackerOptions = {
   views: (() => VisibleElement[])
   interval?: number
   visibilityPercentage?: number
-  onUpdate?: (pagesViews: Map<number, number>, time: number) => void
+  onUpdated?: (pagesViews: Map<number, number>, time: number) => void
 }
 
 export class StatsTracker {
@@ -42,7 +42,7 @@ export class StatsTracker {
       .filter(view => view.percent > visibilityPercentage)
       .forEach(view => this._pagesViews.set(view.id, (this._pagesViews.get(view.id) ?? 0) + interval))
 
-    this.options.onUpdate?.(this._pagesViews, this._time)
+    this.options.onUpdated?.(this._pagesViews, this._time)
   }
 
   stop() {

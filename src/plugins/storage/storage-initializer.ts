@@ -2,16 +2,20 @@ import { Initializer, type Location, type InitializerOptions } from '@/viewer'
 import type { StoragePlugin } from './storage-plugin'
 
 export class StorageInitializer extends Initializer {
+  get order() {
+    return 1
+  }
+
   get storage() {
     return this.viewer.getLayerProperty<StoragePlugin>('StoragePlugin')?.storage
   }
 
-  prepare(options: InitializerOptions) {
-    const data = Object.fromEntries(Object.entries(this.storage?.all() || {}).filter(([_, v]) => v !== undefined))
+  async prepare(options: InitializerOptions) {
+    const data = await this.storage?.load()
 
     return {
-      ...data,
       ...options,
+      ...data,
     }
   }
 

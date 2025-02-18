@@ -18,7 +18,7 @@ export class AnnotationEditorStorage extends Dispatcher {
       this.pdfDocument = pdfDocument
     })
 
-    this.on('StorageInit', ({ source }) => {
+    this.on('StorageLoaded', ({ source }) => {
       this.storage = source.storage
       this.load()
     })
@@ -41,9 +41,7 @@ export class AnnotationEditorStorage extends Dispatcher {
   }
 
   load() {
-    if (!this.storage) return
-
-    this.annotationEditors = this.storage.get('annotation-editors', new Map())
+    this.annotationEditors = this.storage?.get('annotation-editors', new Map()) ?? new Map()
   }
 
   save() {

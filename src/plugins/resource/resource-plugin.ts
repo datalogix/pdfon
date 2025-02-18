@@ -29,7 +29,7 @@ export class ResourcePlugin extends Plugin<ResourcePluginParams> {
     this._resourceManager = new ResourceManager(this.eventBus)
 
     this.on('DocumentDestroy', () => this._resourceManager?.destroy())
-    this.on('StorageInit', () => this.dispatch('ResourceLoad'))
+    this.on('StorageLoaded', () => this.dispatch('ResourceLoad'))
     this.on('ResourceLoad', ({ resources }) => this._resourceManager?.set(resources ?? this.storage?.get('resources') ?? []))
     this.on('Resources', ({ resources }) => this.storage?.set('resources', resources))
   }

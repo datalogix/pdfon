@@ -27,15 +27,15 @@ export class StatsPlugin extends Plugin<StatsPluginParams> {
   protected init() {
     this._statsTracker = new StatsTracker({
       views: () => this.viewer.getVisiblePages().views,
-      onUpdate: (pagesViews, time) => this.dispatch('StatsUpdate', { pagesViews, time }),
+      onUpdated: (pagesViews, time) => this.dispatch('StatsUpdated', { pagesViews, time }),
       interval: this.resolvedParams?.interval,
       visibilityPercentage: this.resolvedParams?.visibilityPercentage,
     })
 
+    this.on('DocumentInitialized', () => this._statsTracker?.start())
     this.on('DocumentDestroy', () => this._statsTracker?.stop())
-    this.on('PagesLoaded', () => this._statsTracker?.start())
 
-    this.on('StorageInit', () => {
+    this.on('StorageLoaded', () => {
       const pageViews = this.storage?.get('page-views', new Map())
 
       this.dispatch('StatsLoad', {
@@ -51,7 +51,7 @@ export class StatsPlugin extends Plugin<StatsPluginParams> {
       )
     })
 
-    this.on('StatsUpdate', ({ pagesViews, time }) => {
+    this.on('StatsUpdated', ({ pagesViews, time }) => {
       this.storage?.set('page-views', pagesViews)
       this.storage?.set('usage-time', time)
 

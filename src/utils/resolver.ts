@@ -1,4 +1,4 @@
-export type Resolveable<T> = T | Promise<T> | (() => T | Promise<T>)
+export type Resolveable<T> = T | Promise<T> | ((...params: any[]) => T | Promise<T>)
 export type ResolvedParams<T> = { [K in keyof T]: Resolveable<T[K]> }
 
 type ResolvedProperty<T> = T extends Resolveable<infer U> ? Promise<U> : T

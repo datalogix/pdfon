@@ -1,10 +1,13 @@
 import { Plugin } from '../plugin'
+import { localStorageDriver } from './drivers'
+import type { StorageDriver } from './storage-driver'
 import { StorageInitializer } from './storage-initializer'
 import { StorageService } from './storage-service'
 
 export type StoragePluginParams = {
   fingerprint?: string
   prefix?: string
+  drivers?: StorageDriver[]
 }
 
 export class StoragePlugin extends Plugin<StoragePluginParams> {
@@ -16,16 +19,21 @@ export class StoragePlugin extends Plugin<StoragePluginParams> {
   }
 
   protected init() {
-    this.on('DocumentInit', ({ pdfDocument, options }) => {
-      this._storage = new StorageService(
-        options?.storageId ?? (this.resolvedParams?.fingerprint) ?? pdfDocument.fingerprints[0] as string,
-        options?.storagePrefix ?? (this.resolvedParams?.prefix),
-      )
+    this.on('DocumentInit', async ({ pdfDocument, options }) => {
+      if (this._storage) await this.destroy()
+
+      this._storage = new StorageService({
+        key: options?.storageId ?? (this.resolvedParams?.fingerprint) ?? pdfDocument.fingerprints[0] as string,
+        drivers: this.resolvedParams?.drivers ?? [localStorageDriver(this.resolvedParams?.prefix)],
+        onLoaded: deserialized => this.dispatch('StorageLoaded', { storage: this._storage, deserialized }),
+        onUpdated: serialized => this.dispatch('StorageUpdated', { storage: this._storage, serialized }),
+        onError: message => this.logger.error(message),
+      })
 
       this.dispatch('StorageInit', { storage: this._storage })
     })
 
-    this.on('DocumentDestroy', () => this.destroy())
+    this.on('DocumentDestroy', async () => await this.destroy())
     this.on('StoreOnEvent', options => this.storeOnEvent(options))
   }
 
@@ -42,17 +50,16 @@ export class StoragePlugin extends Plugin<StoragePluginParams> {
       }
 
       if (key) {
-        this.storage?.set(key, value)
+        this._storage?.set(key, value)
       } else {
-        this.storage?.set(value)
+        this._storage?.set(value)
       }
     })
   }
 
-  protected destroy() {
-    const storage = this.storage
+  protected async destroy() {
+    await this._storage?.save()
+    this.dispatch('StorageDestroy', { storage: this._storage })
     this._storage = undefined
-
-    this.dispatch('StorageDestroy', { storage })
   }
 }

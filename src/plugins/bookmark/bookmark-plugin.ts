@@ -31,7 +31,7 @@ export class BookmarkPlugin extends Plugin<BookmarkPluginParams> {
     this._bookmarkManager = new BookmarkManager(this.eventBus, this.translator)
 
     this.on('DocumentDestroy', () => this._bookmarkManager?.destroy())
-    this.on('StorageInit', () => this.dispatch('BookmarkLoad'))
+    this.on('StorageLoaded', () => this.dispatch('BookmarkLoad'))
     this.on('BookmarkClick', ({ bookmark }) => this.setCurrentPage(bookmark.page))
 
     this.on('BookmarkLoad', ({ bookmarks }) => {
