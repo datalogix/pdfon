@@ -22,7 +22,7 @@ export class L10n implements IL10n {
     i18next
       .use(LanguageDetector)
       .init({
-        debug: true,
+        debug: false,
         fallbackLng: 'pt-BR',
         resources: {
           'pt-BR': {
