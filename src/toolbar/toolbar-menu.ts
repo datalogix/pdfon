@@ -96,7 +96,7 @@ export class ToolbarMenu extends ToolbarActionToggle {
     this.menu = createElement('div', 'toolbar-menu')
     this.container.appendChild(this.menu)
 
-    await Promise.all(this.actions.flat().map(action => action.initialize()))
+    await Promise.allSettled(this.actions.flat().map(action => action.initialize()))
 
     this.actions.forEach((action) => {
       if (action instanceof ToolbarAction) {
@@ -117,7 +117,7 @@ export class ToolbarMenu extends ToolbarActionToggle {
 
     this.close()
 
-    await Promise.all(this.actions.flat().map(action => action.terminate()))
+    await Promise.allSettled(this.actions.flat().map(action => action.terminate()))
 
     this.menu?.remove()
     this.menu = undefined

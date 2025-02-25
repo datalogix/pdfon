@@ -49,7 +49,7 @@ export class Pdfon extends Dispatcher {
   protected async initializePlugins(toolbar: Toolbar, viewer: ViewerType, params?: Record<string, any>) {
     const plugins = this.resolvePlugins(params)
 
-    await Promise.all(plugins.map((plugin) => {
+    await Promise.allSettled(plugins.map((plugin) => {
       plugin.setToolbar(toolbar)
       plugin.setViewer(viewer)
 
@@ -106,7 +106,7 @@ export class Pdfon extends Dispatcher {
     await this.initializeToolbar(toolbar)
 
     //
-    await Promise.all(plugins.map(plugin => plugin.load()))
+    await Promise.allSettled(plugins.map(plugin => plugin.load()))
     this.dispatch('PluginsLoaded', { plugins })
 
     return viewer.start()

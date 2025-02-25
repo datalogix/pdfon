@@ -33,8 +33,9 @@ export class StorageService<Data extends Record<string, any> = InitializerOption
 
   async load() {
     try {
-      const values = await Promise.all(this.options.drivers.map(driver => driver.load(this.key)))
-      this.data = values.reduce((prev, value) => ({ ...prev, ...deserialize(value) }), {} as Data)
+      const values = await Promise.allSettled(this.options.drivers.map(driver => driver.load(this.key)))
+      this.data = values.filter(value => value.status === 'fulfilled')
+        .reduce((prev, { value }) => ({ ...prev, ...deserialize(value) }), {} as Data)
     } catch (e) {
       this.options.onError?.(e)
     } finally {
@@ -51,7 +52,7 @@ export class StorageService<Data extends Record<string, any> = InitializerOption
     const serialized = serialize(this.data)
 
     try {
-      await Promise.all(this.options.drivers.map(driver => driver.save(this.key, serialized, this.data)))
+      await Promise.allSettled(this.options.drivers.map(driver => driver.save(this.key, serialized, this.data)))
     } catch (e) {
       this.options.onError?.(e)
     } finally {

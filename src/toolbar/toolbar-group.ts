@@ -13,11 +13,11 @@ export class ToolbarGroup extends ToolbarItem {
 
   async initialize() {
     await super.initialize()
-    await Promise.all(this.items.map(item => item.initialize()))
+    await Promise.allSettled(this.items.map(item => item.initialize()))
   }
 
   async terminate() {
-    await Promise.all(this.items.map(item => item.terminate()))
+    await Promise.allSettled(this.items.map(item => item.terminate()))
     await super.terminate()
   }
 
