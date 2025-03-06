@@ -166,7 +166,7 @@
       "title": "Fechar",
       "help": "Use esse botão para voltar."
     },
-    "tourguide": {
+    "tour": {
       "label": "Guia",
       "title": "Guia"
     }
@@ -289,18 +289,18 @@
       "title": "Pagina {{ page }}",
       "image": "Miniatura da página {{ page }}"
     },
-    "tourguide": {
+    "tour": {
       "prev": "Anterior",
       "next": "Próximo",
       "finish": "Finalizar",
       "dont-show-again": "Não mostrar novamente",
       "welcome": {
         "title": "👋 Bem-vindo",
-        "content": "<p>Este é um tour simplificado para mostrar um pouco do que ele pode fazer.</p><p class='tour-guide-text-small'>Use seu teclado ou clique no botão próximo para começar.</p>"
+        "content": "<p>Este é um tour simplificado para mostrar um pouco do que ele pode fazer.</p><p class='tour-text-small'>Use seu teclado ou clique no botão próximo para começar.</p>"
       },
       "thanks": {
         "title": "Isso é tudo",
-        "content": "<p>Parece que você está pronto para começar 🎉</p><p class='tour-guide-text-small'>Clique em qualquer lugar para sair do tour.</p>"
+        "content": "<p>Parece que você está pronto para começar 🎉</p><p class='tour-text-small'>Clique em qualquer lugar para sair do tour.</p>"
       }
     }
   }

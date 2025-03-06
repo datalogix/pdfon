@@ -22,7 +22,7 @@ export * from './sidebar'
 export * from './stats'
 export * from './storage'
 export * from './thumbnail'
-export * from './tour-guide'
+export * from './tour'
 export * from './watermark'
 export * from './zoom'
 

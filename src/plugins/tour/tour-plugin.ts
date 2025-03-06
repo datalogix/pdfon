@@ -1,35 +1,39 @@
-import { TourGuideClient } from '@sjmc11/tourguidejs'
+import { TourGuideClient as TourClient } from '@sjmc11/tourguidejs'
 import { Divider, ToolbarGroup, type ToolbarItem, type ToolbarItemType } from '@/toolbar'
 import { createElement } from '@/utils'
 import { name } from '../../../package.json'
 import { Plugin } from '../plugin'
-import { TourGuideToolbarItem } from './tour-guide-toolbar-item'
+import { TourToolbarItem } from './tour-toolbar-item'
 
-export type TourGuidePluginParams = {
+export type TourPluginParams = {
   storageKey: string
 }
 
-export class TourGuidePlugin extends Plugin<TourGuidePluginParams> {
+export class TourPlugin extends Plugin<TourPluginParams> {
   protected getToolbarItems() {
     return new Map<string, ToolbarItemType>([
-      ['tour-guide', TourGuideToolbarItem],
+      ['tour', TourToolbarItem],
     ])
   }
 
-  private _tourGuide?: TourGuideClient
+  private _tour?: TourClient
 
-  get tourGuide() {
-    return this._tourGuide
+  get tour() {
+    return this._tour
+  }
+
+  get storageKey() {
+    return this.resolvedParams?.storageKey ?? `${name}-${this.name}`
   }
 
   protected init() {
     this.on('ToolbarInit', () => this.resolveToolbarItems())
-    this.on('DocumentInitialized', () => this.buildTourGuide(), { once: true })
+    this.on('DocumentInitialized', () => this.buildTour(), { once: true })
   }
 
-  protected disableTourGuide() {
-    localStorage.setItem(this.resolvedParams?.storageKey ?? `${name}-tour-guide`, 'disabled')
-    this._tourGuide?.exit()
+  protected disableTour() {
+    localStorage.setItem(this.storageKey, 'disabled')
+    this._tour?.exit()
   }
 
   protected resolveToolbarItems() {
@@ -39,7 +43,7 @@ export class TourGuidePlugin extends Plugin<TourGuidePluginParams> {
     }
 
     this.toolbar.items.forEach((item) => {
-      if (item instanceof Divider || item instanceof TourGuideToolbarItem) {
+      if (item instanceof Divider || item instanceof TourToolbarItem) {
         return
       }
 
@@ -51,29 +55,33 @@ export class TourGuidePlugin extends Plugin<TourGuidePluginParams> {
     })
   }
 
-  protected buildTourGuide() {
-    this._tourGuide = new TourGuideClient({
+  protected buildTour() {
+    this._tour = new TourClient({
       debug: false,
       showStepDots: false,
       targetPadding: 0,
       completeOnFinish: false,
-      steps: [this.firstStep(), this.lastStep()],
+      steps: this.steps(),
       prevLabel: this.translate('prev'),
       nextLabel: this.translate('next'),
       finishLabel: this.translate('finish'),
       dialogMaxWidth: 380,
     })
 
-    if (localStorage.getItem(this.resolvedParams?.storageKey ?? `${name}-tour-guide`) !== 'disabled') {
-      this._tourGuide?.start()
+    if (localStorage.getItem(this.storageKey) !== 'disabled') {
+      this._tour?.start()
     }
+  }
+
+  protected steps() {
+    return [this.firstStep(), this.lastStep()]
   }
 
   protected firstStep() {
     const button = createElement('button', { type: 'button', innerText: this.translate('dont-show-again') })
-    button.addEventListener('click', () => this.disableTourGuide())
+    button.addEventListener('click', () => this.disableTour())
 
-    const container = createElement('div', 'tour-guide-content')
+    const container = createElement('div', `${this.name}-content`)
     container.appendChild(createElement('div', { innerHTML: this.translate('welcome.content') }))
     container.appendChild(button)
 
@@ -87,7 +95,7 @@ export class TourGuidePlugin extends Plugin<TourGuidePluginParams> {
   protected lastStep() {
     return {
       title: this.translate('thanks.title'),
-      content: createElement('div', 'tour-guide-content', { innerHTML: this.translate('thanks.content') }),
+      content: createElement('div', `${this.name}-content`, { innerHTML: this.translate('thanks.content') }),
       order: 999999,
     }
   }
