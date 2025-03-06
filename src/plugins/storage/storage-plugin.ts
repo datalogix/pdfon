@@ -58,7 +58,7 @@ export class StoragePlugin extends Plugin<StoragePluginParams> {
   }
 
   protected async destroy() {
-    await this._storage?.save()
+    await this._storage?.save(true)
     this.dispatch('StorageDestroy', { storage: this._storage })
     this._storage = undefined
   }

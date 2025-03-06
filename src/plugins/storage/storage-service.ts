@@ -46,13 +46,13 @@ export class StorageService<Data extends Record<string, any> = InitializerOption
     return this.data
   }
 
-  async save() {
+  async save(force?: boolean) {
     if (!this._loaded) return
 
     const serialized = serialize(this.data)
 
     try {
-      await Promise.allSettled(this.options.drivers.map(driver => driver.save(this.key, serialized, this.data)))
+      await Promise.allSettled(this.options.drivers.map(driver => driver.save(this.key, serialized, this.data, force)))
     } catch (e) {
       this.options.onError?.(e)
     } finally {
@@ -61,6 +61,10 @@ export class StorageService<Data extends Record<string, any> = InitializerOption
   }
 
   get<K extends keyof Data>(key: K, defaultValue?: Data[K]) {
+    if (!this._loaded) {
+      return defaultValue
+    }
+
     return key in this.data ? this.data[key] : defaultValue
   }
 
