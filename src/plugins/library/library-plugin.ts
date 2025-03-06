@@ -1,8 +1,10 @@
+import { deserialize, serialize } from '@/utils'
 import type { InformationPlugin } from '../information'
 import { Plugin, type ToolbarItemType } from '../plugin'
 import { BookManager } from './book-manager'
 import type { Book, BookId } from './book'
 import { LibraryToolbarItem } from './library-toolbar-item'
+import { name } from '../../../package.json'
 
 export type LibraryPluginParams = {
   books?: Book[]
@@ -29,28 +31,39 @@ export class LibraryPlugin extends Plugin<LibraryPluginParams> {
   protected init() {
     this._bookManager = new BookManager(this.eventBus)
 
-    this.on('DocumentOpen', ({ documentType }) => {
-      if (this._bookManager && documentType !== this._bookManager.current?.src) {
+    this.on('DocumentOpen', ({ options }) => {
+      if (this._bookManager && options?.book?.id !== this._bookManager.current?.id) {
         this._bookManager.select(undefined)
       }
     })
 
-    this.on('Book', ({ book }) => {
-      this.viewer.openDocument(book.src, book.name, {
-        storageId: book.id,
-        interactions: book.interactions,
-        resources: book.resources,
-        book,
-      })
+    this.on('Book', ({ book }) => this.openBook(book))
+  }
 
-      const props = ['name', 'sku', 'author', 'description']
+  private openBook(book: Book) {
+    const storageKey = `${name}-${this.name}-${book.id}`
+    const document = deserialize(localStorage.getItem(storageKey), book.src)
 
-      props.forEach((key, index) => {
-        this.informationManager?.add({
-          name: this.translate(`book.${key}`),
-          value: book[key],
-          order: index + 1,
-        })
+    this.viewer.openDocument(document, book.name, {
+      storageId: book.id,
+      interactions: book.interactions,
+      resources: book.resources,
+      book,
+    })
+
+    if (document === book.src) {
+      this.on('DocumentInit', async ({ pdfDocument }) => {
+        localStorage.setItem(storageKey, serialize(await pdfDocument.getData()))
+      }, { once: true })
+    }
+
+    const props = ['name', 'sku', 'author', 'description']
+
+    props.forEach((key, index) => {
+      this.informationManager?.add({
+        name: this.translate(`book.${key}`),
+        value: book[key],
+        order: index + 1,
       })
     })
   }

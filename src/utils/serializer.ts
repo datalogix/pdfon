@@ -2,12 +2,16 @@ export function serialize(value: any) {
   return JSON.stringify(value, stringifyReplacer)
 }
 
-export function deserialize(text: string) {
+export function deserialize(text: string | null, defaultValue?: any) {
+  if (!text) {
+    return defaultValue
+  }
+
   try {
     return JSON.parse(text, parseReviver)
   } catch (error) {
     console.error('Failed to deserialize:', error)
-    return null
+    return defaultValue
   }
 }
 
