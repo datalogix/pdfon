@@ -21,7 +21,7 @@ export abstract class SidebarItem extends Dispatcher {
 
   get name() {
     if (!this._name) {
-      this._name = this.constructor.name.toLowerCase().replace('SidebarItem'.toLowerCase(), '')
+      this._name = this.constructor.name.replace('SidebarItem', '').toLowerCase()
     }
 
     return this._name

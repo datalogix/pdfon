@@ -30,7 +30,7 @@ export abstract class Plugin<T = any> extends Dispatcher implements Translatable
 
   get name() {
     if (!this._name) {
-      this._name = this.constructor.name.toLowerCase().replace('plugin', '')
+      this._name = this.constructor.name.replace('Plugin', '').toLowerCase()
     }
 
     return this._name

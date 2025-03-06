@@ -13,7 +13,7 @@ export abstract class ToolbarItem extends Dispatcher {
 
   get name() {
     if (!this._name) {
-      this._name = this.constructor.name.toLowerCase().replace('ToolbarItem'.toLowerCase(), '')
+      this._name = this.constructor.name.replace('ToolbarItem', '').toLowerCase()
     }
 
     return this._name
