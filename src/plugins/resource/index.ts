@@ -1,3 +1,4 @@
+export * from './resource-initializer'
 export * from './resource-manager'
 export * from './resource-plugin'
 export * from './resource-toolbar-item'

@@ -19,7 +19,7 @@ export class StorageInitializer extends Initializer {
     }
   }
 
-  finish() {
+  execute() {
     const isNotPresentationMode = () => !this.viewer.isInPresentationMode
     this.dispatch('StoreOnEvent', { eventName: 'PageChanging', key: 'page', parameter: 'pageNumber' })
     this.dispatch('StoreOnEvent', { eventName: 'RotationChanging', key: 'rotation', parameter: 'rotation', validate: isNotPresentationMode })

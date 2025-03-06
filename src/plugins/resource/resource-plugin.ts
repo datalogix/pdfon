@@ -1,6 +1,7 @@
 import { Plugin, type ToolbarItemType } from '../plugin'
 import type { StoragePlugin } from '../storage'
 import type { Resource } from './resource'
+import { ResourceInitializer } from './resource-initializer'
 import { ResourceManager } from './resource-manager'
 import { ResourceToolbarItem } from './resource-toolbar-item'
 
@@ -9,6 +10,8 @@ export type ResourcePluginParams = {
 }
 
 export class ResourcePlugin extends Plugin<ResourcePluginParams> {
+  protected initializers = [ResourceInitializer]
+
   protected getToolbarItems() {
     return new Map<string, ToolbarItemType>([
       ['resource', ResourceToolbarItem],

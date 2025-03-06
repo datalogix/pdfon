@@ -3,6 +3,7 @@ import { Plugin } from '../plugin'
 import type { SidebarPlugin } from '../sidebar'
 import type { StoragePlugin } from '../storage'
 import type { Interaction, InteractionId } from './interaction'
+import { InteractionInitializer } from './interaction-initializer'
 import { InteractionLayerBuilder } from './interaction-layer-builder'
 import { InteractionManager } from './interaction-manager'
 import { InteractionSidebarItem } from './interaction-sidebar-item'
@@ -13,6 +14,7 @@ export type InteractionPluginParams = {
 }
 
 export class InteractionPlugin extends Plugin<InteractionPluginParams> {
+  protected initializers = [InteractionInitializer]
   protected layerBuilders = [InteractionLayerBuilder]
   private _interactionManager?: InteractionManager
   private interactionSidebarItem = new InteractionSidebarItem()

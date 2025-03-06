@@ -1,9 +1,8 @@
-import { resolveValue } from '@/utils'
+import type { InformationPlugin } from '../information'
 import { Plugin, type ToolbarItemType } from '../plugin'
 import { BookManager } from './book-manager'
 import type { Book, BookId } from './book'
 import { LibraryToolbarItem } from './library-toolbar-item'
-import type { InformationPlugin } from '../information'
 
 export type LibraryPluginParams = {
   books?: Book[]
@@ -39,17 +38,10 @@ export class LibraryPlugin extends Plugin<LibraryPluginParams> {
     this.on('Book', ({ book }) => {
       this.viewer.openDocument(book.src, book.name, {
         storageId: book.id,
-        ...book.options,
+        interactions: book.interactions,
+        resources: book.resources,
+        book,
       })
-
-      this.on('DocumentInitialized', async () => {
-        const interactions = await resolveValue(book.interactions, book)
-        const resources = await resolveValue(book.resources, book)
-
-        this.dispatch('InteractionLoad', { interactions })
-        this.dispatch('ResourceLoad', { resources })
-        this.dispatch('BookInit', { book })
-      }, { once: true })
 
       const props = ['name', 'sku', 'author', 'description']
 

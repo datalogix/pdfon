@@ -56,7 +56,6 @@ export class InitializerManager extends Manager {
       this.applyInitialView(options)
     } finally {
       this.viewer.update()
-      this.dispatch('DocumentInitialized')
     }
   }
 
@@ -111,33 +110,8 @@ export class InitializerManager extends Manager {
   }
 
   private async executeInitializers(options: InitializerOptions) {
-    const handlers: ((options: InitializerOptions) => void)[] = []
-
-    for (const initializer of this.initializersOrdered) {
-      try {
-        const handler = await initializer.execute(options)
-        if (handler) {
-          handlers.push(handler)
-        }
-      } catch (reason) {
-        this.logger.error(`Unable to execute initializer`, reason)
-      }
-    }
-
-    this.on('DocumentInitialized', async () => {
-      handlers.forEach(handler => handler(options))
-      await this.finishInitializers(options)
-      this._initialized = true
-    })
-  }
-
-  private async finishInitializers(options: InitializerOptions) {
-    for (const initializer of this.initializersOrdered) {
-      try {
-        await initializer.finish(options)
-      } catch (reason) {
-        this.logger.error(`Unable to execute initializer`, reason)
-      }
-    }
+    await Promise.allSettled(this.initializersOrdered.map(initializer => initializer.execute(options)))
+    this._initialized = true
+    this.dispatch('DocumentInitialized')
   }
 }

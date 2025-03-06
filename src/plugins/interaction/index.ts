@@ -1,3 +1,4 @@
+export * from './interaction-initializer'
 export * from './interaction-layer-builder'
 export * from './interaction-manager'
 export * from './interaction-plugin'
