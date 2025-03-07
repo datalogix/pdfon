@@ -1,15 +1,11 @@
 import { TourGuideClient as TourClient } from '@sjmc11/tourguidejs'
 import { Divider, ToolbarGroup, type ToolbarItem, type ToolbarItemType } from '@/toolbar'
 import { createElement } from '@/utils'
-import { name } from '../../../package.json'
 import { Plugin } from '../plugin'
+import { localStorageDriver } from '../storage'
 import { TourToolbarItem } from './tour-toolbar-item'
 
-export type TourPluginParams = {
-  storageKey: string
-}
-
-export class TourPlugin extends Plugin<TourPluginParams> {
+export class TourPlugin extends Plugin {
   protected getToolbarItems() {
     return new Map<string, ToolbarItemType>([
       ['tour', TourToolbarItem],
@@ -17,23 +13,21 @@ export class TourPlugin extends Plugin<TourPluginParams> {
   }
 
   private _tour?: TourClient
+  private storage = localStorageDriver()
 
   get tour() {
     return this._tour
   }
 
-  get storageKey() {
-    return this.resolvedParams?.storageKey ?? `${name}-${this.name}`
-  }
-
   protected init() {
     this.on('ToolbarInit', () => this.resolveToolbarItems())
-    this.on('DocumentInitialized', () => this.buildTour(), { once: true })
+    this.on('DocumentInitialized', async () => await this.buildTour(), { once: true })
   }
 
-  protected disableTour() {
-    localStorage.setItem(this.storageKey, 'disabled')
+  protected async disableTour() {
     this._tour?.exit()
+
+    await this.storage.save(this.name, 'disabled')
   }
 
   protected resolveToolbarItems() {
@@ -55,7 +49,7 @@ export class TourPlugin extends Plugin<TourPluginParams> {
     })
   }
 
-  protected buildTour() {
+  protected async buildTour() {
     this._tour = new TourClient({
       debug: false,
       showStepDots: false,
@@ -68,7 +62,9 @@ export class TourPlugin extends Plugin<TourPluginParams> {
       dialogMaxWidth: 380,
     })
 
-    if (localStorage.getItem(this.storageKey) !== 'disabled') {
+    const enabled = await this.storage.load(this.name) !== 'disabled'
+
+    if (enabled) {
       this._tour?.start()
     }
   }
@@ -79,7 +75,7 @@ export class TourPlugin extends Plugin<TourPluginParams> {
 
   protected firstStep() {
     const button = createElement('button', { type: 'button', innerText: this.translate('dont-show-again') })
-    button.addEventListener('click', () => this.disableTour())
+    button.addEventListener('click', async () => await this.disableTour())
 
     const container = createElement('div', `${this.name}-content`)
     container.appendChild(createElement('div', { innerHTML: this.translate('welcome.content') }))
