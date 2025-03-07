@@ -26,11 +26,17 @@ export class LibraryToolbarItem extends ToolbarActionToggle {
     })
 
     this.on('DocumentEmpty', () => {
-      this.on('Books', () => {
+      queueMicrotask(() => {
+        if (this.bookManager?.current) {
+          return
+        }
+
+        this.on('Books', () => {
+          this.openPersist()
+        }, { once: true })
+
         this.openPersist()
       })
-
-      this.openPersist()
     })
   }
 
