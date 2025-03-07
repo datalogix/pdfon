@@ -1,6 +1,59 @@
 # Changelog
 
 
+## v0.1.0
+
+[compare changes](https://github.com/datalogix/pdfon/compare/v0.0.7...v0.1.0)
+
+### 🚀 Enhancements
+
+- Accept multiple drivers in storage ([6e375b5](https://github.com/datalogix/pdfon/commit/6e375b5))
+- Added interval on http storage driver ([da46565](https://github.com/datalogix/pdfon/commit/da46565))
+
+### 🔥 Performance
+
+- Use `Promise.allSettled` ([5860f55](https://github.com/datalogix/pdfon/commit/5860f55))
+- Store the book in localStorage, preventing unnecessary network traffic ([0e14a65](https://github.com/datalogix/pdfon/commit/0e14a65))
+- Cache book ([e7b3ad6](https://github.com/datalogix/pdfon/commit/e7b3ad6))
+
+### 🩹 Fixes
+
+- Add finish label ([17ea2ee](https://github.com/datalogix/pdfon/commit/17ea2ee))
+- Only books that have src ([e586852](https://github.com/datalogix/pdfon/commit/e586852))
+- Dialog z-index ([2f79b29](https://github.com/datalogix/pdfon/commit/2f79b29))
+- Storage init and destroy ([d1665a7](https://github.com/datalogix/pdfon/commit/d1665a7))
+- Library clear interactions and resources from storage ([df58b8c](https://github.com/datalogix/pdfon/commit/df58b8c))
+- Modal `z-index` ([5fc6934](https://github.com/datalogix/pdfon/commit/5fc6934))
+- Interaction position ([5db21f2](https://github.com/datalogix/pdfon/commit/5db21f2))
+
+### 💅 Refactors
+
+- Many changes ([e7e9492](https://github.com/datalogix/pdfon/commit/e7e9492))
+- Use `order` instead of `priority` ([2cebb0c](https://github.com/datalogix/pdfon/commit/2cebb0c))
+- Initializer ([fcdaf9c](https://github.com/datalogix/pdfon/commit/fcdaf9c))
+- Storage ([d08304b](https://github.com/datalogix/pdfon/commit/d08304b))
+
+### 🏡 Chore
+
+- Update deps ([410d420](https://github.com/datalogix/pdfon/commit/410d420))
+- Remove api folder ([de4b9a2](https://github.com/datalogix/pdfon/commit/de4b9a2))
+- Disable l10n debug ([5b9ac42](https://github.com/datalogix/pdfon/commit/5b9ac42))
+- Update deps ([69148ad](https://github.com/datalogix/pdfon/commit/69148ad))
+- Upgrade `unocss` ([bfd653d](https://github.com/datalogix/pdfon/commit/bfd653d))
+- Update deps ([a2269ef](https://github.com/datalogix/pdfon/commit/a2269ef))
+- Rename ([7efceb6](https://github.com/datalogix/pdfon/commit/7efceb6))
+- Formatting ([7fd9b58](https://github.com/datalogix/pdfon/commit/7fd9b58))
+- Update deps ([50691b8](https://github.com/datalogix/pdfon/commit/50691b8))
+- ⚠️  Use `localStorageDriver` and remove `TourPluginParams` ([ce52d0a](https://github.com/datalogix/pdfon/commit/ce52d0a))
+
+#### ⚠️ Breaking Changes
+
+- ⚠️  Use `localStorageDriver` and remove `TourPluginParams` ([ce52d0a](https://github.com/datalogix/pdfon/commit/ce52d0a))
+
+### ❤️ Contributors
+
+- Ricardo Gobbo De Souza ([@ricardogobbosouza](https://github.com/ricardogobbosouza))
+
 ## v0.0.7
 
 [compare changes](https://github.com/datalogix/pdfon/compare/v0.0.6...v0.0.7)
