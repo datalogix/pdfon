@@ -58,4 +58,8 @@ export abstract class Initializer extends Dispatcher {
   execute(_options: InitializerOptions): Promise<void> | void {
     //
   }
+
+  finish(_options: InitializerOptions): Promise<void> | void {
+    //
+  }
 }

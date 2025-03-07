@@ -43,7 +43,9 @@ export class SidebarInitializer extends Initializer {
     if (options['sidebar-opened']) {
       this.sidebarManager?.open()
     }
+  }
 
+  finish() {
     this.dispatch('StoreOnEvent', { eventName: 'SidebarSelected', key: 'sidebar', parameter: 'sidebar' })
     this.dispatch('StoreOnEvent', { eventName: 'SidebarOpen', key: 'sidebar-opened', parameter: () => true })
     this.dispatch('StoreOnEvent', { eventName: 'SidebarClose', key: 'sidebar-opened', parameter: () => false })

@@ -31,6 +31,7 @@ export class InitializerManager extends Manager {
   init() {
     this.on('DocumentInit', async ({ pdfDocument, options }) => await this.setupInitializer(pdfDocument, options))
     this.on('DocumentInitialView', async ({ options }) => await this.executeInitializers(options))
+    this.on('DocumentInitialized', async ({ options }) => await this.finishInitializers(options))
   }
 
   reset() {
@@ -112,6 +113,10 @@ export class InitializerManager extends Manager {
   private async executeInitializers(options: InitializerOptions) {
     await Promise.allSettled(this.initializersOrdered.map(initializer => initializer.execute(options)))
     this._initialized = true
-    this.dispatch('DocumentInitialized')
+    this.dispatch('DocumentInitialized', { options })
+  }
+
+  private async finishInitializers(options: InitializerOptions) {
+    await Promise.allSettled(this.initializersOrdered.map(initializer => initializer.finish(options)))
   }
 }

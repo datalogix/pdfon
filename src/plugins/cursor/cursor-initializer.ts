@@ -20,6 +20,9 @@ export class CursorInitializer extends Initializer {
     }
 
     this.dispatch('SwitchCursorTool', { tool: options.cursor })
-    this.dispatch('StoreOnEvent', { eventName: 'SwitchCursorTool', key: 'cursor', parameter: 'tool' })
+  }
+
+  finish() {
+    this.dispatch('storeonevent', { eventName: 'switchcursortool', key: 'cursor', parameter: 'tool' })
   }
 }
