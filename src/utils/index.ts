@@ -1,3 +1,4 @@
+export * from './cache'
 export * from './document'
 export * from './dom'
 export * from './event'

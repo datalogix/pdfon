@@ -1,6 +1,6 @@
 import { ToolbarActionToggle } from '@/toolbar'
 import { Modal } from '@/tools'
-import { createElement } from '@/utils'
+import { createElement, fetchAndCache } from '@/utils'
 import type { Book } from './book'
 import type { LibraryPlugin } from './library-plugin'
 
@@ -44,7 +44,7 @@ export class LibraryToolbarItem extends ToolbarActionToggle {
 
   open() {
     const content = createElement('div', 'books')
-    this.bookManager?.available.forEach(book => content.appendChild(this.item(book)))
+    this.bookManager?.available.forEach(async book => content.appendChild(await this.item(book)))
 
     Modal.open(content, {
       title: this.libraryPlugin.translate('title'),
@@ -58,7 +58,7 @@ export class LibraryToolbarItem extends ToolbarActionToggle {
     Modal.close()
   }
 
-  protected item(book: Book) {
+  protected async item(book: Book) {
     const button = createElement('button', 'book', { type: 'button' })
     const info = createElement('div', 'info')
     const ul = createElement('ul')
@@ -72,7 +72,7 @@ export class LibraryToolbarItem extends ToolbarActionToggle {
     info.appendChild(createElement('h2', { innerText: book.name }))
     info.appendChild(ul)
 
-    button.appendChild(book.cover ? createElement('img', { src: book.cover }) : createElement('i'))
+    button.appendChild(book.cover ? createElement('img', { src: await fetchAndCache(book.cover) }) : createElement('i'))
     button.appendChild(info)
     button.addEventListener('click', () => {
       this.close()

@@ -1,10 +1,9 @@
-import { deserialize, serialize } from '@/utils'
+import { getFromCache, saveInCache } from '@/utils'
 import type { InformationPlugin } from '../information'
 import { Plugin, type ToolbarItemType } from '../plugin'
 import { BookManager } from './book-manager'
 import type { Book, BookId } from './book'
 import { LibraryToolbarItem } from './library-toolbar-item'
-import { name } from '../../../package.json'
 
 export type LibraryPluginParams = {
   books?: Book[]
@@ -37,23 +36,23 @@ export class LibraryPlugin extends Plugin<LibraryPluginParams> {
       }
     })
 
-    this.on('Book', ({ book }) => this.openBook(book))
+    this.on('Book', async ({ book }) => await this.openBook(book))
   }
 
-  private openBook(book: Book) {
-    const storageKey = `${name}-${this.name}-${book.id}`
-    const document = deserialize(localStorage.getItem(storageKey), book.src)
+  private async openBook(book: Book) {
+    const documentSrc = await getFromCache(book.src)
 
-    this.viewer.openDocument(document, book.name, {
+    this.viewer.openDocument(documentSrc, book.name, {
       storageId: book.id,
       interactions: book.interactions,
       resources: book.resources,
       book,
     })
 
-    if (document === book.src) {
+    if (documentSrc === book.src) {
       this.on('DocumentInit', async ({ pdfDocument }) => {
-        localStorage.setItem(storageKey, serialize(await pdfDocument.getData()))
+        const blob = new Blob([await pdfDocument.getData()])
+        await saveInCache(book.src, new Response(blob))
       }, { once: true })
     }
 
