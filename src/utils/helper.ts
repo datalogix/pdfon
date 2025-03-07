@@ -1,3 +1,9 @@
+import { name } from '../../package.json'
+
+export function makeKey(key?: string, prefix: string = name) {
+  return key ? `${prefix}-${key}` : prefix
+}
+
 export function debounce<T extends (...args: any[]) => void>(func: T, delay = 300): (...args: Parameters<T>) => void {
   let debounceTimeout: NodeJS.Timeout
 

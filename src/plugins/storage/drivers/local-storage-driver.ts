@@ -1,12 +1,12 @@
-import { name } from '../../../../package.json'
+import { makeKey } from '@/utils'
 import { defineStorageDriver } from '../storage-driver'
 
 export const localStorageDriver = (prefix?: string) => defineStorageDriver({
   load(key) {
-    return localStorage.getItem(`${prefix ?? name}-${key}`) ?? '{}'
+    return localStorage.getItem(makeKey(key, prefix))
   },
 
   save(key, serialized) {
-    localStorage.setItem(`${prefix ?? name}-${key}`, serialized)
+    localStorage.setItem(makeKey(key, prefix), serialized)
   },
 })

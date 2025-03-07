@@ -20,8 +20,7 @@ export const httpStorageDriver = (options?: {
       const params = await resolveValue(options?.load, key)
       const request = typeof params === 'string' ? params : params?.request
       const opts = typeof params === 'string' ? {} : params?.options
-
-      return fetch<'json'>(request ?? '/', { method: 'get', query: { key }, ...opts })
+      return await fetch(request ?? '/', { method: 'get', query: { key }, ...opts })
     },
 
     async save(key, serialized, data, force) {

@@ -1,5 +1,5 @@
 import { Plugin } from '../plugin'
-import { localStorageDriver } from './drivers'
+import { indexedDBDriver } from './drivers'
 import type { StorageDriver } from './storage-driver'
 import { StorageInitializer } from './storage-initializer'
 import { StorageService } from './storage-service'
@@ -24,7 +24,7 @@ export class StoragePlugin extends Plugin<StoragePluginParams> {
 
       this._storage = new StorageService({
         key: options?.storageId ?? (this.resolvedParams?.fingerprint) ?? pdfDocument.fingerprints[0] as string,
-        drivers: this.resolvedParams?.drivers ?? [localStorageDriver(this.resolvedParams?.prefix)],
+        drivers: this.resolvedParams?.drivers ?? [indexedDBDriver(this.resolvedParams?.prefix)],
         onLoaded: deserialized => this.dispatch('StorageLoaded', { storage: this._storage, deserialized }),
         onUpdated: serialized => this.dispatch('StorageUpdated', { storage: this._storage, serialized }),
         onError: message => this.logger.error(message),

@@ -2,7 +2,7 @@ export function serialize(value: any) {
   return JSON.stringify(value, stringifyReplacer)
 }
 
-export function deserialize(text: string | null, defaultValue?: any) {
+export function deserialize(text?: string | null, defaultValue?: any) {
   if (!text) {
     return defaultValue
   }

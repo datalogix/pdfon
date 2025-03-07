@@ -6,7 +6,7 @@ export type StorageServiceOptions = {
   key: string
   drivers: StorageDriver[]
   onLoaded?: (deserialized: any) => void
-  onUpdated?: (serialized: string) => void
+  onUpdated?: (serialized: string, data: any) => void
   onError?: (e: any) => void
 }
 
@@ -35,7 +35,7 @@ export class StorageService<Data extends Record<string, any> = InitializerOption
     try {
       const values = await Promise.allSettled(this.options.drivers.map(driver => driver.load(this.key)))
       this.data = values.filter(value => value.status === 'fulfilled')
-        .reduce((prev, { value }) => ({ ...prev, ...deserialize(value) }), {} as Data)
+        .reduce((prev, { value }) => ({ ...prev, ...deserialize(value ?? '{}') }), {} as Data)
     } catch (e) {
       this.options.onError?.(e)
     } finally {
@@ -56,7 +56,7 @@ export class StorageService<Data extends Record<string, any> = InitializerOption
     } catch (e) {
       this.options.onError?.(e)
     } finally {
-      this.options.onUpdated?.(serialized)
+      this.options.onUpdated?.(serialized, this.data)
     }
   }
 
