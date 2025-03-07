@@ -13,6 +13,8 @@ export type Book = {
   sku?: string
   author?: string
   description?: string
+  interactions_count?: number
+  resources_count?: number
   interactions?: Interaction[] | ((book: Book) => Interaction[] | Promise<Interaction[]>)
   resources?: Resource[] | ((book: Book) => Resource[] | Promise<Resource[]>)
 }

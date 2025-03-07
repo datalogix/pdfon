@@ -242,7 +242,8 @@
         "isbn": "ISBN",
         "author": "Autor",
         "description": "Descrição",
-        "interactions": "Interações"
+        "interactions": "Interações",
+        "resources": "Recursos"
       }
     },
     "loading": {

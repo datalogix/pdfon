@@ -71,7 +71,19 @@ export class LibraryToolbarItem extends ToolbarActionToggle {
 
     if (book.sku) ul.append(createElement('li', { innerHTML: `${this.libraryPlugin.translate('book.sku')}: <b>${book.sku}</b>` }))
     if (book.isbn) ul.append(createElement('li', { innerHTML: `${this.libraryPlugin.translate('book.isbn')}: <b>${book.isbn}</b>` }))
-    if (book.interactions) ul.append(createElement('li', { innerHTML: `${this.libraryPlugin.translate('book.interactions')}: <b>${book.interactions.length}</b>` }))
+
+    if (Array.isArray(book.interactions)) {
+      ul.append(createElement('li', { innerHTML: `${this.libraryPlugin.translate('book.interactions')}: <b>${book.interactions.length}</b>` }))
+    } else if (book.interactions_count) {
+      ul.append(createElement('li', { innerHTML: `${this.libraryPlugin.translate('book.interactions')}: <b>${book.interactions_count}</b>` }))
+    }
+
+    if (Array.isArray(book.resources)) {
+      ul.append(createElement('li', { innerHTML: `${this.libraryPlugin.translate('book.resources')}: <b>${book.resources.length}</b>` }))
+    } else if (book.resources_count) {
+      ul.append(createElement('li', { innerHTML: `${this.libraryPlugin.translate('book.resources')}: <b>${book.resources_count}</b>` }))
+    }
+
     if (book.author) ul.append(createElement('li', { innerHTML: `${this.libraryPlugin.translate('book.author')}: <b>${book.author}</b>` }))
     if (book.description) ul.append(createElement('li', 'description', { innerHTML: book.description }))
 
