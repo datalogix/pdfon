@@ -1,6 +1,24 @@
 # Changelog
 
 
+## v0.1.1
+
+[compare changes](https://github.com/datalogix/pdfon/compare/v0.1.0...v0.1.1)
+
+### 🚀 Enhancements
+
+- Book interactions and resources count ([d1f983a](https://github.com/datalogix/pdfon/commit/d1f983a))
+
+### 🩹 Fixes
+
+- Always prefix package name ([2466547](https://github.com/datalogix/pdfon/commit/2466547))
+- Open library when no book selected ([58f124a](https://github.com/datalogix/pdfon/commit/58f124a))
+- Initializer ([d29250a](https://github.com/datalogix/pdfon/commit/d29250a))
+
+### ❤️ Contributors
+
+- Ricardo Gobbo De Souza ([@ricardogobbosouza](https://github.com/ricardogobbosouza))
+
 ## v0.1.0
 
 [compare changes](https://github.com/datalogix/pdfon/compare/v0.0.7...v0.1.0)
