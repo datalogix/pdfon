@@ -1,30 +1,35 @@
 import { Dispatcher, type EventBus } from '@/bus'
 import { AnnotationEditorType, type AnnotationEditor, type AnnotationEditorLayer, type PDFDocumentProxy } from '@/pdfjs'
 import type { StorageService } from '../storage'
+import type { AnnotationEditorLayerBuilder } from './annotation-editor-layer-builder'
 
 export class AnnotationEditorStorage extends Dispatcher {
-  private annotationEditors: Map<string, AnnotationEditor> = new Map()
   private pdfDocument?: PDFDocumentProxy
   private storage?: StorageService
+  private annotationEditors?: Map<string, AnnotationEditor>
+  private annotationEditorLayerBuilders: AnnotationEditorLayerBuilder[] = []
 
   constructor(readonly eventBus: EventBus) {
     super()
 
-    this.init()
-  }
-
-  private init() {
     this.on('DocumentInit', ({ pdfDocument }) => {
       this.pdfDocument = pdfDocument
     })
 
     this.on('StorageLoaded', ({ source }) => {
       this.storage = source.storage
-      this.load()
+      this.annotationEditors = this.storage?.get('annotation-editors') ?? new Map()
+      this.annotationEditorLayerBuilders.forEach((annotationEditorLayerBuilder) => {
+        this.addEditors(annotationEditorLayerBuilder.annotationEditorLayer!)
+      })
     })
 
     this.on('AnnotationEditorLayerBuilderRender', ({ source }) => {
-      this.addEditors(source.annotationEditorLayer)
+      if (this.annotationEditors) {
+        this.addEditors(source.annotationEditorLayer)
+      } else {
+        this.annotationEditorLayerBuilders.push(source)
+      }
     })
 
     let i: NodeJS.Timeout
@@ -35,13 +40,9 @@ export class AnnotationEditorStorage extends Dispatcher {
       if (mode === AnnotationEditorType.NONE) {
         this.save()
       } else {
-        i = setInterval(() => this.save(), 1000)
+        i = setInterval(() => this.save(), 500)
       }
     })
-  }
-
-  load() {
-    this.annotationEditors = this.storage?.get('annotation-editors', new Map()) ?? new Map()
   }
 
   save() {
@@ -53,7 +54,7 @@ export class AnnotationEditorStorage extends Dispatcher {
   getByPage(pageIndex: number) {
     const items: Map<string, Record<string, any>> = new Map()
 
-    this.annotationEditors.entries().forEach(([key, object]) => {
+    this.annotationEditors?.entries().forEach(([key, object]) => {
       if (object.pageIndex === pageIndex) {
         items.set(key, object)
       }
@@ -91,8 +92,10 @@ export class AnnotationEditorStorage extends Dispatcher {
   destroy() {
     this.save()
 
-    this.annotationEditors.clear()
     this.pdfDocument = undefined
     this.storage = undefined
+    this.annotationEditors?.clear()
+    this.annotationEditors = undefined
+    this.annotationEditorLayerBuilders = []
   }
 }
