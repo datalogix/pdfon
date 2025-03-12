@@ -64,7 +64,7 @@ export class AnnotationEditorStorage extends Dispatcher {
 
   addEditors(layer: AnnotationEditorLayer) {
     this.getByPage(layer.pageIndex).forEach(async (annotation) => {
-      // Fix annotation free HIGHLIGHT
+      // Fix annotation editor HIGHLIGHT
       if (annotation.annotationType === AnnotationEditorType.HIGHLIGHT && !annotation.quadPoints) {
         annotation.inkLists = annotation.outlines.points
       }
@@ -73,6 +73,18 @@ export class AnnotationEditorStorage extends Dispatcher {
       layer.addOrRebuild(editor)
       editor.disableEditing()
       editor.unselect()
+
+      // Fix annotation editor FREETEXT
+      if (annotation.annotationType === AnnotationEditorType.FREETEXT) {
+        const [parentWidth, parentHeight] = editor.parentDimensions
+
+        editor.setAt(
+          ((editor.x - editor.width) * parentWidth) - (2 * editor.parentScale),
+          ((editor.y - editor.height) * parentHeight) - (2 * editor.parentScale),
+          0,
+          0,
+        )
+      }
     })
   }
 
