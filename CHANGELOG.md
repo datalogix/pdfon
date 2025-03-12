@@ -1,6 +1,19 @@
 # Changelog
 
 
+## v0.1.2
+
+[compare changes](https://github.com/datalogix/pdfon/compare/v0.1.1...v0.1.2)
+
+### 🩹 Fixes
+
+- Annotation FREETEXT position ([c76f5fe](https://github.com/datalogix/pdfon/commit/c76f5fe))
+- Load annotation editor ([ae4b004](https://github.com/datalogix/pdfon/commit/ae4b004))
+
+### ❤️ Contributors
+
+- Ricardo Gobbo De Souza ([@ricardogobbosouza](https://github.com/ricardogobbosouza))
+
 ## v0.1.1
 
 [compare changes](https://github.com/datalogix/pdfon/compare/v0.1.0...v0.1.1)
