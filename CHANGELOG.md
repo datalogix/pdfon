@@ -1,6 +1,22 @@
 # Changelog
 
 
+## v0.1.3
+
+[compare changes](https://github.com/datalogix/pdfon/compare/v0.1.2...v0.1.3)
+
+### 💅 Refactors
+
+- Parse content ([31f97b4](https://github.com/datalogix/pdfon/commit/31f97b4))
+
+### 🏡 Chore
+
+- Update deps ([69635e7](https://github.com/datalogix/pdfon/commit/69635e7))
+
+### ❤️ Contributors
+
+- Ricardo Gobbo De Souza ([@ricardogobbosouza](https://github.com/ricardogobbosouza))
+
 ## v0.1.2
 
 [compare changes](https://github.com/datalogix/pdfon/compare/v0.1.1...v0.1.2)
