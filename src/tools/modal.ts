@@ -35,7 +35,7 @@ export class Modal {
     }
 
     if (options.draggable) {
-      dragElement(container, header)
+      dragElement(container, { handler: header })
     }
 
     if (options.backdrop) {
