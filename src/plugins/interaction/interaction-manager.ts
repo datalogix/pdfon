@@ -1,5 +1,5 @@
 import { Dispatcher, EventBus } from '@/bus'
-import { createElement } from '@/utils'
+import { parseContent } from '@/utils'
 import { Modal } from '@/tools'
 import { Interaction, InteractionId } from './interaction'
 
@@ -90,40 +90,12 @@ export class InteractionManager extends Dispatcher {
     this.groupedByPageCache = undefined
   }
 
-  openContent({ content }: Interaction) {
-    const html = (() => {
-      if (content.endsWith('.mp4') || content.endsWith('.mp3')) {
-        return createElement(content.endsWith('.mp4') ? 'video' : 'audio', {
-          controlsList: 'nodownload',
-          src: content,
-          controls: true,
-          autoplay: true,
-          preload: true,
-        })
-      }
+  openContent({ content, type }: Interaction) {
+    if (type === 'link') {
+      return window.open(content, '_blank')
+    }
 
-      if (content.endsWith('.jpg') || content.endsWith('.jpeg') || content.endsWith('.png') || content.endsWith('.gif')) {
-        return createElement('img', { src: content })
-      }
-
-      try {
-        new URL(content)
-
-        return createElement('iframe', {
-          src: content,
-          width: '100%',
-          height: '100%',
-          frameborder: 0,
-          allow: 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture',
-          allowfullscreen: 'true',
-        })
-      } catch {
-        //
-      }
-
-      return createElement('div', { innerHTML: content })
-    })()
-
+    const html = parseContent(content)
     const isIframe = html instanceof HTMLIFrameElement
 
     Modal.open(html, {
