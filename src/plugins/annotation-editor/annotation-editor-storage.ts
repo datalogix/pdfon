@@ -48,7 +48,20 @@ export class AnnotationEditorStorage extends Dispatcher {
   save() {
     if (!this.pdfDocument) return
 
-    this.storage?.set('annotation-editors', this.pdfDocument.annotationStorage.serializable.map)
+    const editors = this.pdfDocument.annotationStorage.serializable.map ?? new Map()
+
+    // Fix annotation editor position
+    Object.entries(this.pdfDocument.annotationStorage.getAll() ?? {}).forEach(([name, annotation]) => {
+      if (!editors.has(name)) return
+
+      const serialized = editors.get(name)
+      serialized.x = annotation.x
+      serialized.y = annotation.y
+
+      editors.set(name, serialized)
+    })
+
+    this.storage?.set('annotation-editors', editors)
   }
 
   getByPage(pageIndex: number) {
@@ -71,20 +84,16 @@ export class AnnotationEditorStorage extends Dispatcher {
       }
 
       const editor = await (layer.deserialize(annotation) as any as Promise<AnnotationEditor>)
+
       layer.addOrRebuild(editor)
-      editor.disableEditing()
       editor.unselect()
+      editor.disableEditing()
+      editor.disableEditMode()
 
-      // Fix annotation editor FREETEXT
-      if (annotation.annotationType === AnnotationEditorType.FREETEXT) {
+      // Fix annotation editor position
+      if (annotation.x && annotation.y) {
         const [parentWidth, parentHeight] = editor.parentDimensions
-
-        editor.setAt(
-          ((editor.x - editor.width) * parentWidth) - (2 * editor.parentScale),
-          ((editor.y - editor.height) * parentHeight) - (2 * editor.parentScale),
-          0,
-          0,
-        )
+        editor.setAt(annotation.x * parentWidth, annotation.y * parentHeight, 0, 0)
       }
     })
   }
