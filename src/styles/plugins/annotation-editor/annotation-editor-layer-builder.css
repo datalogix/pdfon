@@ -25,7 +25,7 @@
    --editorHighlight-editing-cursor: url(./images/cursor-editorTextHighlight.svg)
        24 24,
      text;
-   --editorFreeHighlight-editing-cursor: url(..images/cursor-editorFreeHighlight.svg)
+   --editorFreeHighlight-editing-cursor: url(./images/cursor-editorFreeHighlight.svg)
        1 18,
      pointer;
 
