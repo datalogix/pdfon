@@ -1,17 +1,7 @@
-import { Plugin, TourPlugin } from '@/plugins'
+import { Plugin } from '@/plugins'
 import { AnnotationLayerBuilder, StructTreeLayerBuilder, TextLayerBuilder, XfaLayerBuilder } from '@/viewer'
 import { Pdfon } from './pdfon'
 import { InteractionEditorLayerBuilder } from './InteractionEditorLayerBuilder'
-
-export class TourEditorPlugin extends TourPlugin {
-  protected resolveToolbarItems() {
-    //
-  }
-
-  protected steps() {
-    return [this.firstStep()]
-  }
-}
 
 export class InteractionEditorPlugin extends Plugin {
   protected layerBuilders = [InteractionEditorLayerBuilder]
@@ -39,7 +29,6 @@ export class PdfonEditor extends Pdfon {
       plugins: [
         EditorPlugin,
         InteractionEditorPlugin,
-        // TourEditorPlugin,
       ],
     })
   }
