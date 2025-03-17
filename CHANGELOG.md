@@ -1,6 +1,22 @@
 # Changelog
 
 
+## v0.1.4
+
+[compare changes](https://github.com/datalogix/pdfon/compare/v0.1.3...v0.1.4)
+
+### 🩹 Fixes
+
+- Annotation editor position ([6217548](https://github.com/datalogix/pdfon/commit/6217548))
+
+### 🏡 Chore
+
+- Update deps ([c894474](https://github.com/datalogix/pdfon/commit/c894474))
+
+### ❤️ Contributors
+
+- Ricardo Gobbo De Souza ([@ricardogobbosouza](https://github.com/ricardogobbosouza))
+
 ## v0.1.3
 
 [compare changes](https://github.com/datalogix/pdfon/compare/v0.1.2...v0.1.3)
