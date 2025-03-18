@@ -171,7 +171,8 @@ export abstract class Plugin<T = any> extends Dispatcher implements Translatable
   }
 
   async load() {
-    this.onLoad(this._resolvedParams)
+    await this.onLoad(this._resolvedParams)
+
     this.dispatch(`Plugin${this.name}Loaded`)
   }
 

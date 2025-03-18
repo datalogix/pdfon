@@ -1,11 +1,6 @@
-import { Plugin } from '@/plugins'
+import { InteractionEditorPlugin, LoadingPlugin, Plugin } from '@/plugins'
 import { AnnotationLayerBuilder, StructTreeLayerBuilder, TextLayerBuilder, XfaLayerBuilder } from '@/viewer'
 import { Pdfon } from './pdfon'
-import { InteractionEditorLayerBuilder } from './InteractionEditorLayerBuilder'
-
-export class InteractionEditorPlugin extends Plugin {
-  protected layerBuilders = [InteractionEditorLayerBuilder]
-}
 
 export class EditorPlugin extends Plugin {
   protected init() {
@@ -28,6 +23,7 @@ export class PdfonEditor extends Pdfon {
     super({
       plugins: [
         EditorPlugin,
+        LoadingPlugin,
         InteractionEditorPlugin,
       ],
     })

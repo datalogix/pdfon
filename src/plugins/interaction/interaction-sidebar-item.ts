@@ -2,6 +2,7 @@ import { ProgressBar } from '@/tools'
 import { createElement } from '@/utils'
 import { SidebarItem } from '../sidebar'
 import type { InteractionPlugin } from './interaction-plugin'
+import { createInteractionButton } from './interaction'
 
 export class InteractionSidebarItem extends SidebarItem {
   private renderAbortController?: AbortController
@@ -80,12 +81,7 @@ export class InteractionSidebarItem extends SidebarItem {
       const ul = createElement('ul', 'interaction-list')
 
       interactions.forEach((interaction) => {
-        const button = createElement('button', [
-          'interaction',
-          `interaction-${interaction.type}`,
-          `interaction-${interaction.completed ? 'completed' : 'uncompleted'}`,
-        ], { type: 'button' })
-
+        const button = createInteractionButton(interaction, false)
         const content = createElement('span', 'interaction-content')
         const header = createElement('span', 'interaction-header')
         header.appendChild(createElement('i', 'interaction-icon'))

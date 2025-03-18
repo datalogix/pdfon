@@ -1,7 +1,5 @@
 import { Dispatcher, EventBus } from '@/bus'
-import { createElement } from '@/utils'
-import { Modal } from '@/tools'
-import { Interaction, InteractionId } from './interaction'
+import { type Interaction, type InteractionId, openInteraction } from './interaction'
 
 export class InteractionManager extends Dispatcher {
   protected interactions: Interaction[] = []
@@ -74,7 +72,7 @@ export class InteractionManager extends Dispatcher {
     }
 
     this.markAsCompleted(interaction)
-    this.openContent(interaction)
+    openInteraction(interaction)
     this.dispatch('InteractionClick', { interaction })
   }
 
@@ -88,48 +86,6 @@ export class InteractionManager extends Dispatcher {
 
   private resetGroupedByPageCache() {
     this.groupedByPageCache = undefined
-  }
-
-  openContent({ content }: Interaction) {
-    const html = (() => {
-      if (content.endsWith('.mp4') || content.endsWith('.mp3')) {
-        return createElement(content.endsWith('.mp4') ? 'video' : 'audio', {
-          controlsList: 'nodownload',
-          src: content,
-          controls: true,
-          autoplay: true,
-          preload: true,
-        })
-      }
-
-      if (content.endsWith('.jpg') || content.endsWith('.jpeg') || content.endsWith('.png') || content.endsWith('.gif')) {
-        return createElement('img', { src: content })
-      }
-
-      try {
-        new URL(content)
-
-        return createElement('iframe', {
-          src: content,
-          width: '100%',
-          height: '100%',
-          frameborder: 0,
-          allow: 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture',
-          allowfullscreen: 'true',
-        })
-      } catch {
-        //
-      }
-
-      return createElement('div', { innerHTML: content })
-    })()
-
-    const isIframe = html instanceof HTMLIFrameElement
-
-    Modal.open(html, {
-      draggable: !isIframe,
-      backdrop: isIframe ? 'blur' : false,
-    }).classList.add('interaction-modal')
   }
 
   destroy() {

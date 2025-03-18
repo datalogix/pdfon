@@ -35,40 +35,52 @@ export function createElement<K extends keyof HTMLElementTagNameMap>(
 
 export function dragElement(element: HTMLElement, options?: {
   handler?: HTMLElement
-  onStart?: (event: MouseEvent | TouchEvent) => void
-  onDrag?: (event: MouseEvent | TouchEvent) => void
-  onStop?: (event: MouseEvent | TouchEvent) => void
+  threshold?: number
+  onStart?: (event: MouseEvent | TouchEvent, x: number, y: number) => void
+  onDrag?: (event: MouseEvent | TouchEvent, x: number, y: number) => void
+  onStop?: (event: MouseEvent | TouchEvent, x: number, y: number) => void
 }) {
+  const handler = options?.handler ?? element
   let offsetX = 0
   let offsetY = 0
-  const handler = options?.handler ?? element
+  let isDragging = false
 
   const onStart = (event: MouseEvent | TouchEvent) => {
+    isDragging = false
+
     if (event instanceof TouchEvent) {
       offsetX = event.touches[0].clientX - element.offsetLeft
       offsetY = event.touches[0].clientY - element.offsetTop
-      element.ownerDocument.addEventListener('touchmove', onDrag, { passive: true })
-      element.ownerDocument.addEventListener('touchend', onStop, { passive: true })
+      element.ownerDocument.addEventListener('touchmove', onDrag)
+      element.ownerDocument.addEventListener('touchend', onStop)
     } else {
       offsetX = event.clientX - element.offsetLeft
       offsetY = event.clientY - element.offsetTop
-      element.ownerDocument.addEventListener('mousemove', onDrag, { passive: true })
-      element.ownerDocument.addEventListener('mouseup', onStop, { passive: true })
+      element.ownerDocument.addEventListener('mousemove', onDrag)
+      element.ownerDocument.addEventListener('mouseup', onStop)
     }
 
-    options?.onStart?.(event)
+    options?.onStart?.(event, offsetX, offsetY)
   }
 
   const onDrag = (event: MouseEvent | TouchEvent) => {
-    if (event instanceof TouchEvent) {
-      element.style.left = `${event.touches[0].clientX - offsetX}px`
-      element.style.top = `${event.touches[0].clientY - offsetY}px`
-    } else {
-      element.style.left = `${event.clientX - offsetX}px`
-      element.style.top = `${event.clientY - offsetY}px`
+    const x = event instanceof TouchEvent ? event.touches[0].clientX - offsetX : event.clientX - offsetX
+    const y = event instanceof TouchEvent ? event.touches[0].clientY - offsetY : event.clientY - offsetY
+    const threshold = options?.threshold ?? 0
+
+    if (
+      threshold > 0
+      && Math.sqrt((x - element.offsetLeft) ** 2 + (y - element.offsetTop) ** 2) < threshold
+    ) {
+      return
     }
 
-    options?.onDrag?.(event)
+    isDragging = true
+    element.style.position = 'absolute'
+    element.style.left = `${x}px`
+    element.style.top = `${y}px`
+
+    options?.onDrag?.(event, x, y)
   }
 
   const onStop = (event: MouseEvent | TouchEvent) => {
@@ -80,11 +92,18 @@ export function dragElement(element: HTMLElement, options?: {
       element.ownerDocument.removeEventListener('mouseup', onStop)
     }
 
-    options?.onStop?.(event)
+    if (!isDragging) {
+      return
+    }
+
+    const x = parseFloat(element.style.left)
+    const y = parseFloat(element.style.top)
+
+    options?.onStop?.(event, x, y)
   }
 
-  handler.addEventListener('mousedown', onStart, { passive: true })
-  handler.addEventListener('touchstart', onStart, { passive: true })
+  handler.addEventListener('mousedown', onStart)
+  handler.addEventListener('touchstart', onStart)
   handler.style.cursor = 'move'
   handler.style.userSelect = 'none'
   handler.oncontextmenu = preventDefault()
