@@ -5,6 +5,7 @@ import type { ViewerType } from '../types'
 
 export type InitializerOptions = Partial<{
   [key: string]: any
+  id?: number | string
   scroll?: ScrollMode
   spread?: SpreadMode
   rotation?: number

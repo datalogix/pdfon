@@ -21,9 +21,8 @@ export class InformationPlugin extends Plugin<InformationPluginParams> {
   }
 
   protected init() {
-    this._informationManager = new InformationManager(this.eventBus)
-
-    this.on('DocumentDestroy', () => this._informationManager?.destroy())
+    this.on('DocumentInit', () => this._informationManager = new InformationManager(this.eventBus))
+    this.on('DocumentDestroy', () => this.destroyInformationManager())
     this.on('InformationLoad', ({ informations }) => this._informationManager?.set(informations))
     this.on('InformationAdd', ({ information }) => this._informationManager?.add(information))
     this.on('InformationDelete', ({ information }) => this._informationManager?.delete(information))
@@ -35,8 +34,12 @@ export class InformationPlugin extends Plugin<InformationPluginParams> {
     }
   }
 
-  protected destroy() {
+  protected destroyInformationManager() {
     this._informationManager?.destroy()
     this._informationManager = undefined
+  }
+
+  protected destroy() {
+    this.destroyInformationManager()
   }
 }

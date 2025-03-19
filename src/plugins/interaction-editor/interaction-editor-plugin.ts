@@ -1,3 +1,5 @@
+import type { InitializerOptions } from '@/viewer'
+import { createFetch, type FetchOptions } from '@/utils'
 import { Plugin } from '../plugin'
 import type { Interaction } from '../interaction'
 import { InteractionEditorInitializer } from './interaction-editor-initializer'
@@ -5,6 +7,8 @@ import { InteractionEditorLayerBuilder } from './interaction-editor-layer-builde
 import { InteractionEditorManager } from './interaction-editor-manager'
 
 export type InteractionEditorPluginParams = {
+  api: FetchOptions | ((options: InitializerOptions) => FetchOptions)
+  autoFetch?: boolean
   interactions?: Interaction[]
 }
 
@@ -17,21 +21,35 @@ export class InteractionEditorPlugin extends Plugin<InteractionEditorPluginParam
     return this._interactionEditorManager
   }
 
-  protected init() {
-    this._interactionEditorManager = new InteractionEditorManager()
+  protected async init() {
+    this.on('DocumentInit', async ({ options }) => {
+      const defaults = typeof this.resolvedParams?.api === 'function'
+        ? this.resolvedParams?.api(options)
+        : this.resolvedParams?.api
 
-    this.on('InteractionLoad', ({ interactions }) => this._interactionEditorManager?.set(interactions ?? []))
-    this.on('DocumentDestroy', () => this._interactionEditorManager?.destroy())
+      this._interactionEditorManager = new InteractionEditorManager(
+        this.eventBus,
+        createFetch(defaults),
+        this.resolvedParams?.autoFetch,
+      )
+    })
+
+    this.on('DocumentDestroy', () => this.destroyInteractionEditorManager())
+    this.on('InteractionEditorLoad', ({ interactions }) => this._interactionEditorManager?.set(interactions ?? []))
   }
 
   protected onLoad() {
     if (this.resolvedParams?.interactions) {
-      this._interactionEditorManager?.set(this.resolvedParams.interactions)
+      this._interactionEditorManager?.set(this.resolvedParams?.interactions)
     }
   }
 
-  protected destroy() {
+  protected destroyInteractionEditorManager() {
     this._interactionEditorManager?.destroy()
     this._interactionEditorManager = undefined
+  }
+
+  protected destroy() {
+    this.destroyInteractionEditorManager()
   }
 }

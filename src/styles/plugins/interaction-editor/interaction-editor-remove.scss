@@ -1,0 +1,22 @@
+.interaction-editor-remove {
+  @apply
+    m-4
+    p-4
+    text-white
+    bg-red-500
+    rounded-lg
+    flex
+    items-center
+    justify-center
+    hover:bg-red-400
+    transition
+  ;
+
+  &:before {
+    content: '';
+
+    @apply
+      i-ph:trash
+    ;
+  }
+}

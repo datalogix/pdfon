@@ -1,5 +1,5 @@
 import { Modal } from '@/tools'
-import { createElement } from '@/utils'
+import { createElement, parseContent } from '@/utils'
 
 export type InteractionId = string | number
 
@@ -23,7 +23,7 @@ export function createInteractionButton(interaction: Interaction, positions: boo
     'interaction',
     `interaction-${interaction.type.toLowerCase()}`,
     completed ? `interaction-${interaction.completed ? 'completed' : 'uncompleted'}` : undefined,
-  ], { type: 'button' })
+  ], { type: 'button', id: `interaction-${interaction.id}` })
 
   if (positions) {
     button.style.left = `calc(${interaction.x}px * var(--scale-factor))`
@@ -33,13 +33,19 @@ export function createInteractionButton(interaction: Interaction, positions: boo
   return button
 }
 
-export function openInteraction(interaction: Interaction) {
-  const html = 'foo' as any
+export function openInteraction({ content, type, title }: Interaction) {
+  const html = parseContent(type === 'link' ? 'Uma nova janela será aberta, aguarde...' : content)
   const isIframe = html instanceof HTMLIFrameElement
-
-  Modal.open(html, {
-    title: interaction.title,
+  const modal = Modal.open(html, {
+    title,
     draggable: !isIframe,
     backdrop: isIframe ? 'blur' : false,
-  }).classList.add('interaction-modal')
+  })
+  modal.classList.add('interaction-modal')
+
+  if (type === 'link') {
+    setTimeout(() => window.open(content, '_blank'), 2000)
+  }
+
+  return modal
 }

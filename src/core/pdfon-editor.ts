@@ -1,4 +1,4 @@
-import { InteractionEditorPlugin, LoadingPlugin, Plugin } from '@/plugins'
+import { InteractionEditorPlugin, LoadingPlugin, NotifyPlugin, Plugin } from '@/plugins'
 import { AnnotationLayerBuilder, StructTreeLayerBuilder, TextLayerBuilder, XfaLayerBuilder } from '@/viewer'
 import { Pdfon } from './pdfon'
 
@@ -23,6 +23,7 @@ export class PdfonEditor extends Pdfon {
     super({
       plugins: [
         EditorPlugin,
+        NotifyPlugin,
         LoadingPlugin,
         InteractionEditorPlugin,
       ],

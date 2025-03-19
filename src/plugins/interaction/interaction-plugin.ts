@@ -36,9 +36,8 @@ export class InteractionPlugin extends Plugin<InteractionPluginParams> {
   }
 
   protected init() {
-    this._interactionManager = new InteractionManager(this.eventBus)
-
-    this.on('DocumentDestroy', () => this._interactionManager?.destroy())
+    this.on('DocumentInit', () => this._interactionManager = new InteractionManager(this.eventBus))
+    this.on('DocumentDestroy', () => this.destroyInteractionManager())
     this.on('StorageLoaded', () => this.dispatch('InteractionLoad'))
     this.on('InteractionClick', ({ interaction }) => this.setCurrentPage(interaction.page))
 
@@ -78,9 +77,13 @@ export class InteractionPlugin extends Plugin<InteractionPluginParams> {
     }
   }
 
-  protected destroy() {
-    this.sidebarManager?.delete(this.interactionSidebarItem)
+  protected destroyInteractionManager() {
     this._interactionManager?.destroy()
     this._interactionManager = undefined
+  }
+
+  protected destroy() {
+    this.destroyInteractionManager()
+    this.sidebarManager?.delete(this.interactionSidebarItem)
   }
 }

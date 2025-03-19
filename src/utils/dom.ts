@@ -34,6 +34,7 @@ export function createElement<K extends keyof HTMLElementTagNameMap>(
 }
 
 export function dragElement(element: HTMLElement, options?: {
+  parent?: HTMLElement
   handler?: HTMLElement
   threshold?: number
   onStart?: (event: MouseEvent | TouchEvent, x: number, y: number) => void
@@ -64,8 +65,8 @@ export function dragElement(element: HTMLElement, options?: {
   }
 
   const onDrag = (event: MouseEvent | TouchEvent) => {
-    const x = event instanceof TouchEvent ? event.touches[0].clientX - offsetX : event.clientX - offsetX
-    const y = event instanceof TouchEvent ? event.touches[0].clientY - offsetY : event.clientY - offsetY
+    let x = event instanceof TouchEvent ? event.touches[0].clientX - offsetX : event.clientX - offsetX
+    let y = event instanceof TouchEvent ? event.touches[0].clientY - offsetY : event.clientY - offsetY
     const threshold = options?.threshold ?? 0
 
     if (
@@ -73,6 +74,19 @@ export function dragElement(element: HTMLElement, options?: {
       && Math.sqrt((x - element.offsetLeft) ** 2 + (y - element.offsetTop) ** 2) < threshold
     ) {
       return
+    }
+
+    if (options?.parent) {
+      const minX = options.parent.offsetLeft
+      const maxX = minX + options.parent.offsetWidth
+      const minY = options.parent.offsetTop
+      const maxY = minY + options.parent.offsetHeight
+
+      const clampedX = Math.max(minX, Math.min(x, maxX))
+      const clampedY = Math.max(minY, Math.min(y, maxY))
+
+      x = clampedX
+      y = clampedY
     }
 
     isDragging = true

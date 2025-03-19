@@ -1,5 +1,4 @@
-import { ofetch, type FetchRequest, type FetchOptions } from 'ofetch'
-import { type Resolveable, resolveValue } from '@/utils'
+import { createFetch, type FetchOptions, type FetchRequest, type Resolveable, resolveValue } from '@/utils'
 import { defineStorageDriver } from '../storage-driver'
 
 export const httpStorageDriver = (options?: {
@@ -7,10 +6,7 @@ export const httpStorageDriver = (options?: {
   load?: Resolveable<{ request?: FetchRequest, options?: FetchOptions<'json'> } | string>
   save?: Resolveable<{ request?: FetchRequest, options?: FetchOptions } | string>
 }, interval: number = 10000) => {
-  const fetch = ofetch.create({
-    headers: { 'Content-Type': 'application/json' },
-    ...options?.defaults,
-  })
+  const fetch = createFetch(options?.defaults)
 
   let saveDate = 0
   let saveController: AbortController

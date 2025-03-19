@@ -29,9 +29,8 @@ export class ResourcePlugin extends Plugin<ResourcePluginParams> {
   }
 
   protected init() {
-    this._resourceManager = new ResourceManager(this.eventBus)
-
-    this.on('DocumentDestroy', () => this._resourceManager?.destroy())
+    this.on('DocumentInit', () => this._resourceManager = new ResourceManager(this.eventBus))
+    this.on('DocumentDestroy', () => this.destroyResourceManager())
     this.on('StorageLoaded', () => this.dispatch('ResourceLoad'))
     this.on('ResourceLoad', ({ resources }) => this._resourceManager?.set(resources ?? this.storage?.get('resources') ?? []))
     this.on('Resources', ({ resources }) => this.storage?.set('resources', resources))
@@ -43,8 +42,12 @@ export class ResourcePlugin extends Plugin<ResourcePluginParams> {
     }
   }
 
-  protected destroy() {
+  protected destroyResourceManager() {
     this._resourceManager?.destroy()
     this._resourceManager = undefined
+  }
+
+  protected destroy() {
+    this.destroyResourceManager()
   }
 }

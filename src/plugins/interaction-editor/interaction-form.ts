@@ -1,8 +1,8 @@
-import { createField, createForm } from '@/tools'
+import { createField, createForm, FormOptions } from '@/tools'
 import { createElement } from '@/utils'
 import type { Interaction } from '../interaction'
 
-export function createInteractionForm() {
+export function createInteractionForm(options?: FormOptions<Interaction>) {
   const type = createField({
     label: false,
     name: 'type',
@@ -78,7 +78,8 @@ export function createInteractionForm() {
     contentField.focus()
   })
 
-  return createForm<Interaction>({
+  return createForm({
     fields: [type, content, title],
+    ...options,
   })
 }

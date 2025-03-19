@@ -1,8 +1,7 @@
-import { $fetch, type FetchOptions } from 'ofetch'
-import { createElement } from '@/utils'
+import { $fetch, createElement, type FetchOptions } from '@/utils'
 
 export type FormPrepareData = (formData: FormData) => Promise<void> | void
-export type FormOnSubmit<T> = (formData: FormData) => Promise<T> | T
+export type FormOnSubmit<T> = (formData: FormData) => Promise<T> | T | undefined
 export type FormOnSuccess<T> = (data: T) => void
 export type FormOnError = (e: unknown, formData: FormData) => void
 export type FormField = HTMLElement | Field
@@ -20,6 +19,7 @@ export type FormOptions<T> = {
 }
 
 export class Form<T> {
+  private form = createElement('form', 'form')
   private _fields: FormField[] = []
   private _buttonSubmit: HTMLButtonElement
   private _loading: boolean = false
@@ -51,46 +51,60 @@ export class Form<T> {
 
   addField(...fields: FormField[]) {
     this._fields.push(...fields)
+    return this
   }
 
   prepareData(fn?: FormPrepareData) {
     this._prepareData = fn
+    return this
   }
 
   onSubmit(fn?: FormOnSubmit<T>) {
     this._onSubmit = fn
+    return this
   }
 
   onSuccess(fn?: FormOnSuccess<T>) {
     this._onSuccess = fn
+    return this
   }
 
   onError(fn?: FormOnError) {
     this._onError = fn
+    return this
   }
 
   render() {
-    const form = createElement('form', 'form')
-    form.append(...this.fields.map(field => (field as any).container ? (field as Field).container : field))
-    form.append(this._buttonSubmit)
-    form.addEventListener('submit', (event: SubmitEvent) => this.submit(event))
+    this.form.append(...this.fields.map(field => (field as any).container ? (field as Field).container : field))
+    this.form.append(this._buttonSubmit)
+    this.form.addEventListener('submit', (event: SubmitEvent) => this.submit(event))
 
-    return form
+    return this.form
   }
 
-  protected startLoading() {
+  startLoading() {
     this._loading = true
     this._buttonSubmit.disabled = true
     this._buttonSubmit.classList.add('loading')
   }
 
-  protected finishLoading() {
+  finishLoading() {
     this._loading = false
     this._buttonSubmit.disabled = false
     this._buttonSubmit.classList.remove('loading')
   }
 
-  protected async submit(event: SubmitEvent) {
+  showError(message: string) {
+    this.form.prepend(createElement('div', 'form-error', {
+      innerHTML: message,
+    }))
+  }
+
+  clearError() {
+    this.form.querySelectorAll('.form-error').forEach(el => el.remove())
+  }
+
+  async submit(event: SubmitEvent) {
     event.preventDefault()
 
     if (this.isLoading) {
@@ -98,6 +112,7 @@ export class Form<T> {
     }
 
     this.startLoading()
+    this.clearError()
 
     const formData = new FormData(event.currentTarget as HTMLFormElement)
 
@@ -118,6 +133,7 @@ export class Form<T> {
 
       this._onSuccess?.(data as T)
     } catch (e) {
+      this.showError(String(e))
       this._onError?.(e, formData)
     } finally {
       this.finishLoading()

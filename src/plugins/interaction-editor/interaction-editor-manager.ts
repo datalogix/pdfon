@@ -1,17 +1,48 @@
-import { $fetch } from 'ofetch'
+import { Dispatcher, type EventBus } from '@/bus'
+import type { $Fetch } from '@/utils'
 import type { InteractionId, Interaction, InteractionCreate } from '../interaction'
 
-export class InteractionEditorManager {
+export class InteractionEditorManager extends Dispatcher {
   protected interactions: Interaction[] = []
-  protected updates = new Map<InteractionId, { x: number, y: number }>()
+  protected updates = new Map<InteractionId, { id: InteractionId, x: number, y: number }>()
   private updatesTimeout?: NodeJS.Timeout
 
+  constructor(
+    readonly eventBus: EventBus,
+    private readonly fetch: $Fetch,
+    autoFetch: boolean = true,
+  ) {
+    super()
+
+    if (autoFetch) {
+      this.load()
+    }
+  }
+
+  load() {
+    this.fetch<Interaction[]>('/interactions').then((interactions) => {
+      if (Array.isArray(interactions)) {
+        this.set(interactions)
+      }
+    })
+  }
+
   set(interactions: Interaction[]) {
-    this.interactions = interactions
+    this.interactions = interactions.sort((a, b) => {
+      if (a.page !== b.page) {
+        return a.page - b.page
+      } else if (a.x === b.x) {
+        return b.y - a.y
+      } else {
+        return b.x - a.x
+      }
+    })
+
+    this.dispatch('InteractionsEditor', { interactions: this.interactions })
   }
 
   getByPage(page: number) {
-    return this.interactions.filter(interaction => interaction.page === page)
+    return this.interactions.filter(interaction => interaction.page == page)
   }
 
   async add(data: InteractionCreate) {
@@ -26,51 +57,58 @@ export class InteractionEditorManager {
       formData.set('title', data.title)
     }
 
-    const interaction = await $fetch<Interaction>('interactions', {
+    const interaction = await this.fetch<Interaction>('/interactions', {
       method: 'post',
       body: formData,
     })
 
     this.interactions.push(interaction)
 
+    this.dispatch('InteractionEditorAdded', { interaction })
+
     return interaction
   }
 
-  update(interaction: Interaction, x: number, y: number) {
-    const item = this.interactions.find(({ id }) => id === interaction.id)
+  update(id: InteractionId, x: number, y: number) {
+    const interaction = this.interactions.find(interaction => interaction.id === id)
 
-    if (!item) {
+    if (!interaction) {
       return
     }
 
-    item.x = x
-    item.y = y
+    interaction.x = x
+    interaction.y = y
 
-    this.updates.set(interaction.id, { x, y })
+    this.dispatch(`InteractionEditorUpdated${interaction.id}`, { interaction })
+    this.dispatch('InteractionEditorUpdated', { interaction })
 
+    this.updates.set(id, { id, x, y })
     clearTimeout(this.updatesTimeout)
 
     this.updatesTimeout = setTimeout(() => {
-      $fetch('interactions/updates', { method: 'post', body: JSON.stringify(this.updates.entries()) })
+      this.fetch('/interactions/update', { method: 'post', body: Array.from(this.updates.values()) })
         .then(() => this.updates.clear())
-    }, 500)
+    }, 1000)
   }
 
-  remove(interaction: Interaction) {
+  delete(interaction: Interaction) {
     const index = this.interactions.findIndex(({ id }) => id === interaction.id)
 
     if (index < 0) {
       return
     }
 
-    this.interactions.splice(index, 1)
+    this.dispatch(`InteractionEditorDeleted${interaction.id}`, { interaction })
+    this.dispatch('InteractionEditorDeleted', { interaction })
 
-    $fetch(`interactions/${interaction.id}`, { method: 'delete' })
+    this.interactions.splice(index, 1)
+    this.fetch(`/interactions/${interaction.id}`, { method: 'delete' })
   }
 
   destroy() {
     this.interactions = []
     this.updates.clear()
     clearTimeout(this.updatesTimeout)
+    this.dispatch('InteractionEditorDestroy')
   }
 }

@@ -5,6 +5,6 @@ export class InteractionEditorInitializer extends Initializer {
   async execute(options: InitializerOptions) {
     const interactions = await resolveValue(options.interactions, options)
 
-    this.dispatch('InteractionLoad', { interactions })
+    this.dispatch('InteractionEditorLoad', { interactions })
   }
 }

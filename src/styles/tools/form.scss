@@ -1,5 +1,19 @@
 
 .form {
+  .form-error {
+    @apply
+      mb-6
+      text-sm
+      text-red-500
+      bg-red-100
+      border
+      border-red-300
+      p-4
+      rounded
+      break-words
+    ;
+  }
+
   .field {
     @apply
       mb-4
