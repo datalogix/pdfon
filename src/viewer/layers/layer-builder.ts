@@ -81,6 +81,10 @@ export abstract class LayerBuilder<T = any> extends Dispatcher {
     return this.page.layersPage
   }
 
+  get logger() {
+    return this.options.logger
+  }
+
   findLayer<T>(layer: LayerBuilderType | string) {
     return this.layersPage.find<T>(layer)
   }

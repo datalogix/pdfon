@@ -28,9 +28,8 @@ export class BookmarkPlugin extends Plugin<BookmarkPluginParams> {
   }
 
   protected init() {
-    this._bookmarkManager = new BookmarkManager(this.eventBus, this.translator)
-
-    this.on('DocumentDestroy', () => this._bookmarkManager?.destroy())
+    this.on('DocumentInit', () => this._bookmarkManager = new BookmarkManager(this.eventBus, this.translator))
+    this.on('DocumentDestroy', () => this.destroyBookmarkManager())
     this.on('StorageLoaded', () => this.dispatch('BookmarkLoad'))
     this.on('BookmarkClick', ({ bookmark }) => this.setCurrentPage(bookmark.page))
 
@@ -53,9 +52,13 @@ export class BookmarkPlugin extends Plugin<BookmarkPluginParams> {
     }
   }
 
-  protected destroy() {
-    this.sidebarManager?.delete(this.bookmarkSidebarItem)
+  protected destroyBookmarkManager() {
     this._bookmarkManager?.destroy()
     this._bookmarkManager = undefined
+  }
+
+  protected destroy() {
+    this.destroyBookmarkManager()
+    this.sidebarManager?.delete(this.bookmarkSidebarItem)
   }
 }

@@ -381,6 +381,7 @@ export class PagesManager extends Manager {
           viewport: viewport.clone(),
           eventBus: this.eventBus,
           l10n: this.viewer.l10n,
+          logger: this.logger,
           container,
           scale: this.currentScale,
           rotation: this.rotation,

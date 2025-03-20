@@ -31,7 +31,7 @@ export class LibraryPlugin extends Plugin<LibraryPluginParams> {
     this._bookManager = new BookManager(this.eventBus)
 
     this.on('DocumentOpen', ({ options }) => {
-      if (this._bookManager && options?.book?.id !== this._bookManager.current?.id) {
+      if (this._bookManager && options?.id !== this._bookManager.current?.id) {
         this._bookManager.select(undefined)
       }
     })
@@ -42,12 +42,7 @@ export class LibraryPlugin extends Plugin<LibraryPluginParams> {
   private async openBook(book: Book) {
     const documentSrc = await getFromCache(book.src)
 
-    this.viewer.openDocument(documentSrc, book.name, {
-      storageId: book.id,
-      interactions: book.interactions,
-      resources: book.resources,
-      book,
-    })
+    this.viewer.openDocument(documentSrc, book.name, book)
 
     if (documentSrc === book.src) {
       this.on('DocumentInit', async ({ pdfDocument }) => {

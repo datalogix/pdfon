@@ -4,6 +4,7 @@ import { Manager } from './'
 
 export class DocumentPropertiesManager extends Manager {
   private _documentType?: pdfjs.DocumentType
+  private _documentFingerprint?: string
   private _documentTitle?: string
   private _documentUrl?: string
   private _documentFilename?: string
@@ -13,6 +14,10 @@ export class DocumentPropertiesManager extends Manager {
 
   get documentType() {
     return this._documentType
+  }
+
+  get documentFingerprint() {
+    return this._documentFingerprint
   }
 
   get documentTitle() {
@@ -87,6 +92,8 @@ export class DocumentPropertiesManager extends Manager {
     documentFilename?: string,
   ) {
     this._documentType = documentType
+    this._documentFingerprint = pdfDocument.fingerprints[0] ?? undefined
+
     if (documentFilename?.trim()) this._documentFilename = documentFilename
 
     if ((this.options.enableTitleUpdate ?? true) && !isEmbedded() && this.documentTitle) {
@@ -112,7 +119,7 @@ export class DocumentPropertiesManager extends Manager {
       this._documentMetadata = data.metadata
 
       this.logger.info(
-        `PDF ${pdfDocument.fingerprints[0]} [${this._documentInfo.PDFFormatVersion}`
+        `PDF ${this._documentFingerprint} [${this._documentInfo.PDFFormatVersion}`
         + `${(this._documentInfo.Producer || '-').trim()} / ${(this._documentInfo.Creator || '-').trim()}]`,
         null,
         true,

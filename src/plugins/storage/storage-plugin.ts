@@ -19,11 +19,11 @@ export class StoragePlugin extends Plugin<StoragePluginParams> {
   }
 
   protected init() {
-    this.on('DocumentInit', async ({ pdfDocument, options }) => {
+    this.on('DocumentInit', async ({ options }) => {
       if (this._storage) await this.destroy()
 
       this._storage = new StorageService({
-        key: options?.storageId ?? (this.resolvedParams?.fingerprint) ?? pdfDocument.fingerprints[0] as string,
+        key: options?.storageId ?? options?.id ?? this.resolvedParams?.fingerprint ?? this.viewer.documentFingerprint,
         drivers: this.resolvedParams?.drivers ?? [indexedDBDriver(this.resolvedParams?.prefix)],
         onLoaded: deserialized => this.dispatch('StorageLoaded', { storage: this._storage, deserialized }),
         onUpdated: serialized => this.dispatch('StorageUpdated', { storage: this._storage, serialized }),

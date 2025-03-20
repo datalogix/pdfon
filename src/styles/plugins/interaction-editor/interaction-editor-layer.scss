@@ -1,0 +1,16 @@
+@use '../interaction/interaction-layer';
+
+.interaction-editor-layer {
+  @extend .interaction-layer;
+
+  @apply
+    pointer-events-auto
+    cursor-pointer
+  ;
+
+  .interaction {
+    @apply
+      hover:scale-100
+    ;
+  }
+}

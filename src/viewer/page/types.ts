@@ -5,6 +5,7 @@ import * as pdfjs from '@/pdfjs'
 import type { LayerBuilderType } from '../layers'
 import * as managers from '../managers'
 import type { RenderingQueue } from '../rendering'
+import type { Logger } from '../logger'
 
 export type PageColors = {
   background: 'Canvas' | string
@@ -16,6 +17,7 @@ export type PageOptions = {
   viewport: pdfjs.PageViewport
   eventBus: EventBus
   l10n: IL10n
+  logger: Logger
   container?: HTMLElement
   scale?: number
   rotation?: number

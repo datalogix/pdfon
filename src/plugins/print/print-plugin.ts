@@ -136,7 +136,7 @@ export class PrintPlugin extends Plugin<PrintPluginParams> {
       title: this.translate('progress-title'),
       backdrop: 'blur',
       persist: true,
-    }).classList.add('modal-printing')
+    }).classList.add('printing-modal')
 
     this.viewer.renderingQueue.startPrinting()
     this.viewer.forceRendering()

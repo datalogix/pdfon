@@ -234,6 +234,9 @@
       "filter": "Apenas não finalizadas",
       "page": "Página {{ page }}"
     },
+    "interaction-editor": {
+      "remove-confirm": "Deseja realmente remover essa interação?"
+    },
     "library": {
       "title": "Biblioteca",
       "book": {

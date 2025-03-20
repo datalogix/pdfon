@@ -1,7 +1,5 @@
 import { Dispatcher, EventBus } from '@/bus'
-import { parseContent } from '@/utils'
-import { Modal } from '@/tools'
-import { Interaction, InteractionId } from './interaction'
+import { type Interaction, type InteractionId, openInteraction } from './interaction'
 
 export class InteractionManager extends Dispatcher {
   protected interactions: Interaction[] = []
@@ -74,7 +72,7 @@ export class InteractionManager extends Dispatcher {
     }
 
     this.markAsCompleted(interaction)
-    this.openContent(interaction)
+    openInteraction(interaction)
     this.dispatch('InteractionClick', { interaction })
   }
 
@@ -88,20 +86,6 @@ export class InteractionManager extends Dispatcher {
 
   private resetGroupedByPageCache() {
     this.groupedByPageCache = undefined
-  }
-
-  openContent({ content, type }: Interaction) {
-    if (type === 'link') {
-      return window.open(content, '_blank')
-    }
-
-    const html = parseContent(content)
-    const isIframe = html instanceof HTMLIFrameElement
-
-    Modal.open(html, {
-      draggable: !isIframe,
-      backdrop: isIframe ? 'blur' : false,
-    }).classList.add('interaction-modal')
   }
 
   destroy() {

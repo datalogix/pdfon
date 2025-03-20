@@ -13,11 +13,20 @@ export type PdfonOptions = {
 }
 
 export class Pdfon extends Dispatcher {
-  protected plugins: PluginType[] = DEFAULT_PLUGINS
-  protected toolbarItems: Map<string, ToolbarItemType> = DEFAULT_TOOLBAR_ITEMS
+  readonly eventBus: EventBus
+  protected plugins: PluginType[] = []
+  protected toolbarItems: Map<string, ToolbarItemType> = new Map()
 
-  constructor(readonly eventBus: EventBus = new EventBus()) {
+  constructor(options?: Partial<{
+    eventBus: EventBus
+    plugins: PluginType[]
+    toolbarItems: Map<string, ToolbarItemType>
+  }>) {
     super()
+
+    this.eventBus = options?.eventBus ?? new EventBus()
+    this.plugins = options?.plugins ?? DEFAULT_PLUGINS
+    this.toolbarItems = options?.toolbarItems ?? DEFAULT_TOOLBAR_ITEMS
   }
 
   addPlugin(...plugin: PluginType[]) {
@@ -105,7 +114,6 @@ export class Pdfon extends Dispatcher {
     const plugins = await this.initializePlugins(toolbar, viewer, opts.plugins)
     await this.initializeToolbar(toolbar)
 
-    //
     await Promise.allSettled(plugins.map(plugin => plugin.load()))
     this.dispatch('PluginsLoaded', { plugins })
 

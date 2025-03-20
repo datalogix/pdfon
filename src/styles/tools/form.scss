@@ -1,0 +1,68 @@
+
+.form {
+  .form-error {
+    @apply
+      mb-6
+      text-sm
+      text-red-500
+      bg-red-100
+      border
+      border-red-300
+      p-4
+      rounded
+      break-words
+    ;
+  }
+
+  .field {
+    @apply
+      mb-4
+    ;
+
+    input, select, textarea {
+      @apply
+        resize-none
+        border
+        border-gray-300
+        w-full
+        rounded
+        px-3
+        py-2
+      ;
+    }
+  }
+
+  button[type="submit"] {
+    @apply
+      bg-blue-500
+      text-white
+      px-10
+      py-3
+      rounded
+      w-full
+      disabled:bg-blue/70
+    ;
+
+    &.loading {
+      @apply
+       flex
+       items-center
+       justify-center
+       gap-4
+      ;
+
+
+      &:before {
+        content: '';
+
+        @apply
+          w-6
+          h-6
+          inline-block
+          i-ph:spinner
+          animate-spin
+        ;
+      }
+    }
+  }
+}
