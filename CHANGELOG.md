@@ -1,6 +1,18 @@
 # Changelog
 
 
+## v0.1.5
+
+[compare changes](https://github.com/datalogix/pdfon/compare/v0.1.4...v0.1.5)
+
+### 🩹 Fixes
+
+- Cursor svg path ([8517b8c](https://github.com/datalogix/pdfon/commit/8517b8c))
+
+### ❤️ Contributors
+
+- Ricardo Gobbo De Souza ([@ricardogobbosouza](https://github.com/ricardogobbosouza))
+
 ## v0.1.4
 
 [compare changes](https://github.com/datalogix/pdfon/compare/v0.1.3...v0.1.4)
