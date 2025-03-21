@@ -1,6 +1,7 @@
 import { Dispatcher, EventBus } from '@/bus'
 import type { PluginType } from '@/plugins'
 import { Toolbar, type ToolbarOptions, type ToolbarItemType } from '@/toolbar'
+import { Modal } from '@/tools'
 import { createElement } from '@/utils'
 import { Viewer, type ViewerType, type ViewerOptions } from '@/viewer'
 import { DEFAULT_PLUGINS, DEFAULT_TOOLBAR_ITEMS, DEFAULT_OPTIONS } from './defaults'
@@ -100,6 +101,8 @@ export class Pdfon extends Dispatcher {
 
     container.classList.add('pdfon')
     container.tabIndex = 0
+
+    Modal.root = container
 
     const viewer = new Viewer({
       eventBus: this.eventBus,

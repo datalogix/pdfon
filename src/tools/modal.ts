@@ -1,6 +1,7 @@
 import { createElement, dragElement } from '@/utils'
 
 export class Modal {
+  static root = document.body
   private static backdrop?: HTMLDivElement
   private static container?: HTMLDivElement
   private static onClose?: () => void
@@ -18,7 +19,7 @@ export class Modal {
     this.onClose = options.onClose
 
     const container = createElement('div', 'modal-container')
-    const root = options.root || document.body
+    const root = options.root ?? Modal.root
     root.appendChild(container)
 
     let header = undefined
