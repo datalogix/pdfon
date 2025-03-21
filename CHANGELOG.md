@@ -1,6 +1,37 @@
 # Changelog
 
 
+## v0.1.6
+
+[compare changes](https://github.com/datalogix/pdfon/compare/v0.1.5...v0.1.6)
+
+### 🩹 Fixes
+
+- Remove grabbing overlay ([e568e7d](https://github.com/datalogix/pdfon/commit/e568e7d))
+- Define root element of modal ([e4f0470](https://github.com/datalogix/pdfon/commit/e4f0470))
+- Use Drawer ([96291f9](https://github.com/datalogix/pdfon/commit/96291f9))
+- Use `use` instead of `import` ([3345140](https://github.com/datalogix/pdfon/commit/3345140))
+- Loading ([40cdb59](https://github.com/datalogix/pdfon/commit/40cdb59))
+- Images location ([3fb327a](https://github.com/datalogix/pdfon/commit/3fb327a))
+- Type ([dec7e09](https://github.com/datalogix/pdfon/commit/dec7e09))
+
+### 📦 Build
+
+- Ignore temp files ([bd49ad7](https://github.com/datalogix/pdfon/commit/bd49ad7))
+
+### 🏡 Chore
+
+- Update deps ([2ba0f56](https://github.com/datalogix/pdfon/commit/2ba0f56))
+
+### 🎨 Styles
+
+- Formatting ([cc6abf3](https://github.com/datalogix/pdfon/commit/cc6abf3))
+- Bookmark ([91221bd](https://github.com/datalogix/pdfon/commit/91221bd))
+
+### ❤️ Contributors
+
+- Ricardo Gobbo De Souza ([@ricardogobbosouza](https://github.com/ricardogobbosouza))
+
 ## v0.1.5
 
 [compare changes](https://github.com/datalogix/pdfon/compare/v0.1.4...v0.1.5)
