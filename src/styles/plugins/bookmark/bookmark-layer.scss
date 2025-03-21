@@ -13,16 +13,17 @@
 
     @apply
       pointer-events-auto
-      top-10
+      top-2
       right-0
-      translate-x-[80%]
+      translate-x-[90%]
+      scale-80
+      hover:scale-100
       absolute
       transition
-      hover:translate-x-[95%]
-      hover:scale-110
-      flex items-center justify-center
+      flex
+      items-center
+      justify-center
       text-gray-500
-      rotate-90
       z-0
     ;
 
@@ -39,8 +40,7 @@
     &.selected {
       @apply
         text-blue-500
-        scale-110
-        translate-x-[95%]
+        scale-100
       ;
     }
   }
