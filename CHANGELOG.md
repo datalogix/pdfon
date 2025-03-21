@@ -1,6 +1,18 @@
 # Changelog
 
 
+## v0.1.7
+
+[compare changes](https://github.com/datalogix/pdfon/compare/v0.1.6...v0.1.7)
+
+### 🩹 Fixes
+
+- Use `tailwind-compat` ([2deff58](https://github.com/datalogix/pdfon/commit/2deff58))
+
+### ❤️ Contributors
+
+- Ricardo Gobbo De Souza ([@ricardogobbosouza](https://github.com/ricardogobbosouza))
+
 ## v0.1.6
 
 [compare changes](https://github.com/datalogix/pdfon/compare/v0.1.5...v0.1.6)
