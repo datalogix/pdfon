@@ -39,28 +39,18 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.22.0",
-    "@iconify/json": "^2.2.317",
+    "@iconify/json": "^2.2.319",
     "@stylistic/eslint-plugin": "^4.2.0",
-    "@types/node": "^22.13.10",
+    "@types/node": "^22.13.11",
     "changelogen": "^0.6.1",
     "eslint": "^9.22.0",
     "globals": "^16.0.0",
-    "sass": "^1.85.1",
+    "sass": "^1.86.0",
     "typescript": "^5.8.2",
-    "typescript-eslint": "^8.26.1",
+    "typescript-eslint": "^8.27.0",
     "unocss": "^66.0.0",
     "vite": "^6.2.2",
     "vite-plugin-dts": "^4.5.3",
     "vite-plugin-eslint2": "^5.0.3"
-  },
-  "pnpm": {
-    "ignoredBuiltDependencies": [
-      "@parcel/watcher",
-      "esbuild"
-    ],
-    "onlyBuiltDependencies": [
-      "@parcel/watcher",
-      "esbuild"
-    ]
   }
 }
