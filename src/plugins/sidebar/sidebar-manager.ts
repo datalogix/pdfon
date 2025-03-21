@@ -24,7 +24,7 @@ export class SidebarManager extends Dispatcher {
     super()
 
     this.container.appendChild(this.menu)
-    this.drawer.render(this.container, this.viewer.rootContainer)
+    this.viewer.rootContainer.append(this.drawer.render(this.container))
   }
 
   get length() {

@@ -32,13 +32,14 @@ export class Drawer {
     }
   }
 
-  render(content: HTMLElement, root: HTMLElement = document.body) {
+  render(content: HTMLElement) {
     const container = createElement('div', 'drawer-container')
     container.appendChild(content)
 
     this.container.appendChild(container)
-    root.appendChild(this.container)
     this.buildBackdrop()
+
+    return this.container
   }
 
   private buildBackdrop() {

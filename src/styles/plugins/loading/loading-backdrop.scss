@@ -1,6 +1,6 @@
-.pdfon >.loading {
+>.loading {
   @apply
-    fixed
+    absolute
     inset-0
     z-100000000000
     backdrop-blur-sm

@@ -8,7 +8,7 @@
 
 .modal-backdrop {
   @apply
-    fixed
+    absolute
     inset-0
     h-screen
     w-full
@@ -33,7 +33,7 @@
 .modal-container {
   @apply
     select-none
-    fixed
+    absolute
     top-1/2
     left-1/2
     transform
