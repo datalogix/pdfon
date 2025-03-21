@@ -70,17 +70,11 @@
       transition
       relative
     ;
-
-    &.hidden {
-      @apply
-        hidden
-      ;
-    }
   }
 }
 
 .sidebar-drawer .drawer-container {
   @apply top-14!;
 
-  height: calc(100vh - 3.5rem) !important;
+  height: calc(100% - 3.5rem) !important;
 }

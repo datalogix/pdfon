@@ -1,5 +1,7 @@
 .drawer {
-  @apply select-none;
+  @apply
+    select-none
+  ;
 
   .drawer-container {
     @apply
@@ -12,7 +14,7 @@
       transition
       w-full
       h-full
-      z-10001
+      z-100001
     ;
   }
 

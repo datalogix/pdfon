@@ -14,12 +14,6 @@
     text-gray-500
   ;
 
-  &.hidden {
-    @apply
-      hidden
-    ;
-  }
-
   span {
     &:before {
       content: '';
