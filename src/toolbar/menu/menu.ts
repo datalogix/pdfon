@@ -1,3 +1,4 @@
+import { Drawer } from '@/tools'
 import { ToolbarMenu } from '../toolbar-menu'
 
 export class Menu extends ToolbarMenu {
@@ -39,5 +40,29 @@ export class Menu extends ToolbarMenu {
     ],
   ]) {
     super(items)
+  }
+
+  protected drawer = new Drawer({
+    position: 'right',
+    backdrop: false,
+    classes: 'menu-drawer',
+    onClose: () => this.close(),
+  })
+
+  async initialize() {
+    await super.initialize()
+
+    this.container.removeChild(this.menu!)
+    this.viewer.rootContainer.append(this.drawer.render(this.menu!))
+  }
+
+  open() {
+    super.open()
+    this.drawer.open()
+  }
+
+  close() {
+    super.close()
+    this.drawer.close()
   }
 }

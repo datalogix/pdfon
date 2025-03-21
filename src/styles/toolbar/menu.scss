@@ -2,84 +2,64 @@
   > button:before {
     @apply i-ph:list;
   }
+}
 
-  .toolbar-menu {
-    @apply
-      overflow-x-hidden
-      overflow-y-auto
-      h-screen
-      invisible
-      fixed
-      border
-      rounded
-      bg-white
-      flex
-      flex-col
-      transition
-      right-0
-      top-14
-      translate-x-full
-      w-80
-      divide-y-2
-      shadow-[rgba(0,0,0,0.1)_0px_6px_4px_4px]
-    ;
+.menu-drawer .drawer-container {
+  @apply
+    top-14!
+    w-80!
+    overflow-x-hidden!
+  ;
 
-    .toolbar-menu-group {
-      @apply py-2;
+  height: calc(100% - 3.5rem) !important;
+}
 
-      &:last-child {
-        @apply pb-14;
-      }
-    }
+.toolbar-menu {
+  @apply
+    divide-y-2
+  ;
 
-    .toolbar-action {
-      @apply
-        w-full
-      ;
-
-      > button {
-        @apply
-          gap-3
-          justify-start
-          px-4
-          border-none
-          hover:bg-blue-50
-          rounded-none
-
-        ;
-
-        &.active {
-          @apply
-            border-blue-100
-            bg-blue-50
-            shadow-inner
-            text-blue-700
-          ;
-
-          &:before {
-            @apply
-              text-blue-700
-              scale-110
-            ;
-          }
-        }
-
-        > span {
-          @apply
-            not-sr-only
-          ;
-        }
-      }
-    }
+  .toolbar-menu-group {
+    @apply py-2;
   }
 
-  &.toolbar-menu-open {
-    .toolbar-menu {
+  .toolbar-action {
+    @apply
+      w-full
+    ;
+
+    > button {
       @apply
-        z-100002
-        visible
-        translate-x-0
+        gap-3
+        justify-start
+        px-4
+        border-none
+        hover:bg-blue-50
+        rounded-none
       ;
+
+      &.active {
+        @apply
+          border-blue-100
+          bg-blue-50
+          shadow-inner
+          text-blue-700
+        ;
+
+        &:before {
+          @apply
+            text-blue-700
+            scale-110
+          ;
+        }
+      }
+
+      > span {
+        @apply
+          not-sr-only
+        ;
+      }
     }
   }
 }
+
