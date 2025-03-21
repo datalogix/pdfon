@@ -11,6 +11,7 @@
     "lib": ["DOM", "ESNext"],
     "paths": {
       "@/*": ["./src/*"],
-    }
+    },
   },
+  "exclude": ["src/_x", "src/plugins/history"]
 }
