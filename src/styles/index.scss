@@ -1,38 +1,9 @@
-.pdfon {
-  @apply
-    relative
-    outline-none
-    overflow-hidden
-    w-full
-    h-dvh
-    flex
-    flex-col
-  ;
-
-  .hidden,
-  [hidden] {
-    @apply hidden!;
-  }
-
-  &.wait::before {
-    content: '';
-
-    @apply
-      absolute
-      inset-0
-      w-full
-      h-full
-      cursor-wait
-      z-100001
-    ;
-  }
-
-  @import 'layers';
-  @import 'plugins';
-  @import 'toolbar';
-  @import 'tools';
-  @import 'viewer';
-}
+@use 'layers';
+@use 'plugins';
+@use 'toolbar';
+@use 'tools';
+@use 'viewer';
+@use 'pdfon';
 
 /* TODO: refactor to scss */
 @import url(./plugins/annotation-editor/annotation-editor-layer-builder.css);

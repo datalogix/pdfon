@@ -1,0 +1,29 @@
+.pdfon {
+  @apply
+    relative
+    outline-none
+    overflow-hidden
+    w-full
+    h-dvh
+    flex
+    flex-col
+  ;
+
+  .hidden,
+  [hidden] {
+    @apply hidden!;
+  }
+
+  &.wait::before {
+    content: '';
+
+    @apply
+      absolute
+      inset-0
+      w-full
+      h-full
+      cursor-wait
+      z-100001
+    ;
+  }
+}
