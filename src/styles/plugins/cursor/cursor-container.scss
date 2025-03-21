@@ -9,14 +9,3 @@
     @apply cursor-grabbing!;
   }
 }
-
-.grabbing-overlay {
-  @apply
-    fixed
-    block
-    inset-0
-    hidden
-    z-50000
-    bg-black/0
-  ;
-}

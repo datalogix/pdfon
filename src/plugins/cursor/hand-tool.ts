@@ -1,5 +1,4 @@
 import { stopEvent } from '@/pdfjs'
-import { createElement } from '@/utils'
 
 export class HandTool {
   private activateAbortController?: AbortController
@@ -9,7 +8,6 @@ export class HandTool {
   private scrollTopStart = 0
   private clientXStart = 0
   private clientYStart = 0
-  private overlay: HTMLDivElement = createElement('div', 'grabbing-overlay')
 
   constructor(private readonly element: HTMLDivElement) {}
 
@@ -96,10 +94,6 @@ export class HandTool {
       left: this.scrollLeftStart - xDiff,
       behavior: 'instant',
     })
-
-    if (!this.overlay.parentNode) {
-      document.body.append(this.overlay)
-    }
   }
 
   private endPan(_event?: MouseEvent | Event) {
@@ -107,7 +101,5 @@ export class HandTool {
     this.mouseDownAbortController = undefined
     this.scrollAbortController?.abort()
     this.scrollAbortController = undefined
-    // Note: ChildNode.remove doesn't throw if the parentNode is undefined.
-    this.overlay.remove()
   }
 }
