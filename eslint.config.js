@@ -1,15 +1,15 @@
 import globals from 'globals'
-import pluginJs from '@eslint/js'
+import eslint from '@eslint/js'
 import tseslint from 'typescript-eslint'
 import stylistic from '@stylistic/eslint-plugin'
 
-export default [
+export default tseslint.config([
   { files: ['src/**/*.{js,mjs,cjs,ts}'] },
   { ignores: ['dist', 'src/_x/**/*', 'src/plugins/history/*'] },
   { languageOptions: { globals: globals.browser } },
-  pluginJs.configs.recommended,
-  ...tseslint.configs.recommended,
-  stylistic.configs['recommended-flat'],
+  eslint.configs.recommended,
+  tseslint.configs.recommended,
+  stylistic.configs.recommended,
   stylistic.configs.customize({
     braceStyle: '1tbs',
   }),
@@ -31,4 +31,4 @@ export default [
       ],
     },
   },
-]
+])
