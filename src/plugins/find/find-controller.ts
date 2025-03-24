@@ -1,6 +1,5 @@
+import { Extension } from '@/core/extension'
 import { scrollIntoView, serialize } from '@/utils'
-import { Dispatcher } from '@/bus'
-import type { ViewerType } from '@/viewer'
 import { getOriginalIndex, convertToRegExpString, isEntireWord, normalize } from './helpers'
 
 export enum FindState {
@@ -24,7 +23,7 @@ const FIND_TIMEOUT = 250 // ms
 const MATCH_SCROLL_OFFSET_TOP = -50 // px
 const MATCH_SCROLL_OFFSET_LEFT = -400 // px
 
-export class FindController extends Dispatcher {
+export class FindController extends Extension {
   protected firstPageCapability?: PromiseWithResolvers<void>
   protected findTimeout?: NodeJS.Timeout
   protected extractTextPromises: Promise<void>[] = []
@@ -56,36 +55,9 @@ export class FindController extends Dispatcher {
     wrapped?: boolean
   } = {}
 
-  constructor(
-    protected readonly viewer: ViewerType,
-    protected updateMatchesCountOnProgress = true,
-  ) {
+  constructor(protected updateMatchesCountOnProgress = true) {
     super()
     this.reset()
-  }
-
-  get eventBus() {
-    return this.viewer.eventBus
-  }
-
-  get logger() {
-    return this.viewer.logger
-  }
-
-  get pdfDocument() {
-    return this.viewer.getDocument()
-  }
-
-  get pagesCount() {
-    return this.viewer.pagesCount
-  }
-
-  get page() {
-    return this.viewer.currentPageNumber
-  }
-
-  set page(value) {
-    this.viewer.currentPageNumber = value
   }
 
   get highlightMatches() {

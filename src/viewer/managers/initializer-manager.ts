@@ -1,4 +1,3 @@
-import type { PDFDocumentProxy } from '@/pdfjs'
 import { FORCE_PAGES_LOADED_TIMEOUT } from '@/config'
 import { isEmbedded } from '@/utils'
 import { AnimationInitializer, DocumentInitializer, type Initializer, type InitializerOptions } from '../initializers'
@@ -29,7 +28,7 @@ export class InitializerManager extends Manager {
   }
 
   init() {
-    this.on('DocumentInit', async ({ pdfDocument, options }) => await this.setupInitializer(pdfDocument, options))
+    this.on('DocumentInit', async ({ options }) => await this.setupInitializer(options))
     this.on('DocumentInitialView', async ({ options }) => await this.executeInitializers(options))
     this.on('DocumentInitialized', async ({ options }) => await this.finishInitializers(options))
   }
@@ -38,10 +37,10 @@ export class InitializerManager extends Manager {
     this._initialized = false
   }
 
-  private async setupInitializer(pdfDocument: PDFDocumentProxy, options: InitializerOptions = {}) {
+  private async setupInitializer(options: InitializerOptions = {}) {
     try {
       this.applyInitialView({
-        ...await this.prepareInitializers(pdfDocument),
+        ...await this.prepareInitializers(),
         ...options,
       })
 
@@ -95,12 +94,12 @@ export class InitializerManager extends Manager {
     })
   }
 
-  private async prepareInitializers(pdfDocument: PDFDocumentProxy) {
+  private async prepareInitializers() {
     let options: InitializerOptions = {}
 
     for (const initializer of this.initializersOrdered) {
       try {
-        initializer.init(pdfDocument, this.viewer as ViewerType)
+        initializer.setViewer(this.viewer as ViewerType)
         options = await initializer.prepare(options)
       } catch (reason) {
         this.logger.error(`Unable to prepare initializer`, reason)

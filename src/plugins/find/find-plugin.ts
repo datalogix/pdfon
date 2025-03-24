@@ -19,10 +19,8 @@ export class FindPlugin extends Plugin<FindPluginParams> {
   private findHighlighters = new Map<number, FindHighlighter>()
 
   protected init() {
-    this.findController = new FindController(
-      this.viewer,
-      this.resolvedParams?.updateMatchesCountOnProgress,
-    )
+    this.findController = new FindController(this.resolvedParams?.updateMatchesCountOnProgress)
+    this.findController.setViewer(this.viewer)
 
     this.on('OnePageRendered', () => this.findController?.init())
     this.on('Find', params => this.findController?.find(params))

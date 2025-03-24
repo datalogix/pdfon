@@ -11,7 +11,7 @@ export class SidebarInitializer extends Initializer {
       return options
     }
 
-    const pageMode = await this.pdfDocument.getPageMode().catch(() => { })
+    const pageMode = await this.pdfDocument?.getPageMode().catch(() => { })
 
     if (pageMode) {
       switch (pageMode) {

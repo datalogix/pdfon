@@ -12,7 +12,7 @@ export class OpenPlugin extends Plugin {
   private openService?: OpenService
 
   protected init() {
-    this.openService = new OpenService(this.container, this.translator)
+    this.openService = new OpenService(this.viewer.container, this.translator)
     this.openService.onChooseFile((file, blob) => {
       if (this.viewer.isInPresentationMode) return
 

@@ -16,6 +16,10 @@ export class ZoomPlugin extends Plugin {
   private isCtrlKeyDown = false
   private isScrolling = false
 
+  get container() {
+    return this.viewer.container
+  }
+
   protected init() {
     this.zoomTouchManager = new ZoomTouchManager({
       container: this.container,

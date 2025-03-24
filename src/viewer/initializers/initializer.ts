@@ -1,7 +1,5 @@
-import { Dispatcher } from '@/bus'
+import { Extension } from '@/core/extension'
 import type { ScrollMode, SpreadMode } from '@/enums'
-import type { PDFDocumentProxy } from '@/pdfjs'
-import type { ViewerType } from '../types'
 
 export type InitializerOptions = Partial<{
   [key: string]: any
@@ -19,37 +17,9 @@ export type InitializerExecuteResult = void | ((options: InitializerOptions) => 
 
 export type InitializerType = (Initializer | (new () => Initializer))
 
-export abstract class Initializer extends Dispatcher {
-  private _pdfDocument?: PDFDocumentProxy
-  private _viewer?: ViewerType
-
+export abstract class Initializer extends Extension {
   get order() {
     return 0
-  }
-
-  get pdfDocument() {
-    return this._pdfDocument!
-  }
-
-  get viewer() {
-    return this._viewer!
-  }
-
-  get eventBus() {
-    return this.viewer.eventBus
-  }
-
-  get l10n() {
-    return this.viewer.l10n
-  }
-
-  get logger() {
-    return this.viewer.logger
-  }
-
-  init(pdfDocument: PDFDocumentProxy, viewer: ViewerType) {
-    this._pdfDocument = pdfDocument
-    this._viewer = viewer
   }
 
   prepare(options: InitializerOptions): Promise<InitializerOptions> | InitializerOptions {

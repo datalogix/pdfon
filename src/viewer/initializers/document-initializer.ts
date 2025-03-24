@@ -7,7 +7,7 @@ export class DocumentInitializer extends Initializer {
       return options
     }
 
-    const pageLayout = await this.pdfDocument.getPageLayout().catch(() => { })
+    const pageLayout = await this.pdfDocument?.getPageLayout().catch(() => { })
 
     if (pageLayout) {
       const modes = apiPageLayoutToViewerModes(pageLayout)

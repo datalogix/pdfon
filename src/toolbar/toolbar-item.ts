@@ -1,13 +1,11 @@
-import { Dispatcher } from '@/bus'
+import { Extension } from '@/core/extension'
 import { createElement } from '@/utils'
-import type { Toolbar } from './toolbar'
 
 export type ToolbarItemType = ToolbarItem | (new () => ToolbarItem)
 
-export abstract class ToolbarItem extends Dispatcher {
+export abstract class ToolbarItem extends Extension {
   private _name?: string
   protected container = createElement('div', ['toolbar-item', this.className])
-  private _toolbar?: Toolbar
   protected initialized = false
   protected abortController?: AbortController
 
@@ -19,40 +17,20 @@ export abstract class ToolbarItem extends Dispatcher {
     return this._name
   }
 
-  get className() {
-    return `toolbar-item-${this.name}`
-  }
-
-  get toolbar() {
-    return this._toolbar!
-  }
-
   get viewer() {
-    return this.toolbar.viewer!
-  }
-
-  get eventBus() {
-    return this.viewer.eventBus
+    return this.toolbar.viewer
   }
 
   get signal() {
     return this.abortController?.signal
   }
 
-  get l10n() {
-    return this.viewer.l10n
-  }
-
-  get logger() {
-    return this.viewer.logger
+  get className() {
+    return `toolbar-item-${this.name}`
   }
 
   translate(key: string, options?: object) {
     return this.l10n.get(`toolbar.${this.name}.${key}`.toLowerCase(), options)
-  }
-
-  setToolbar(toolbar: Toolbar) {
-    this._toolbar = toolbar
   }
 
   async initialize() {
