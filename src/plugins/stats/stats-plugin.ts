@@ -36,10 +36,16 @@ export class StatsPlugin extends Plugin<StatsPluginParams> {
     this.on('DocumentDestroy', () => this._statsTracker?.stop())
 
     this.on('StorageLoaded', () => {
-      const pageViews = this.storage?.get('page-views', new Map())
+      let pagesViews = this.storage?.get('pages-views', this.storage?.get('page-views', new Map()))
+
+      if (typeof pagesViews === 'string') {
+        pagesViews = new Map(JSON.parse(pagesViews))
+      } else if (Array.isArray(pagesViews)) {
+        pagesViews = new Map(pagesViews.map(i => [i[0], i[1]]))
+      }
 
       this.dispatch('StatsLoad', {
-        pagesViews: typeof pageViews === 'string' ? new Map(JSON.parse(pageViews)) : pageViews,
+        pagesViews,
         time: parseInt(this.storage?.get('usage-time', 0), 0),
       })
     })
@@ -52,11 +58,11 @@ export class StatsPlugin extends Plugin<StatsPluginParams> {
     })
 
     this.on('StatsUpdated', ({ pagesViews, time }) => {
-      this.storage?.set('page-views', pagesViews)
+      this.storage?.set('pages-views', Array.from(pagesViews))
       this.storage?.set('usage-time', time)
 
       this.informationManager?.add({
-        name: this.translate('page-views'),
+        name: this.translate('pages-views'),
         value: pagesViews.size,
         total: this.viewer.pagesCount,
         order: 3,
