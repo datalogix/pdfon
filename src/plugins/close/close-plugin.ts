@@ -8,16 +8,10 @@ export type ClosePluginParams = {
 }
 
 export class ClosePlugin extends Plugin<ClosePluginParams> {
-  protected readonly closeToolbarItem = new CloseToolbarItem()
-
   protected getToolbarItems() {
-    return new Map<string, ToolbarItemType>([
-      ['close', this.closeToolbarItem],
-    ])
-  }
-
-  protected onLoad() {
-    this.closeToolbarItem.toggle()
+    return new Map<string, ToolbarItemType>(
+      this.resolvedParams?.url ? [['close', CloseToolbarItem]] : [],
+    )
   }
 
   close() {
