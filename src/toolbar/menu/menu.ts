@@ -52,8 +52,10 @@ export class Menu extends ToolbarMenu {
   async initialize() {
     await super.initialize()
 
-    this.container.removeChild(this.menu!)
-    this.viewer.rootContainer.append(this.drawer.render(this.menu!))
+    if (this.menu) {
+      this.container.removeChild(this.menu)
+      this.rootContainer.append(this.drawer.render(this.menu))
+    }
   }
 
   open() {
