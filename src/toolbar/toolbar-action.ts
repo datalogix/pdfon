@@ -57,14 +57,14 @@ export abstract class ToolbarAction extends ToolbarItem {
   }
 
   enable() {
-    if (!this._button) return
+    if (!this._button || !this._button.disabled) return
 
     this._button.addEventListener('click', this.onClickListener)
     this._button.disabled = false
   }
 
   disable() {
-    if (!this._button) return
+    if (!this._button || this._button.disabled) return
 
     this._button.removeEventListener('click', this.onClickListener)
     this._button.disabled = true
