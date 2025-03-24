@@ -37,12 +37,14 @@
       text-2xl
       cursor-pointer
       shadow-2xl
+      transition
+      hover:scale-110
+      hover:text-blue-500
     ;
   }
 
   &.open-dragover {
     @apply
-      opacity-100
       scale-110
       text-blue-500
     ;
