@@ -24,19 +24,15 @@ export const httpStorageDriver = (options?: {
 
       if (saveDate === 0) {
         saveDate = now
-
         return
       }
 
       if (!force && now - saveDate < interval) {
-        if (saveController) {
-          saveController.abort()
-        }
-
         return
       }
 
       saveDate = now
+      saveController?.abort()
       saveController = new AbortController()
 
       const params = await resolveValue(options?.save, key)
