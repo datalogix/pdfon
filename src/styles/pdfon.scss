@@ -13,17 +13,4 @@
   [hidden] {
     @apply hidden!;
   }
-
-  &.wait::before {
-    content: '';
-
-    @apply
-      absolute
-      inset-0
-      w-full
-      h-full
-      cursor-wait
-      z-100001
-    ;
-  }
 }

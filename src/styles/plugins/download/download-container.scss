@@ -1,0 +1,11 @@
+.download-container::before {
+  content: '';
+
+  @apply
+    fixed
+    w-full
+    h-full
+    cursor-wait
+    z-100001
+  ;
+}

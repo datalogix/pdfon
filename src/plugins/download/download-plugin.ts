@@ -17,7 +17,7 @@ export class DownloadPlugin extends Plugin<DownloadPluginParams> {
   private saveInProgress = false
 
   async downloadOrSave() {
-    this.rootContainer.classList.add('wait')
+    this.rootContainer.classList.add('download-container')
 
     if (this.pdfDocument && this.pdfDocument.annotationStorage.size > 0) {
       await this.save()
@@ -25,7 +25,7 @@ export class DownloadPlugin extends Plugin<DownloadPluginParams> {
       await this.download()
     }
 
-    this.rootContainer.classList.remove('wait')
+    this.rootContainer.classList.remove('download-container')
   }
 
   async download() {
