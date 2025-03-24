@@ -169,6 +169,10 @@
     "tour": {
       "label": "Guia",
       "title": "Guia"
+    },
+    "fullscreen": {
+      "label": "Maximizar / Minimizar",
+      "title": "Maximizar / Minimizar"
     }
   },
   "plugins": {

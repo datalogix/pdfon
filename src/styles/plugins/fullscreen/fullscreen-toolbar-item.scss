@@ -1,0 +1,7 @@
+.toolbar-item-fullscreen > button:before {
+  @apply i-ph:arrows-out-thin;
+}
+
+.fullscreen-container .toolbar-item-fullscreen > button:before {
+  @apply i-ph:arrows-in-thin;
+}
