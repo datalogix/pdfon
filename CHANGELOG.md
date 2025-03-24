@@ -1,6 +1,37 @@
 # Changelog
 
 
+## v0.1.8
+
+[compare changes](https://github.com/datalogix/pdfon/compare/v0.1.7...v0.1.8)
+
+### 🚀 Enhancements
+
+- Add `FullscreenPlugin` ([1b26d7c](https://github.com/datalogix/pdfon/commit/1b26d7c))
+- Add hover ([5f579fe](https://github.com/datalogix/pdfon/commit/5f579fe))
+
+### 🩹 Fixes
+
+- Prevent adding event listener more than once ([c6b6558](https://github.com/datalogix/pdfon/commit/c6b6558))
+- Download container class ([2158c60](https://github.com/datalogix/pdfon/commit/2158c60))
+- Do not add when there is no url ([7906d39](https://github.com/datalogix/pdfon/commit/7906d39))
+- Save on http storage driver ([6a1994e](https://github.com/datalogix/pdfon/commit/6a1994e))
+- Use `pages-views` instead of `page-views` ([d3e6d20](https://github.com/datalogix/pdfon/commit/d3e6d20))
+
+### 💅 Refactors
+
+- Create `Extension` class ([f2ee2c7](https://github.com/datalogix/pdfon/commit/f2ee2c7))
+
+### 🏡 Chore
+
+- Formatting ([2c442c8](https://github.com/datalogix/pdfon/commit/2c442c8))
+- Use `tseslint.config` ([0472597](https://github.com/datalogix/pdfon/commit/0472597))
+- Update deps ([01bf684](https://github.com/datalogix/pdfon/commit/01bf684))
+
+### ❤️ Contributors
+
+- Ricardo Gobbo De Souza ([@ricardogobbosouza](https://github.com/ricardogobbosouza))
+
 ## v0.1.7
 
 [compare changes](https://github.com/datalogix/pdfon/compare/v0.1.6...v0.1.7)
