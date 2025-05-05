@@ -1,4 +1,3 @@
-import { getFromCache, saveInCache } from '@/utils'
 import type { InformationPlugin } from '../information'
 import { Plugin, type ToolbarItemType } from '../plugin'
 import { BookManager } from './book-manager'
@@ -40,16 +39,7 @@ export class LibraryPlugin extends Plugin<LibraryPluginParams> {
   }
 
   private async openBook(book: Book) {
-    const documentSrc = await getFromCache(book.src)
-
-    this.viewer.openDocument(documentSrc, book.name, book)
-
-    if (documentSrc === book.src) {
-      this.on('DocumentInit', async ({ pdfDocument }) => {
-        const blob = new Blob([await pdfDocument.getData()])
-        await saveInCache(book.src, new Response(blob))
-      }, { once: true })
-    }
+    this.viewer.openDocument(book.src, book.name, book)
 
     const props = ['name', 'sku', 'author', 'description']
 
