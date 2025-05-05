@@ -1,10 +1,10 @@
 import { resolve } from 'path'
 import { defineConfig } from 'vite'
-import { presetWind3, presetIcons, transformerDirectives } from 'unocss'
+import { presetIcons, presetWind3, transformerDirectives } from 'unocss'
 import unocss from 'unocss/vite'
-import { name } from './package.json'
 import eslint from 'vite-plugin-eslint2'
 import dts from 'vite-plugin-dts'
+import { name } from './package.json'
 
 export default defineConfig({
   esbuild: {

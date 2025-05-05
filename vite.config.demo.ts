@@ -1,6 +1,6 @@
 import { resolve } from 'path'
 import { defineConfig } from 'vite'
-import { transformerDirectives, presetUno, presetIcons } from 'unocss'
+import { presetIcons, presetWind3, transformerDirectives } from 'unocss'
 import unocss from 'unocss/vite'
 
 export default defineConfig({
@@ -10,7 +10,7 @@ export default defineConfig({
   plugins: [
     unocss({
       presets: [
-        presetUno(),
+        presetWind3(),
         presetIcons(),
       ],
       transformers: [
