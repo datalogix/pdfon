@@ -1,6 +1,5 @@
 import * as pdfjs from '@/pdfjs'
-import { capitalize } from '@/utils'
-import { name, version } from '../../package.json'
+import { name, version, capitalize } from '@/utils'
 
 export class Logger {
   log(type: 'info' | 'warn' | 'error' = 'info', message: string, info?: any, header?: boolean) {

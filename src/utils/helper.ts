@@ -1,4 +1,9 @@
-import { name } from '../../package.json'
+import { name, version } from '../../package.json'
+
+export {
+  name,
+  version,
+}
 
 export function makeKey(key?: string, prefix?: string) {
   return [name, prefix, key].filter(value => !!value).join('-')
