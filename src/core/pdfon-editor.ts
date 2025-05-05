@@ -1,6 +1,6 @@
 import { FullscreenPlugin, InteractionEditorPlugin, LoadingPlugin, NotifyPlugin, Plugin } from '@/plugins'
 import { AnnotationLayerBuilder, StructTreeLayerBuilder, TextLayerBuilder, XfaLayerBuilder } from '@/viewer'
-import { Pdfon } from './pdfon'
+import { Pdfon, type PdfonOptions } from './pdfon'
 
 export class EditorPlugin extends Plugin {
   protected init() {
@@ -28,6 +28,16 @@ export class PdfonEditor extends Pdfon {
         NotifyPlugin,
         InteractionEditorPlugin,
       ],
+    })
+  }
+
+  async render(options: Partial<PdfonOptions> = {}) {
+    return super.render({
+      container: 'editor',
+      viewerOptions: {
+        enableTitleUpdate: false,
+      },
+      ...options,
     })
   }
 }
