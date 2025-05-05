@@ -2,6 +2,7 @@ import { Dispatcher } from '@/bus'
 import type { OptionalContentConfig, RenderTask } from '@/pdfjs'
 import { LayerBuilder, type LayerBuilderType } from '../layers'
 import type { Page, PageUpdate } from './'
+import { generateName } from '@/utils'
 
 export class LayersPage extends Dispatcher {
   private layers = new Map<number, (Element | null)>()
@@ -34,7 +35,7 @@ export class LayersPage extends Dispatcher {
       }
 
       return item
-    }).filter(item => !this.builders.find(builder => builder.constructor.name === item.constructor.name))
+    }).filter(item => !this.builders.find(builder => generateName(builder) === generateName(item)))
   }
 
   async init() {
@@ -107,11 +108,7 @@ export class LayersPage extends Dispatcher {
   }
 
   find<T>(item: LayerBuilderType | string) {
-    const name = item instanceof LayerBuilder
-      ? item.constructor.name
-      : (typeof item === 'string' ? item : item.name)
-
-    return this.builders.find(builder => builder.constructor.name === name) as T | undefined
+    return this.builders.find(builder => generateName(builder) === generateName(item)) as T | undefined
   }
 
   cancel(keep?: boolean) {

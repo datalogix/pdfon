@@ -9,6 +9,15 @@ export function makeKey(key?: string, prefix?: string) {
   return [name, prefix, key].filter(value => !!value).join('-')
 }
 
+export function generateName(obj: any, suffix?: string) {
+  const name = String(typeof obj === 'function' ? obj.name : typeof obj === 'string' ? obj : obj.constructor.name)
+  const result = suffix && name.endsWith(suffix)
+    ? name.slice(0, -suffix.length)
+    : name
+
+  return result.toLowerCase()
+}
+
 export function expose(obj: any, exposer: any, exclude?: string[]) {
   const prototype = Object.getPrototypeOf(exposer)
   const descriptors = Object.getOwnPropertyDescriptors(prototype)

@@ -1,6 +1,6 @@
 import { Dispatcher } from '@/bus'
 import type { PageViewport, OptionalContentConfig, RenderTask } from '@/pdfjs'
-import { createElement, updateLayerDimensions } from '@/utils'
+import { createElement, generateName, updateLayerDimensions } from '@/utils'
 import type { Page, PageUpdate } from '../page'
 
 export type LayerBuilderType = (LayerBuilder | (new () => LayerBuilder))
@@ -22,11 +22,7 @@ export abstract class LayerBuilder<T = any> extends Dispatcher {
   }
 
   get name() {
-    if (!this._name) {
-      this._name = this.constructor.name.toLowerCase()
-    }
-
-    return this._name
+    return this._name ||= generateName(this)
   }
 
   get page() {

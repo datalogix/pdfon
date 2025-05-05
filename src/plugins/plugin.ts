@@ -1,7 +1,7 @@
 import { Extension } from '@/core/extension'
 import type { Translatable } from '@/l10n'
 import type { ToolbarItemType } from '@/toolbar'
-import { createResolvedObject, resolveObject, type ResolvedParams } from '@/utils'
+import { createResolvedObject, generateName, resolveObject, type ResolvedParams } from '@/utils'
 import type { Initializer, InitializerType, LayerBuilderType } from '@/viewer'
 
 export { ToolbarItemType }
@@ -27,11 +27,7 @@ export abstract class Plugin<T = any> extends Extension implements Translatable 
   }
 
   get name() {
-    if (!this._name) {
-      this._name = this.constructor.name.replace('Plugin', '').toLowerCase()
-    }
-
-    return this._name
+    return this._name ||= generateName(this, 'Plugin')
   }
 
   get signal() {

@@ -1,5 +1,5 @@
 import { Extension } from '@/core/extension'
-import { createElement } from '@/utils'
+import { createElement, generateName } from '@/utils'
 
 export type ToolbarItemType = ToolbarItem | (new () => ToolbarItem)
 
@@ -10,11 +10,7 @@ export abstract class ToolbarItem extends Extension {
   protected abortController?: AbortController
 
   get name() {
-    if (!this._name) {
-      this._name = this.constructor.name.replace('ToolbarItem', '').toLowerCase()
-    }
-
-    return this._name
+    return this._name ||= generateName(this, 'ToolbarItem')
   }
 
   get viewer() {

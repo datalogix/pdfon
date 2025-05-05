@@ -1,5 +1,5 @@
 import { Dispatcher } from '@/bus'
-import { createElement } from '@/utils'
+import { createElement, generateName } from '@/utils'
 import type { SidebarManager } from './sidebar-manager'
 
 export abstract class SidebarItem extends Dispatcher {
@@ -20,11 +20,7 @@ export abstract class SidebarItem extends Dispatcher {
   }
 
   get name() {
-    if (!this._name) {
-      this._name = this.constructor.name.replace('SidebarItem', '').toLowerCase()
-    }
-
-    return this._name
+    return this._name ||= generateName(this, 'SidebarItem')
   }
 
   get order() {

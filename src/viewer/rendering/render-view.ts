@@ -2,7 +2,7 @@ import { Dispatcher, type EventBus } from '@/bus'
 import { DEFAULT_SCALE } from '@/config'
 import { RenderingStates } from '@/enums'
 import * as pdfjs from '@/pdfjs'
-import { createElement } from '@/utils'
+import { createElement, generateName } from '@/utils'
 import type { RenderingQueue } from './rendering-queue'
 
 export abstract class RenderView extends Dispatcher implements pdfjs.IRenderableView {
@@ -55,11 +55,7 @@ export abstract class RenderView extends Dispatcher implements pdfjs.IRenderable
   }
 
   get name() {
-    if (!this._name) {
-      this._name = this.constructor.name.toLowerCase()
-    }
-
-    return this._name
+    return this._name ||= generateName(this)
   }
 
   get renderingId() {
