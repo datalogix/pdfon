@@ -20,6 +20,7 @@ export class Viewer extends Dispatcher {
   readonly optionalContentManager: managers.OptionalContentManager
   readonly pageLabelsManager: managers.PageLabelsManager
   readonly pagesManager: managers.PagesManager
+  readonly passwordManager: managers.PasswordManager
   readonly presentationManager: managers.PresentationManager
   readonly renderManager: managers.RenderManager
   readonly rotationManager: managers.RotationManager
@@ -46,6 +47,7 @@ export class Viewer extends Dispatcher {
       this.optionalContentManager = new managers.OptionalContentManager(this),
       this.pageLabelsManager = new managers.PageLabelsManager(this),
       this.pagesManager = new managers.PagesManager(this),
+      this.passwordManager = new managers.PasswordManager(this),
       this.presentationManager = new managers.PresentationManager(this),
       this.renderManager = new managers.RenderManager(this),
       this.rotationManager = new managers.RotationManager(this),

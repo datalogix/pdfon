@@ -4,7 +4,12 @@
     "invalid-file": "Arquivo PDF corrompido ou inválido.",
     "missing-file": "Arquivo PDF ausente.",
     "unexpected-response": "Resposta inesperada do servidor.",
-    "rendering": "Ocorreu um erro ao renderizar a página."
+    "rendering": "Ocorreu um erro ao renderizar a página.",
+    "password": "Forneça a senha para abrir este arquivo PDF."
+  },
+  "password": {
+    "label": "Digite a senha",
+    "error": "Senha inválida.Tente novamente."
   },
   "page": {
     "title": "Pagina {{ page }}"

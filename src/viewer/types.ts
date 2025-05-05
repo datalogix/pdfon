@@ -37,6 +37,7 @@ export type ViewerType = Viewer &
   managers.OptionalContentManager &
   managers.PageLabelsManager &
   managers.PagesManager &
+  managers.PasswordManager &
   managers.PresentationManager &
   managers.RenderManager &
   managers.RotationManager &
