@@ -32,3 +32,28 @@ export function getOriginalIndex<T extends number>(diffs: T[][], pos: T, len: T)
 
   return [oldStart, oldLen]
 }
+
+export function binarySearchFirstItem<T = Element>(items: T[], condition: (arg: T) => boolean, start = 0) {
+  let minIndex = start
+  let maxIndex = items.length - 1
+
+  if (maxIndex < 0 || !condition(items[maxIndex])) {
+    return items.length
+  }
+
+  if (condition(items[minIndex])) {
+    return minIndex
+  }
+
+  while (minIndex < maxIndex) {
+    const currentIndex = (minIndex + maxIndex) >> 1
+    const currentItem = items[currentIndex]
+    if (condition(currentItem)) {
+      maxIndex = currentIndex
+    } else {
+      minIndex = currentIndex + 1
+    }
+  }
+
+  return minIndex
+}
