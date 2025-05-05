@@ -35,7 +35,7 @@ export class StorageService<Data extends Record<string, any> = InitializerOption
     try {
       const values = await Promise.allSettled(this.options.drivers.map(driver => driver.load(this.key)))
       this.data = values.filter(value => value.status === 'fulfilled')
-        .reduce((prev, { value }) => ({ ...prev, ...deserialize(value ?? '{}') }), {} as Data)
+        .reduce((prev, { value }) => ({ ...prev, ...deserialize(value, {}) }), {} as Data)
     } catch (e) {
       this.options.onError?.(e)
     } finally {
