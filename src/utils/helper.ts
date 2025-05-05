@@ -1,7 +1,7 @@
 import { name } from '../../package.json'
 
 export function makeKey(key?: string, prefix?: string) {
-  return [name, prefix, key].filter(value => value !== null && value !== undefined).join('-')
+  return [name, prefix, key].filter(value => !!value).join('-')
 }
 
 export function debounce<T extends (...args: any[]) => void>(func: T, delay = 300): (...args: Parameters<T>) => void {
