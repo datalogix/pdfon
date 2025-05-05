@@ -1,4 +1,4 @@
-import { name } from './helper'
+import { packageName } from './helper'
 
 export function preventDefault() {
   return (event: MouseEvent) => event.preventDefault()
@@ -132,7 +132,7 @@ export function rootContainer(el?: HTMLDivElement | string) {
     container = document.body.appendChild(createElement('div'))
   }
 
-  container.classList.add(name)
+  container.classList.add(packageName)
   container.tabIndex = 0
 
   return container

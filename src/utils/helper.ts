@@ -1,12 +1,12 @@
-import { name, version } from '../../package.json'
+import { name as packageName, version as packageVersion } from '../../package.json'
 
 export {
-  name,
-  version,
+  packageName,
+  packageVersion,
 }
 
 export function makeKey(key?: string, prefix?: string) {
-  return [name, prefix, key].filter(value => !!value).join('-')
+  return [packageName, prefix, key].filter(value => !!value).join('-')
 }
 
 export function generateName(obj: any, suffix?: string) {

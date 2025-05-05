@@ -1,12 +1,12 @@
 import * as pdfjs from '@/pdfjs'
-import { name, version, capitalize } from '@/utils'
+import { packageName, packageVersion, capitalize } from '@/utils'
 
 export class Logger {
   log(type: 'info' | 'warn' | 'error' = 'info', message: string, info?: any, header?: boolean) {
     const messages = []
 
     if (header) {
-      messages.push(`(${name}: ${version || '?'} - PDF.js: ${pdfjs.version || '?'} [${pdfjs.build || '?'}])`)
+      messages.push(`(${packageName}: ${packageVersion || '?'} - PDF.js: ${pdfjs.version || '?'} [${pdfjs.build || '?'}])`)
     }
 
     messages.push(message)
