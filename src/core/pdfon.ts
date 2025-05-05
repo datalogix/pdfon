@@ -1,8 +1,8 @@
 import { Dispatcher, EventBus } from '@/bus'
-import type { PluginType } from '@/plugins'
-import { Toolbar, type ToolbarOptions, type ToolbarItemType } from '@/toolbar'
+import { PluginManager, type PluginType } from '@/plugins'
+import { ToolbarManager, type ToolbarOptions, type ToolbarItemType } from '@/toolbar'
 import { Modal } from '@/tools'
-import { createElement } from '@/utils'
+import { rootContainer } from '@/utils'
 import { Viewer, type ViewerType, type ViewerOptions } from '@/viewer'
 import { DEFAULT_PLUGINS, DEFAULT_TOOLBAR_ITEMS, DEFAULT_OPTIONS } from './defaults'
 
@@ -15,8 +15,8 @@ export type PdfonOptions = {
 
 export class Pdfon extends Dispatcher {
   readonly eventBus: EventBus
-  protected plugins: PluginType[] = []
-  protected toolbarItems: Map<string, ToolbarItemType> = new Map()
+  readonly pluginManager: PluginManager
+  readonly toolbarManager: ToolbarManager
 
   constructor(options?: Partial<{
     eventBus: EventBus
@@ -26,63 +26,24 @@ export class Pdfon extends Dispatcher {
     super()
 
     this.eventBus = options?.eventBus ?? new EventBus()
-    this.plugins = options?.plugins ?? DEFAULT_PLUGINS
-    this.toolbarItems = options?.toolbarItems ?? DEFAULT_TOOLBAR_ITEMS
+    this.pluginManager = new PluginManager(options?.plugins ?? DEFAULT_PLUGINS)
+    this.toolbarManager = new ToolbarManager(options?.toolbarItems ?? DEFAULT_TOOLBAR_ITEMS)
   }
 
   addPlugin(...plugin: PluginType[]) {
-    this.plugins.push(...plugin)
+    this.pluginManager.add(...plugin)
   }
 
   removePlugin(pluginToRemove: PluginType | string) {
-    this.plugins = this.plugins.filter((plugin) => {
-      if (typeof pluginToRemove === 'string') {
-        const pluginClassName = typeof plugin === 'function' ? plugin.name : plugin.constructor.name
-        return pluginClassName !== pluginToRemove
-      }
-
-      if (typeof pluginToRemove === 'function') {
-        return !(typeof plugin === 'function' && plugin === pluginToRemove) && !(plugin instanceof pluginToRemove)
-      }
-
-      return plugin !== pluginToRemove
-    })
+    this.pluginManager.remove(pluginToRemove)
   }
 
-  protected resolvePlugins(params?: Record<string, any>) {
-    return this.plugins.map(plugin => typeof plugin === 'function'
-      ? new plugin(params?.[plugin.name.toLowerCase().replace('plugin', '')])
-      : plugin,
-    )
+  addToolbarItem(name: string, item: ToolbarItemType) {
+    this.toolbarManager.add(name, item)
   }
 
-  protected async initializePlugins(toolbar: Toolbar, viewer: ViewerType, params?: Record<string, any>) {
-    const plugins = this.resolvePlugins(params)
-
-    await Promise.allSettled(plugins.map((plugin) => {
-      plugin.setToolbar(toolbar)
-      plugin.setViewer(viewer)
-
-      return plugin.initialize()
-    }))
-
-    this.dispatch('PluginsInit', { plugins })
-
-    return plugins
-  }
-
-  registerToolbarItem(name: string, item: ToolbarItemType) {
-    this.toolbarItems.set(name, item)
-  }
-
-  unregisterToolbarItem(name: string) {
-    this.toolbarItems.delete(name)
-  }
-
-  protected async initializeToolbar(toolbar: Toolbar) {
-    this.toolbarItems.forEach((item, name) => toolbar.register(name, item))
-
-    await toolbar.initialize()
+  removeToolbarItem(name: string) {
+    this.toolbarManager.remove(name)
   }
 
   async render(options: Partial<PdfonOptions> = {}) {
@@ -91,34 +52,22 @@ export class Pdfon extends Dispatcher {
       ...options,
     }
 
-    let container = opts.container instanceof HTMLDivElement
-      ? opts.container
-      : (opts.container ? document.getElementById(opts.container) : null)
-
-    if (!container) {
-      container = document.body.appendChild(createElement('div'))
-    }
-
-    container.classList.add('pdfon')
-    container.tabIndex = 0
-
-    Modal.root = container
-
     const viewer = new Viewer({
       eventBus: this.eventBus,
       ...opts.viewerOptions,
     }) as ViewerType
 
-    const toolbar = new Toolbar(viewer, opts.toolbarOptions)
+    const toolbar = this.toolbarManager.build(viewer, opts.toolbarOptions)
 
+    const container = rootContainer(opts.container)
     container.appendChild(toolbar.render())
     container.appendChild(viewer.render())
 
-    const plugins = await this.initializePlugins(toolbar, viewer, opts.plugins)
-    await this.initializeToolbar(toolbar)
+    Modal.root = container
 
+    const plugins = await this.pluginManager.initialize(toolbar, viewer, opts.plugins)
+    await this.toolbarManager.initialize()
     await Promise.allSettled(plugins.map(plugin => plugin.load()))
-    this.dispatch('PluginsLoaded', { plugins })
 
     return viewer.start()
   }

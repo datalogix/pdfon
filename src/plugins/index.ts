@@ -1,3 +1,6 @@
+export * from './plugin-manager'
+export * from './plugin'
+
 export * from './annotation-editor'
 export * from './bookmark'
 export * from './close'
@@ -27,5 +30,3 @@ export * from './thumbnail'
 export * from './tour'
 export * from './watermark'
 export * from './zoom'
-
-export * from './plugin'

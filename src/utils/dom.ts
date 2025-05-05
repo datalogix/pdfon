@@ -1,3 +1,5 @@
+import { name } from './helper'
+
 export function preventDefault() {
   return (event: MouseEvent) => event.preventDefault()
 }
@@ -121,4 +123,17 @@ export function dragElement(element: HTMLElement, options?: {
   handler.style.cursor = 'move'
   handler.style.userSelect = 'none'
   handler.oncontextmenu = preventDefault()
+}
+
+export function rootContainer(el?: HTMLDivElement | string) {
+  let container = el instanceof HTMLDivElement ? el : (el ? document.getElementById(el) : null)
+
+  if (!container) {
+    container = document.body.appendChild(createElement('div'))
+  }
+
+  container.classList.add(name)
+  container.tabIndex = 0
+
+  return container
 }
