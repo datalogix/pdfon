@@ -1,5 +1,3 @@
-import { binarySearchFirstItem } from '@/utils'
-
 // Determine the original, non-normalized, match index such that highlighting of
 // search results is correct in the `textLayer` for strings containing e.g. "½"
 // characters; essentially "inverting" the result of the `normalize` function.

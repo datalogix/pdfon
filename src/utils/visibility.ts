@@ -1,5 +1,5 @@
 import { IRenderableView } from '@/pdfjs'
-import { binarySearchFirstItem } from './helper'
+import { binarySearchFirstItem } from './search'
 
 export type VisibleView = IRenderableView & {
   id: number

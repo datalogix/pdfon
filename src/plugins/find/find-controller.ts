@@ -1,6 +1,6 @@
 import { Extension } from '@/core/extension'
-import { scrollIntoView, serialize } from '@/utils'
-import { getOriginalIndex, convertToRegExpString, isEntireWord, normalize } from './helpers'
+import { getOriginalIndex, scrollIntoView, serialize } from '@/utils'
+import { convertToRegExpString, isEntireWord, normalize } from './helpers'
 
 export enum FindState {
   FOUND = 0,
