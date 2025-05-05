@@ -1,6 +1,6 @@
 import * as pdfjs from '@/pdfjs'
 import { WAIT_LOAD_DOCUMENT } from '@/config'
-import { defineWorker, waitOnEventOrTimeout } from '@/utils'
+import { defineWorker, getFromCache, saveInCache, waitOnEventOrTimeout } from '@/utils'
 import type { InitializerOptions } from '../initializers'
 import { Manager } from './'
 
@@ -45,20 +45,22 @@ export class DocumentManager extends Manager {
     }
   }
 
-  async openDocument(documentType?: pdfjs.DocumentType, documentFilename?: string, options: InitializerOptions = {}) {
+  async openDocument(
+    documentType: pdfjs.DocumentType,
+    documentFilename?: string,
+    options: InitializerOptions = {},
+  ) {
     defineWorker()
+
+    documentType = await this.openDocumentFromCache(documentType, options.disabledCache)
 
     this.dispatch('DocumentOpen', { documentType, documentFilename, options })
 
     await this.closeDocument()
 
-    this.dispatch('DocumentLoad', { documentType, documentFilename, options })
-
     const loadingTask = this.loadingTask = pdfjs.getDocument(documentType)
 
-    loadingTask.onProgress = ({ loaded, total }: { loaded: number, total: number }) => {
-      this.dispatch('DocumentProgress', { loaded, total })
-    }
+    this.dispatch('DocumentLoad', { loadingTask, documentType, documentFilename, options })
 
     try {
       const pdfDocument = await loadingTask.promise
@@ -77,11 +79,38 @@ export class DocumentManager extends Manager {
         key = 'error.missing-file'
       } else if (reason instanceof pdfjs.UnexpectedResponseException) {
         key = 'error.unexpected-response'
+      } else if (reason instanceof Error && reason.name === 'PasswordException') {
+        key = 'error.password'
       }
 
       this.dispatch('DocumentError', { message: this.translate(key), reason })
 
       throw reason
     }
+  }
+
+  private async openDocumentFromCache(documentType: pdfjs.DocumentType, disabledCache?: boolean) {
+    if (!(typeof documentType === 'string' || documentType instanceof URL)) {
+      return documentType
+    }
+
+    if (documentType.toString().startsWith('blob:')) {
+      return documentType
+    }
+
+    if (disabledCache === true) {
+      return documentType
+    }
+
+    const fromCache = await getFromCache(documentType)
+
+    if (fromCache === documentType) {
+      this.on('DocumentInit', async ({ pdfDocument }) => {
+        const blob = new Blob([await pdfDocument.getData()])
+        await saveInCache(documentType, new Response(blob))
+      }, { once: true })
+    }
+
+    return fromCache
   }
 }

@@ -9,6 +9,11 @@ export class LoadingPlugin extends Plugin {
     this.loadingService.render(this.rootContainer)
 
     this.on('DocumentOpen', () => this.loadingService?.init())
+    this.on('DocumentLoad', ({ loadingTask }) => {
+      loadingTask.onProgress = ({ loaded, total }: { loaded: number, total: number }) => {
+        this.dispatch('DocumentProgress', { loaded, total })
+      }
+    })
     this.on('DocumentProgress', ({ loaded, total }) => this.loadingService?.update(loaded, total))
     this.on('DocumentLoaded', () => this.loadingService?.finish())
     this.on(['DocumentInitialized', 'DocumentError', 'DocumentEmpty'], () => this.loadingService?.complete())
