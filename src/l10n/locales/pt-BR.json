@@ -243,8 +243,44 @@
       "filter": "Apenas não finalizadas",
       "page": "Página {{ page }}"
     },
-    "interaction-editor": {
-      "remove-confirm": "Deseja realmente remover essa interação?"
+    "interactioneditor": {
+      "remove-confirm": "Deseja realmente remover essa interação?",
+      "form": {
+        "type": {
+          "placeholder": "Selecione..."
+        },
+        "image": {
+          "option" : "Imagem",
+          "placeholder": "Selecione o arquivo"
+        },
+        "audio": {
+          "option" : "Áudio",
+          "placeholder": "Selecione o arquivo"
+        },
+        "video": {
+          "option" : "Vídeo",
+          "placeholder": "Selecione o arquivo"
+        },
+        "link": {
+          "option" : "URL externa",
+          "placeholder": "Digite o endereço..."
+        },
+        "iframe": {
+          "option" : "Iframe",
+          "placeholder": "Digite o endereço..."
+        },
+        "text": {
+          "option" : "Texto",
+          "placeholder": "Digite o texto..."
+        },
+        "activity": {
+          "option" : "Atividade",
+          "placeholder": "Selecione a atividade"
+        },
+        "title": {
+          "placeholder": "(Opcional) Digite o título..."
+        }
+      }
     },
     "library": {
       "title": "Biblioteca",

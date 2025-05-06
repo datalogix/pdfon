@@ -5,6 +5,7 @@ import type { Interaction } from '../interaction'
 import { InteractionEditorInitializer } from './interaction-editor-initializer'
 import { InteractionEditorLayerBuilder } from './interaction-editor-layer-builder'
 import { InteractionEditorManager } from './interaction-editor-manager'
+import { InteractionTypeField, type InteractionTypeFieldProps } from './interaction-type'
 
 export type InteractionEditorPluginParams = {
   api: FetchOptions | ((options: InitializerOptions) => FetchOptions)
@@ -16,9 +17,29 @@ export class InteractionEditorPlugin extends Plugin<InteractionEditorPluginParam
   protected initializers = [InteractionEditorInitializer]
   protected layerBuilders = [InteractionEditorLayerBuilder]
   private _interactionEditorManager?: InteractionEditorManager
+  private interactionTypes = new Map([
+    ['image', new InteractionTypeField({ accept: '.gif,.png,.jpg,.jpeg' })],
+    ['audio', new InteractionTypeField({ accept: '.mp3' })],
+    ['video', new InteractionTypeField({ accept: '.mp4,.webm' })],
+    ['link', new InteractionTypeField({ type: 'url' })],
+    ['iframe', new InteractionTypeField({ type: 'url' })],
+    ['text', new InteractionTypeField({ field: 'textarea', rows: 4 })],
+  ])
 
   get interactionEditorManager() {
     return this._interactionEditorManager
+  }
+
+  getInteractionTypes() {
+    return this.interactionTypes
+  }
+
+  addInteractionType(key: string, field: InteractionTypeField | InteractionTypeFieldProps = {}) {
+    this.interactionTypes.set(key, field instanceof InteractionTypeField ? field : new InteractionTypeField(field))
+  }
+
+  removeInteractionType(key: string) {
+    this.interactionTypes.delete(key)
   }
 
   protected async init() {

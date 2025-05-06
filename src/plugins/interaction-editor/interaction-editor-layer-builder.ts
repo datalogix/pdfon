@@ -1,13 +1,17 @@
 import { Modal } from '@/tools'
 import { createElement, dragElement } from '@/utils'
 import { LayerBuilder } from '@/viewer'
-import { createInteractionButton, openInteraction, type InteractionType, type Interaction } from '../interaction'
+import { createInteractionButton, openInteraction, type Interaction } from '../interaction'
 import type { InteractionEditorPlugin } from './interaction-editor-plugin'
 import { createInteractionForm } from './interaction-form'
 
 export class InteractionEditorLayerBuilder extends LayerBuilder {
+  get interactionEditorPlugin() {
+    return this.layerProperties.getLayerProperty<InteractionEditorPlugin>('InteractionEditorPlugin')
+  }
+
   get interactionEditorManager() {
-    return this.layerProperties.getLayerProperty<InteractionEditorPlugin>('InteractionEditorPlugin')?.interactionEditorManager
+    return this.interactionEditorPlugin?.interactionEditorManager
   }
 
   protected build() {
@@ -25,16 +29,20 @@ export class InteractionEditorLayerBuilder extends LayerBuilder {
   }
 
   protected createInteraction(page: number, x: number, y: number) {
-    const form = createInteractionForm({
-      onSubmit: formData => this.interactionEditorManager!.add({
-        page,
-        x,
-        y,
-        type: formData.get('type') as InteractionType,
-        content: formData.get('content')!,
-        title: formData.has('title') ? formData.get('title') as string : undefined,
-      }),
-    })
+    const form = createInteractionForm(
+      this.interactionEditorPlugin!.getInteractionTypes(),
+      this.interactionEditorPlugin!.translator,
+      {
+        onSubmit: formData => this.interactionEditorManager?.add({
+          page,
+          x,
+          y,
+          type: formData.get('type') as string,
+          content: formData.get('content')!,
+          title: formData.has('title') ? formData.get('title') as string : undefined,
+        }),
+      },
+    )
 
     Modal.open(form.render(), {
       title: 'Nova interação',
@@ -53,7 +61,7 @@ export class InteractionEditorLayerBuilder extends LayerBuilder {
     button.addEventListener('dblclick', () => {
       const removeButton = createElement('button', 'interaction-editor-remove', { type: 'button' })
       removeButton.addEventListener('click', () => {
-        if (!confirm(this.l10n.get('plugins.interaction-editor.remove-confirm'))) {
+        if (!confirm(this.interactionEditorPlugin?.translate('remove-confirm'))) {
           return
         }
 

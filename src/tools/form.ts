@@ -165,7 +165,7 @@ export function createField(props: CreateFieldProps): Field {
     label = container.appendChild(createElement('label', { innerText: props.label ?? props.name }))
   }
 
-  const options = props.options
+  let options = props.options
   const tag = props.field ?? (options ? 'select' : 'input')
 
   const fieldProps = { ...props }
@@ -174,6 +174,10 @@ export function createField(props: CreateFieldProps): Field {
 
   if (tag === 'input') {
     fieldProps.type = fieldProps.type ?? (fieldProps.accept ? 'file' : 'text')
+  } else if (tag === 'select' && fieldProps.placeholder) {
+    const placeholder = fieldProps.placeholder
+    delete fieldProps.placeholder
+    options = [{ value: '', text: placeholder }, ...options]
   }
 
   const field = container.appendChild(createElement(tag, fieldProps))

@@ -1,20 +1,24 @@
+import type { Translator } from '@/l10n'
 import { createField, createForm, FormOptions } from '@/tools'
 import { createElement } from '@/utils'
 import type { Interaction } from '../interaction'
+import type { InteractionTypes } from './interaction-type'
 
-export function createInteractionForm(options?: FormOptions<Interaction>) {
+export function createInteractionForm(
+  types: InteractionTypes,
+  { translate }: Translator,
+  formOptions?: FormOptions<Interaction>,
+) {
   const type = createField({
     label: false,
     name: 'type',
     required: true,
+    placeholder: translate('form.type.placeholder'),
     options: [
-      { value: '', text: 'Selecione...' },
-      { value: 'image', text: 'Imagem' },
-      { value: 'audio', text: 'Áudio' },
-      { value: 'video', text: 'Vídeo' },
-      { value: 'link', text: 'URL externa' },
-      { value: 'iframe', text: 'Iframe' },
-      { value: 'text', text: 'Texto' },
+      ...types.entries().map(([key, interactionType]) => ({
+        value: key,
+        text: interactionType.option ?? translate(`form.${key}.option`),
+      })),
     ],
   })
 
@@ -24,62 +28,23 @@ export function createInteractionForm(options?: FormOptions<Interaction>) {
     label: false,
     name: 'title',
     maxLength: 50,
-    placeholder: '(Opcional) Digite o título...',
+    placeholder: translate('form.title.placeholder'),
   })
 
-  type.addEventListener('change', () => {
+  type.addEventListener('change', async () => {
     content.innerHTML = ''
 
-    if (!type.value) return
+    const interactionType = types.get(type.value)
 
-    let contentField
-
-    switch (type.value) {
-      case 'text':
-        contentField = createField({
-          label: false,
-          field: 'textarea',
-          name: 'content',
-          placeholder: 'Digite o texto...',
-          rows: 4,
-          required: true,
-        })
-        break
-      case 'link':
-      case 'iframe':
-        contentField = createField({
-          label: false,
-          name: 'content',
-          placeholder: 'Digite o endereço...',
-          type: 'url',
-          required: true,
-        })
-        break
-
-      default: {
-        const accepts = {
-          image: '.gif,.png,.jpg,.jpeg',
-          audio: '.mp3',
-          video: '.mp4,.webm',
-        }
-
-        contentField = createField({
-          label: false,
-          name: 'content',
-          accept: accepts[type.value as keyof typeof accepts],
-          placeholder: 'Selecione o arquivo',
-          required: true,
-        })
-        break
-      }
+    if (!interactionType) {
+      return
     }
 
-    content.appendChild(contentField.container)
-    contentField.focus()
+    await interactionType.render(content)
   })
 
   return createForm({
     fields: [type, content, title],
-    ...options,
+    ...formOptions,
   })
 }

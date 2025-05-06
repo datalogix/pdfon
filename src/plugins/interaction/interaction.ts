@@ -3,13 +3,11 @@ import { createElement, parseContent } from '@/utils'
 
 export type InteractionId = string | number
 
-export type InteractionType = 'image' | 'audio' | 'video' | 'question' | 'link' | 'iframe' | 'text'
-
 export type Interaction = {
   id: InteractionId
   title?: string
   page: number
-  type: InteractionType
+  type: string
   x: number
   y: number
   content: string
