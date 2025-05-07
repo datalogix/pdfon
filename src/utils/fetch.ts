@@ -12,7 +12,7 @@ export {
 
 export function createFetch(defaults?: FetchOptions) {
   return ofetch.create({
-    headers: { 'Content-Type': 'application/json' },
+    headers: { Accept: 'application/json' },
     ...defaults,
   })
 }
