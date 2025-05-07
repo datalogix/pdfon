@@ -29,9 +29,9 @@
     "test": "pnpm lint"
   },
   "dependencies": {
-    "@sjmc11/tourguidejs": "^0.0.26",
+    "@sjmc11/tourguidejs": "^0.0.27",
     "@unocss/reset": "^66.1.0",
-    "i18next": "^25.0.2",
+    "i18next": "^25.1.1",
     "i18next-browser-languagedetector": "^8.1.0",
     "idb-keyval": "^6.2.1",
     "ofetch": "^1.4.1",
