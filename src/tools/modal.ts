@@ -8,6 +8,7 @@ export class Modal {
 
   static open(html: HTMLElement, options?: {
     title?: string
+    animate?: boolean
     draggable?: boolean
     persist?: boolean
     backdrop?: 'blur' | 'overlay' | boolean
@@ -19,6 +20,11 @@ export class Modal {
     this.onClose = options.onClose
 
     const container = createElement('div', 'modal-container')
+
+    if (options.animate !== false) {
+      container.classList.add('modal-animate')
+    }
+
     const root = options.root ?? Modal.root
     root.appendChild(container)
 

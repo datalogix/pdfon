@@ -56,6 +56,13 @@
     animation: modal-persist 0.3s infinite
   }
 
+  &.modal-animate {
+    @apply
+      animate-fade-in
+      animate-duration-300
+    ;
+  }
+
   .modal-header {
     @apply
       py-3
