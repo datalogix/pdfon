@@ -1,6 +1,18 @@
 # Changelog
 
 
+## v0.1.12
+
+[compare changes](https://github.com/datalogix/pdfon/compare/v0.1.11...v0.1.12)
+
+### 🚀 Enhancements
+
+- Accept a function in drivers ([3e763bc](https://github.com/datalogix/pdfon/commit/3e763bc))
+
+### ❤️ Contributors
+
+- Ricardo Gobbo De Souza ([@ricardogobbosouza](https://github.com/ricardogobbosouza))
+
 ## v0.1.11
 
 [compare changes](https://github.com/datalogix/pdfon/compare/v0.1.10...v0.1.11)
