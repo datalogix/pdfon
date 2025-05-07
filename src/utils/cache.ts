@@ -22,14 +22,16 @@ export async function fetchAndCache(request: RequestInfo | URL) {
 }
 
 export async function getFromCache(request: RequestInfo | URL) {
-  const cache = await caches.open(makeKey())
-  const response = await cache.match(request)
+  if ('caches' in window) {
+    const cache = await window.caches.open(makeKey())
+    const response = await cache.match(request)
 
-  if (response?.ok) {
-    try {
-      return URL.createObjectURL(await response.blob())
-    } catch {
-      //
+    if (response?.ok) {
+      try {
+        return URL.createObjectURL(await response.blob())
+      } catch {
+        //
+      }
     }
   }
 
@@ -37,7 +39,6 @@ export async function getFromCache(request: RequestInfo | URL) {
 
   if (blob) {
     try {
-      await cache.put(request, new Response(blob))
       return URL.createObjectURL(blob)
     } catch {
       //
@@ -48,9 +49,11 @@ export async function getFromCache(request: RequestInfo | URL) {
 }
 
 export async function saveInCache(request: RequestInfo | URL, response: Response) {
-  const cache = await caches.open(makeKey())
-  const blob = await response.blob()
+  if ('caches' in window) {
+    const cache = await window.caches.open(makeKey())
+    await cache.put(request, response)
+  }
 
+  const blob = await response.blob()
   await idb.set(makeKey(request.toString()), blob)
-  await cache.put(request, response)
 }
