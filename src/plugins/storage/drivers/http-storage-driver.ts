@@ -1,4 +1,4 @@
-import { createFetch, type FetchOptions, type FetchRequest, type Resolveable, resolveValue } from '@/utils'
+import { createFetch, type FetchOptions, type FetchRequest, type Resolveable, resolveValue, serialize } from '@/utils'
 import { defineStorageDriver } from '../storage-driver'
 
 export const httpStorageDriver = (options?: {
@@ -16,7 +16,17 @@ export const httpStorageDriver = (options?: {
       const params = await resolveValue(options?.load, key)
       const request = typeof params === 'string' ? params : params?.request
       const opts = typeof params === 'string' ? {} : params?.options
-      return await fetch(request ?? '/', { method: 'get', query: { key }, ...opts })
+      const response = await fetch(request ?? '/', { method: 'get', query: { key }, ...opts })
+
+      if (typeof response === 'string') {
+        return response
+      }
+
+      if ('serialized' in response && typeof response.serialized === 'string') {
+        return response.serialized
+      }
+
+      return serialize(response.data ?? response)
     },
 
     async save(key, serialized, data, force) {
