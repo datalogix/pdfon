@@ -1,6 +1,18 @@
 # Changelog
 
 
+## v0.1.10
+
+[compare changes](https://github.com/datalogix/pdfon/compare/v0.1.9...v0.1.10)
+
+### 🩹 Fixes
+
+- Ensure window caches is available ([f7a64a1](https://github.com/datalogix/pdfon/commit/f7a64a1))
+
+### ❤️ Contributors
+
+- Ricardo Gobbo De Souza ([@ricardogobbosouza](https://github.com/ricardogobbosouza))
+
 ## v0.1.9
 
 [compare changes](https://github.com/datalogix/pdfon/compare/v0.1.8...v0.1.9)
