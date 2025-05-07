@@ -1,6 +1,19 @@
 # Changelog
 
 
+## v0.1.11
+
+[compare changes](https://github.com/datalogix/pdfon/compare/v0.1.10...v0.1.11)
+
+### 🩹 Fixes
+
+- Parse response ([ec9135d](https://github.com/datalogix/pdfon/commit/ec9135d))
+- Accept header ([b9694e4](https://github.com/datalogix/pdfon/commit/b9694e4))
+
+### ❤️ Contributors
+
+- Ricardo Gobbo De Souza ([@ricardogobbosouza](https://github.com/ricardogobbosouza))
+
 ## v0.1.10
 
 [compare changes](https://github.com/datalogix/pdfon/compare/v0.1.9...v0.1.10)
