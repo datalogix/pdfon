@@ -1,6 +1,47 @@
 # Changelog
 
 
+## v0.1.9
+
+[compare changes](https://github.com/datalogix/pdfon/compare/v0.1.8...v0.1.9)
+
+### 🚀 Enhancements
+
+- Add password manager ([9a0f0f0](https://github.com/datalogix/pdfon/commit/9a0f0f0))
+- Cache any document ([a18f25b](https://github.com/datalogix/pdfon/commit/a18f25b))
+- Add `PdfonPrivate` ([7f7cafc](https://github.com/datalogix/pdfon/commit/7f7cafc))
+- Update `PdfonEditor` render options ([f90b044](https://github.com/datalogix/pdfon/commit/f90b044))
+- Custom interactions types ([548812f](https://github.com/datalogix/pdfon/commit/548812f))
+- Add modal animate ([5b8ac20](https://github.com/datalogix/pdfon/commit/5b8ac20))
+
+### 🩹 Fixes
+
+- Use cache from document manager ([612e20b](https://github.com/datalogix/pdfon/commit/612e20b))
+- Default value from deserialize ([729f0e2](https://github.com/datalogix/pdfon/commit/729f0e2))
+- Empty value ([0446887](https://github.com/datalogix/pdfon/commit/0446887))
+- Export package name and version ([bea424d](https://github.com/datalogix/pdfon/commit/bea424d))
+
+### 💅 Refactors
+
+- Core ([d869b23](https://github.com/datalogix/pdfon/commit/d869b23))
+
+### 🏡 Chore
+
+- Update deps ([c4329cb](https://github.com/datalogix/pdfon/commit/c4329cb))
+- Use name and version from helper ([e6db667](https://github.com/datalogix/pdfon/commit/e6db667))
+- Formatting ([9d4ddc3](https://github.com/datalogix/pdfon/commit/9d4ddc3))
+- Use `generateName` ([9d0b66b](https://github.com/datalogix/pdfon/commit/9d0b66b))
+- Update deps ([61ca111](https://github.com/datalogix/pdfon/commit/61ca111))
+- Update deps ([0101e2b](https://github.com/datalogix/pdfon/commit/0101e2b))
+
+### 🎨 Styles
+
+- Formatting ([91551bf](https://github.com/datalogix/pdfon/commit/91551bf))
+
+### ❤️ Contributors
+
+- Ricardo Gobbo De Souza ([@ricardogobbosouza](https://github.com/ricardogobbosouza))
+
 ## v0.1.8
 
 [compare changes](https://github.com/datalogix/pdfon/compare/v0.1.7...v0.1.8)
