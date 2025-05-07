@@ -1,3 +1,4 @@
+import type { InitializerOptions } from '@/viewer'
 import { Plugin } from '../plugin'
 import { indexedDBDriver } from './drivers'
 import type { StorageDriver } from './storage-driver'
@@ -7,7 +8,7 @@ import { StorageService } from './storage-service'
 export type StoragePluginParams = {
   fingerprint?: string
   prefix?: string
-  drivers?: StorageDriver[]
+  drivers?: StorageDriver[] | ((options: InitializerOptions) => Promise<StorageDriver[]>)
 }
 
 export class StoragePlugin extends Plugin<StoragePluginParams> {
@@ -22,15 +23,19 @@ export class StoragePlugin extends Plugin<StoragePluginParams> {
     this.on('DocumentInit', async ({ options }) => {
       if (this._storage) await this.destroy()
 
+      const drivers = typeof this.resolvedParams?.drivers === 'function'
+        ? await this.resolvedParams?.drivers(options)
+        : this.resolvedParams?.drivers
+
       this._storage = new StorageService({
         key: options?.storageId ?? options?.id ?? this.resolvedParams?.fingerprint ?? this.viewer.documentFingerprint,
-        drivers: this.resolvedParams?.drivers ?? [indexedDBDriver(this.resolvedParams?.prefix)],
-        onLoaded: deserialized => this.dispatch('StorageLoaded', { storage: this._storage, deserialized }),
-        onUpdated: serialized => this.dispatch('StorageUpdated', { storage: this._storage, serialized }),
+        drivers: drivers ?? [indexedDBDriver(this.resolvedParams?.prefix)],
+        onLoaded: deserialized => this.dispatch('StorageLoaded', { storage: this._storage, drivers, deserialized }),
+        onUpdated: serialized => this.dispatch('StorageUpdated', { storage: this._storage, drivers, serialized }),
         onError: message => this.logger.error(message),
       })
 
-      this.dispatch('StorageInit', { storage: this._storage })
+      this.dispatch('StorageInit', { storage: this._storage, drivers })
     })
 
     this.on('DocumentDestroy', async () => await this.destroy())
