@@ -86,7 +86,7 @@ export class InteractionEditorManager extends Dispatcher {
     clearTimeout(this.updatesTimeout)
 
     this.updatesTimeout = setTimeout(() => {
-      this.fetch('/interactions/update', { method: 'post', body: Array.from(this.updates.values()) })
+      this.fetch('/interactions/update', { method: 'post', body: { interactions: Array.from(this.updates.values()) } })
         .then(() => this.updates.clear())
     }, 1000)
   }
