@@ -90,24 +90,32 @@ export class DocumentManager extends Manager {
   }
 
   private async openDocumentFromCache(documentType: pdfjs.DocumentType, disabledCache?: boolean) {
-    if (!(typeof documentType === 'string' || documentType instanceof URL)) {
-      return documentType
-    }
-
-    if (documentType.toString().startsWith('blob:')) {
-      return documentType
-    }
-
     if (disabledCache === true) {
       return documentType
     }
 
-    const fromCache = await getFromCache(documentType)
+    if (documentType instanceof ArrayBuffer) {
+      return documentType
+    }
 
-    if (fromCache === documentType) {
+    const documentURL = typeof documentType === 'string' || documentType instanceof URL
+      ? documentType
+      : documentType.url
+
+    if (!documentURL) {
+      return documentType
+    }
+
+    if (documentURL.toString().startsWith('blob:')) {
+      return documentURL
+    }
+
+    const fromCache = await getFromCache(documentURL)
+
+    if (fromCache === documentURL) {
       this.on('DocumentInit', async ({ pdfDocument }) => {
         const blob = new Blob([await pdfDocument.getData()])
-        await saveInCache(documentType, new Response(blob))
+        await saveInCache(documentURL, new Response(blob))
       }, { once: true })
     }
 
