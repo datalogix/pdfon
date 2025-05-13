@@ -6,7 +6,6 @@ import { Plugin, type ToolbarItemType } from '../plugin'
 import { PrintService } from './print-service'
 import { PrintToolbarItem } from './print-toolbar-item'
 
-const print = window.print
 const AutoPrintRegExp = /\bprint\s*\(/
 
 export type PrintPluginParams = {
@@ -14,6 +13,8 @@ export type PrintPluginParams = {
 }
 
 export class PrintPlugin extends Plugin<PrintPluginParams> {
+  private static print: typeof window.print = () => {}
+
   protected getToolbarItems() {
     return new Map<string, ToolbarItemType>([
       ['print', PrintToolbarItem],
@@ -32,6 +33,8 @@ export class PrintPlugin extends Plugin<PrintPluginParams> {
   }
 
   protected init() {
+    PrintPlugin.print = window.print
+
     this.on('BeforePrint', () => this.onBeforePrint())
     this.on('AfterPrint', () => this.onAfterPrint())
     this.on('Print', () => this.triggerPrint())
@@ -68,8 +71,7 @@ export class PrintPlugin extends Plugin<PrintPluginParams> {
 
   protected destroy() {
     this.abortPrint()
-
-    window.print = print
+    window.print = PrintPlugin.print
   }
 
   triggerPrint() {
@@ -85,7 +87,7 @@ export class PrintPlugin extends Plugin<PrintPluginParams> {
     try {
       dispatchEvent('beforeprint')
     } finally {
-      this.printService?.print(print).then(() => {
+      this.printService?.print(PrintPlugin.print).then(() => {
         dispatchEvent('afterprint')
       })
     }
