@@ -25,7 +25,7 @@
     "dev": "vite",
     "preview": "pnpm build:demo && vite preview",
     "lint": "eslint",
-    "release": "pnpm build && changelogen --release --push && pnpm publish --no-git-checks",
+    "release": "pnpm build && changelogen --release --push && pnpm publish",
     "test": "pnpm lint"
   },
   "dependencies": {
