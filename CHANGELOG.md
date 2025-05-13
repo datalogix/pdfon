@@ -1,6 +1,24 @@
 # Changelog
 
 
+## v0.1.13
+
+[compare changes](https://github.com/datalogix/pdfon/compare/v0.1.12...v0.1.13)
+
+### 🩹 Fixes
+
+- Window or document is undefined ([c52fbac](https://github.com/datalogix/pdfon/commit/c52fbac))
+- Document cache ([aa6e046](https://github.com/datalogix/pdfon/commit/aa6e046))
+- Update interactions ([d2d1706](https://github.com/datalogix/pdfon/commit/d2d1706))
+
+### 🏡 Chore
+
+- Update deps ([09e6f6e](https://github.com/datalogix/pdfon/commit/09e6f6e))
+
+### ❤️ Contributors
+
+- Ricardo Gobbo De Souza ([@ricardogobbosouza](https://github.com/ricardogobbosouza))
+
 ## v0.1.12
 
 [compare changes](https://github.com/datalogix/pdfon/compare/v0.1.11...v0.1.12)
