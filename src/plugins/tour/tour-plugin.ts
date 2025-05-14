@@ -60,6 +60,7 @@ export class TourPlugin extends Plugin {
       nextLabel: this.translate('next'),
       finishLabel: this.translate('finish'),
       dialogMaxWidth: 380,
+      activeStepInteraction: false,
     })
 
     const enabled = await this.storage.load(this.name) !== 'disabled'
