@@ -82,6 +82,8 @@
       md:px-10
       overflow-auto
     ;
+
+    max-height: calc(100dvh - 6rem);
   }
 
   .modal-close {
