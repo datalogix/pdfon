@@ -42,7 +42,10 @@ export function openInteraction({ content, type, title }: Interaction) {
   modal.classList.add('interaction-modal')
 
   if (type === 'link') {
-    setTimeout(() => window.open(content, '_blank'), 2000)
+    setTimeout(() => {
+      window.open(content, '_blank')
+      setTimeout(() => Modal.close(), 0)
+    }, 2000)
   }
 
   return modal

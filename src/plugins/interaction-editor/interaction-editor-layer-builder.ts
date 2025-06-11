@@ -2,7 +2,7 @@ import { Modal } from '@/tools'
 import { createElement, dragElement } from '@/utils'
 import { LayerBuilder } from '@/viewer'
 import { createInteractionButton, openInteraction, type Interaction } from '../interaction'
-import type { InteractionEditorPlugin } from './interaction-editor-plugin'
+import { InteractionEditorPlugin } from './interaction-editor-plugin'
 import { createInteractionForm } from './interaction-form'
 
 export class InteractionEditorLayerBuilder extends LayerBuilder {
@@ -22,15 +22,17 @@ export class InteractionEditorLayerBuilder extends LayerBuilder {
     })
 
     this.on('InteractionsEditor', () => this.renderInteractions())
-    this.on('InteractionEditorAdded', ({ interaction }) => this.renderInteraction(interaction))
-    this.on(['InteractionEditorAdded', 'InteractionEditorDeleted'], () => Modal.close())
+    this.on(`InteractionEditorAddedOnPage${this.id}`, ({ interaction }) => {
+      this.renderInteraction(interaction)
+      Modal.close()
+    })
     this.on('DocumentDestroy', () => this.clearInteractions())
     this.renderInteractions()
   }
 
   protected createInteraction(page: number, x: number, y: number) {
     const form = createInteractionForm(
-      this.interactionEditorPlugin!.getInteractionTypes(),
+      InteractionEditorPlugin.interactionTypes,
       this.interactionEditorPlugin!.translator,
       {
         onSubmit: formData => this.interactionEditorManager?.add({
@@ -66,6 +68,7 @@ export class InteractionEditorLayerBuilder extends LayerBuilder {
         }
 
         button.remove()
+        Modal.close()
         this.interactionEditorManager?.delete(interaction)
       })
 

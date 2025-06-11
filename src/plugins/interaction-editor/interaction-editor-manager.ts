@@ -64,6 +64,7 @@ export class InteractionEditorManager extends Dispatcher {
 
     this.interactions.push(interaction)
 
+    this.dispatch(`InteractionEditorAddedOnPage${interaction.page}`, { interaction })
     this.dispatch('InteractionEditorAdded', { interaction })
 
     return interaction
@@ -79,6 +80,7 @@ export class InteractionEditorManager extends Dispatcher {
     interaction.x = x
     interaction.y = y
 
+    this.dispatch(`InteractionEditorUpdatedOnPage${interaction.page}`, { interaction })
     this.dispatch(`InteractionEditorUpdated${interaction.id}`, { interaction })
     this.dispatch('InteractionEditorUpdated', { interaction })
 
@@ -98,6 +100,7 @@ export class InteractionEditorManager extends Dispatcher {
       return
     }
 
+    this.dispatch(`InteractionEditorUpdatedOnPage${interaction.page}`, { interaction })
     this.dispatch(`InteractionEditorDeleted${interaction.id}`, { interaction })
     this.dispatch('InteractionEditorDeleted', { interaction })
 
