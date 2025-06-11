@@ -1,6 +1,24 @@
 # Changelog
 
 
+## v0.1.14
+
+[compare changes](https://github.com/datalogix/pdfon/compare/v0.1.13...v0.1.14)
+
+### 🩹 Fixes
+
+- Disable `activeStepInteraction` ([e1109d3](https://github.com/datalogix/pdfon/commit/e1109d3))
+- Improvements to the interaction editor ([2f5e7d2](https://github.com/datalogix/pdfon/commit/2f5e7d2))
+- Set maximum height of modal content ([f3df8d8](https://github.com/datalogix/pdfon/commit/f3df8d8))
+
+### 🏡 Chore
+
+- Update release command ([9494d3c](https://github.com/datalogix/pdfon/commit/9494d3c))
+
+### ❤️ Contributors
+
+- Ricardo Gobbo De Souza ([@ricardogobbosouza](https://github.com/ricardogobbosouza))
+
 ## v0.1.13
 
 [compare changes](https://github.com/datalogix/pdfon/compare/v0.1.12...v0.1.13)
