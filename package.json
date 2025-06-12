@@ -1,6 +1,6 @@
 {
   "name": "pdfon",
-  "version": "0.1.14",
+  "version": "0.1.15",
   "description": "Modern and extensible PDF viewer library built on PDF.js with interactive features, resource management, and i18n support",
   "repository": "datalogix/pdfon",
   "license": "MIT",

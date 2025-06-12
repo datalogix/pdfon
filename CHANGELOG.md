@@ -1,6 +1,18 @@
 # Changelog
 
 
+## v0.1.15
+
+[compare changes](https://github.com/datalogix/pdfon/compare/v0.1.14...v0.1.15)
+
+### 🩹 Fixes
+
+- Document init parameters ([a4789c9](https://github.com/datalogix/pdfon/commit/a4789c9))
+
+### ❤️ Contributors
+
+- Ricardo Gobbo De Souza ([@ricardogobbosouza](https://github.com/ricardogobbosouza))
+
 ## v0.1.14
 
 [compare changes](https://github.com/datalogix/pdfon/compare/v0.1.13...v0.1.14)
