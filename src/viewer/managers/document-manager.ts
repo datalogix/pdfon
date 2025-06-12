@@ -63,10 +63,10 @@ export class DocumentManager extends Manager {
       data: documentType instanceof ArrayBuffer ? documentType : undefined,
       docBaseUrl: document.URL.split('#', 1)[0],
       canvasMaxAreaInBytes: -1,
-      cMapUrl: `//cdn.jsdelivr.net/npm/pdfjs-dist@${pdfjs.version}/cmaps/`,
+      cMapUrl: `https://unpkg.com/pdfjs-dist@${pdfjs.version}/cmaps/`,
       enableXfa: true,
       maxImageSize: -1,
-      standardFontDataUrl: `//cdn.jsdelivr.net/npm/pdfjs-dist@${pdfjs.version}/standard_fonts/`,
+      standardFontDataUrl: `https://unpkg.com/pdfjs-dist@${pdfjs.version}/standard_fonts/`,
       ...(typeof documentType === 'string' || documentType instanceof URL || documentType instanceof ArrayBuffer ? {} : documentType),
     })
 
