@@ -1,6 +1,18 @@
 # Changelog
 
 
+## v0.2.0
+
+[compare changes](https://github.com/datalogix/pdfon/compare/v0.1.16...v0.2.0)
+
+### 🚀 Enhancements
+
+- Add interaction for `correct-answer` ([c839297](https://github.com/datalogix/pdfon/commit/c839297))
+
+### ❤️ Contributors
+
+- Ricardo Gobbo De Souza ([@ricardogobbosouza](https://github.com/ricardogobbosouza))
+
 ## v0.1.16
 
 [compare changes](https://github.com/datalogix/pdfon/compare/v0.1.15...v0.1.16)
