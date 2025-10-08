@@ -22,6 +22,17 @@ export class RenderManager extends Manager implements Renderable {
     const newCacheSize = Math.max(DEFAULT_CACHE_SIZE, 2 * visible.views.length + 1)
 
     this.buffer.resize(newCacheSize, visible.ids)
+
+    for (const { view, visibleArea } of visible.views) {
+      view.updateVisibleArea(visibleArea)
+    }
+
+    for (const view of this.buffer) {
+      if (!visible.ids.has(view.id)) {
+        view.updateVisibleArea()
+      }
+    }
+
     this.renderingQueue.renderHighestPriority(visible)
   }
 
@@ -77,7 +88,17 @@ export class RenderManager extends Manager implements Renderable {
     const visiblePages = currentlyVisiblePages || this.scrollManager.getVisiblePages()
     const scrollAhead = this.scrollManager.getScrollAhead(visiblePages)
     const preRenderExtra = this.spreadMode !== SpreadMode.NONE && this.scrollMode !== ScrollMode.HORIZONTAL
-    const page = this.renderingQueue.getHighestPriority(visiblePages, this.pages, scrollAhead, preRenderExtra)
+
+    const ignoreDetailViews = this.scaleManager.scaleTimeoutId !== undefined
+      || (this.scrollManager.scrollTimeoutId !== undefined && visiblePages.views.some(({ view }) => view.detailView?.renderingCancelled))
+
+    const page = this.renderingQueue.getHighestPriority(
+      visiblePages,
+      this.pages,
+      scrollAhead,
+      preRenderExtra,
+      ignoreDetailViews,
+    )
 
     if (!page) {
       return false

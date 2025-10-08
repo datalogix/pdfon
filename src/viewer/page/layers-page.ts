@@ -7,12 +7,11 @@ import { generateName } from '@/utils'
 export class LayersPage extends Dispatcher {
   private layers = new Map<number, (Element | null)>()
   private builders: LayerBuilder[] = []
+  private readonly items: LayerBuilderType[] = []
 
-  constructor(
-    private readonly page: Page,
-    private readonly items: LayerBuilderType[] = [],
-  ) {
+  constructor(private readonly page: Page) {
     super()
+    this.items = page.options.layerBuilders ?? []
   }
 
   get container() {

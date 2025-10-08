@@ -11,6 +11,11 @@ export class DocumentPropertiesManager extends Manager {
   private _documentFilesize?: number
   private _documentInfo?: Record<string, any>
   private _documentMetadata?: pdfjs.Metadata
+  private _documentAuthor?: string
+  private _documentSubject?: string
+  private _documentKeywords?: string
+  private _documentCreator?: string
+  private _documentProducer?: string
 
   get documentType() {
     return this._documentType
@@ -21,20 +26,6 @@ export class DocumentPropertiesManager extends Manager {
   }
 
   get documentTitle() {
-    if (this._documentTitle !== undefined) {
-      return this._documentTitle
-    }
-
-    this._documentTitle = this.documentFilename
-
-    if (!this._documentTitle) {
-      try {
-        this._documentTitle = decodeURIComponent(pdfjs.getFilenameFromUrl(this.documentUrl))
-      } catch {
-        //
-      }
-    }
-
     return this._documentTitle
   }
 
@@ -55,7 +46,7 @@ export class DocumentPropertiesManager extends Manager {
   }
 
   get documentFilename() {
-    return (this._documentFilename ||= pdfjs.getPdfFilenameFromUrl(this.documentUrl || '', ''))
+    return this._documentFilename ||= pdfjs.getPdfFilenameFromUrl(this.documentUrl || '', '')
   }
 
   get documentFilesize() {
@@ -70,10 +61,36 @@ export class DocumentPropertiesManager extends Manager {
     return this._documentMetadata
   }
 
+  get documentAuthor() {
+    return this._documentAuthor ||= this._documentMetadata?.get('dc:creator')?.join('\n') || this.documentInfo?.Author
+  }
+
+  get documentSubject() {
+    return this._documentSubject ||= this._documentMetadata?.get('dc:subject')?.join('\n') || this.documentInfo?.Subject
+  }
+
+  get documentKeywords() {
+    return this._documentKeywords ||= this._documentMetadata?.get('dc:keywords') || this.documentInfo?.Keywords
+  }
+
+  get documentCreator() {
+    return this._documentCreator ||= this._documentMetadata?.get('xmp:creatortool') || this.documentInfo?.Creator
+  }
+
+  get documentProducer() {
+    return this._documentProducer ||= this._documentMetadata?.get('pdf:producer') || this.documentInfo?.Producer
+  }
+
   init() {
     this.on('DocumentInit', ({ pdfDocument, documentType, documentFilename }) => {
       this.setupDocumentProperties(pdfDocument, documentType, documentFilename)
     })
+
+    if ((this.options.enableTitleUpdate ?? true) && !isEmbedded()) {
+      this.on('DocumentTitleUpdated', ({ title }) => {
+        document.title = title
+      })
+    }
   }
 
   reset() {
@@ -84,6 +101,29 @@ export class DocumentPropertiesManager extends Manager {
     this._documentFilesize = undefined
     this._documentInfo = undefined
     this._documentMetadata = undefined
+    this._documentAuthor = undefined
+    this._documentSubject = undefined
+    this._documentKeywords = undefined
+    this._documentCreator = undefined
+    this._documentProducer = undefined
+  }
+
+  private getDocumentTitle() {
+    const docTitle = this.documentMetadata?.get('dc:title')
+
+    if (docTitle && docTitle !== 'Untitled' && !/[\uFFF0-\uFFFF]/g.test(docTitle)) {
+      return docTitle
+    }
+
+    if (this.documentInfo?.Title) {
+      return this.documentInfo?.Title
+    }
+
+    try {
+      return decodeURIComponent(pdfjs.getFilenameFromUrl(this.documentUrl))
+    } catch {
+      //
+    }
   }
 
   private setupDocumentProperties(
@@ -95,11 +135,6 @@ export class DocumentPropertiesManager extends Manager {
     this._documentFingerprint = pdfDocument.fingerprints[0] ?? undefined
 
     if (documentFilename?.trim()) this._documentFilename = documentFilename
-
-    if ((this.options.enableTitleUpdate ?? true) && !isEmbedded() && this.documentTitle) {
-      document.title = this.documentTitle
-      this.dispatch('DocumentTitleUpdated', { title: this.documentTitle })
-    }
 
     pdfDocument.getDownloadInfo().then(({ length }) => {
       this._documentFilesize = length
@@ -117,10 +152,13 @@ export class DocumentPropertiesManager extends Manager {
 
       this._documentInfo = data.info
       this._documentMetadata = data.metadata
+      this._documentTitle = this.getDocumentTitle()
+
+      this.dispatch('DocumentTitleUpdated', { title: this._documentTitle })
 
       this.logger.info(
         `PDF ${this._documentFingerprint} [${this._documentInfo.PDFFormatVersion}`
-        + `${(this._documentInfo.Producer || '-').trim()} / ${(this._documentInfo.Creator || '-').trim()}]`,
+        + `${(this.documentProducer || '-').trim()} / ${(this.documentCreator || '-').trim()}]`,
         null,
         true,
       )

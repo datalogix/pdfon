@@ -2,7 +2,6 @@ import { PixelsPerInch } from '@/pdfjs'
 import * as constants from '@/config'
 import { SpreadMode, ScrollMode } from '@/enums'
 import { isPortraitOrientation } from '@/utils'
-import { PageUpdate } from '../page'
 import type { ScrollDestination } from './scroll-manager'
 import { Manager } from './'
 
@@ -23,12 +22,28 @@ export type ScaleOptions = {
 export class ScaleManager extends Manager {
   private _currentScale!: number
   private _currentScaleValue!: string
-  private scaleTimeoutId?: NodeJS.Timeout
+  private _scaleTimeoutId?: NodeJS.Timeout
   private zoomDelay = constants.ZOOM_DELAY
+
+  get scaleTimeoutId() {
+    return this._scaleTimeoutId
+  }
 
   reset() {
     this._currentScale = constants.DEFAULT_SCALE
     this._currentScaleValue = constants.DEFAULT_SCALE_VALUE
+    this.clearScaleTimeout()
+  }
+
+  refresh() {
+    this.clearScaleTimeout()
+  }
+
+  private clearScaleTimeout() {
+    if (this._scaleTimeoutId) {
+      clearTimeout(this._scaleTimeoutId)
+      this._scaleTimeoutId = undefined
+    }
   }
 
   updateZoom(options: ScaleUpdate = {}) {
@@ -109,8 +124,8 @@ export class ScaleManager extends Manager {
     })
 
     if (postponeDrawing) {
-      this.scaleTimeoutId = setTimeout(() => {
-        this.scaleTimeoutId = undefined
+      this._scaleTimeoutId = setTimeout(() => {
+        this._scaleTimeoutId = undefined
         this.viewer.refresh()
       }, drawingDelay)
     }
@@ -257,12 +272,5 @@ export class ScaleManager extends Manager {
       ...options,
       steps: -(options.steps ?? 1),
     })
-  }
-
-  refresh(_params: PageUpdate) {
-    if (this.scaleTimeoutId) {
-      clearTimeout(this.scaleTimeoutId)
-      this.scaleTimeoutId = undefined
-    }
   }
 }

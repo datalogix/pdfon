@@ -24,12 +24,17 @@ export type PageOptions = {
   optionalContentConfigPromise?: Promise<pdfjs.OptionalContentConfig>
   renderingQueue?: RenderingQueue
   maxCanvasPixels?: number
+  maxCanvasDim?: number
+  capCanvasAreaFactor?: number
+  enableDetailCanvas?: boolean
   textLayerMode?: TextLayerMode
   imageResourcesPath?: string
   annotationMode?: number
   layerBuilders?: LayerBuilderType[]
   layerProperties: managers.LayerPropertiesManager
   enableHWA?: boolean
+  enableAutoLinking?: boolean
+  minDurationToUpdateCanvas?: number
   pageColors?: PageColors
   isStandalone?: boolean
 }

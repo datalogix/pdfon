@@ -1,3 +1,4 @@
+import { OutputScale } from '@/pdfjs'
 import { Plugin } from '../plugin'
 
 export class ResolutionPlugin extends Plugin {
@@ -5,7 +6,7 @@ export class ResolutionPlugin extends Plugin {
   private mediaQueryList?: MediaQueryList
 
   protected init() {
-    this.mediaQueryList = window.matchMedia(`(resolution: ${window.devicePixelRatio || 1}dppx)`)
+    this.mediaQueryList = window.matchMedia(`(resolution: ${OutputScale.pixelRatio}dppx)`)
     this.onChangeListener()
   }
 

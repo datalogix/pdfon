@@ -38,11 +38,11 @@ export class ThumbnailSidebarItem extends SidebarItem {
       }
     })
 
-    this.on('PageRendered', ({ pageNumber }) => {
+    this.on('PageRendered', ({ pageNumber, isDetailView }) => {
       const page = this.viewer.getPage(pageNumber - 1)
 
-      if (this.opened && this.thumbnailViewer && page) {
-        // this.thumbnailViewer.getThumbnail(pageNumber - 1).setImage(page)
+      if (!isDetailView && this.opened && this.thumbnailViewer && page) {
+        this.thumbnailViewer.getThumbnail(pageNumber - 1).setImage(page)
       }
     })
 

@@ -414,13 +414,19 @@ export class FindController extends Extension {
 
     let deferred = Promise.resolve()
     const textOptions = { disableNormalization: true }
+    const pdfDocument = this.pdfDocument
 
     for (let i = 0, ii = this.pagesCount; i < ii; i++) {
       const { promise, resolve } = Promise.withResolvers<void>()
       this.extractTextPromises[i] = promise
 
-      deferred = deferred.then(() => {
-        return this.pdfDocument?.getPage(i + 1)
+      deferred = deferred.then(async () => {
+        if (pdfDocument !== this.pdfDocument) {
+          resolve()
+          return
+        }
+
+        await pdfDocument?.getPage(i + 1)
           .then(pdfPage => pdfPage.getTextContent(textOptions))
           .then((textContent) => {
             const strBuf = []

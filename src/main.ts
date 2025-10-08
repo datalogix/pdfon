@@ -5,4 +5,6 @@ import './styles/index.scss'
 import { Pdfon } from '.'
 
 const pdfon = new Pdfon()
-pdfon.render()
+pdfon.render().then(viewer => [
+  viewer.openDocument('/demo.pdf'),
+])

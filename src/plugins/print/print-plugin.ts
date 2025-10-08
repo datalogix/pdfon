@@ -29,7 +29,7 @@ export class PrintPlugin extends Plugin<PrintPluginParams> {
   }
 
   get supportsPrinting() {
-    return true
+    return !!window.print
   }
 
   protected init() {

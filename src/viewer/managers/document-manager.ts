@@ -58,14 +58,25 @@ export class DocumentManager extends Manager {
 
     await this.closeDocument()
 
-    const loadingTask = this.loadingTask = pdfjs.getDocument(documentType)
+    const loadingTask = this.loadingTask = pdfjs.getDocument({
+      url: typeof documentType === 'string' || documentType instanceof URL ? documentType : undefined,
+      data: documentType instanceof ArrayBuffer ? documentType : undefined,
+      docBaseUrl: document.URL.split('#', 1)[0],
+      canvasMaxAreaInBytes: -1,
+      cMapUrl: `//cdn.jsdelivr.net/npm/pdfjs-dist@${pdfjs.version}/cmaps/`,
+      enableXfa: true,
+      iccUrl: `//cdn.jsdelivr.net/npm/pdfjs-dist@${pdfjs.version}/iccs/`,
+      maxImageSize: -1,
+      standardFontDataUrl: `//cdn.jsdelivr.net/npm/pdfjs-dist@${pdfjs.version}/standard_fonts/`,
+      ...(typeof documentType === 'string' || documentType instanceof URL || documentType instanceof ArrayBuffer ? {} : documentType),
+    })
 
     this.dispatch('DocumentLoad', { loadingTask, documentType, documentFilename, options })
 
     try {
       const pdfDocument = await loadingTask.promise
       this._pdfDocument = pdfDocument
-      this.dispatch('DocumentInit', { pdfDocument, documentType, documentFilename, options })
+      this.dispatch('DocumentInit', { pdfDocument, loadingTask, documentType, documentFilename, options })
     } catch (reason) {
       if (loadingTask !== this.loadingTask) {
         return
@@ -75,10 +86,8 @@ export class DocumentManager extends Manager {
 
       if (reason instanceof pdfjs.InvalidPDFException) {
         key = 'error.invalid-file'
-      } else if (reason instanceof pdfjs.MissingPDFException) {
-        key = 'error.missing-file'
-      } else if (reason instanceof pdfjs.UnexpectedResponseException) {
-        key = 'error.unexpected-response'
+      } else if (reason instanceof pdfjs.ResponseException) {
+        key = reason.missing ? 'error.missing-file' : 'error.unexpected-response'
       } else if (reason instanceof Error && reason.name === 'PasswordException') {
         key = 'error.password'
       }

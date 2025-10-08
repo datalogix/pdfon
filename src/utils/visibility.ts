@@ -4,12 +4,22 @@ import { binarySearchFirstItem } from './search'
 export type VisibleView = IRenderableView & {
   id: number
   div: HTMLElement
+  updateVisibleArea?: (visibleArea?: VisibleArea) => void
+  detailView?: IRenderableView
+}
+
+export type VisibleArea = {
+  minX: number
+  minY: number
+  maxX: number
+  maxY: number
 }
 
 export type VisibleElement = {
   id: number
   x: number
   y: number
+  visibleArea?: VisibleArea
   view: VisibleView
   percent: number
   widthPercent: number
@@ -71,7 +81,7 @@ export function getVisibleElements(
     return index
   }
 
-  const visible = []
+  const visible: VisibleElement[] = []
   const ids = new Set<number>()
   const numViews = views.length
 
@@ -123,8 +133,12 @@ export function getVisibleElements(
       continue
     }
 
-    const hiddenHeight = Math.max(0, top - currentHeight) + Math.max(0, viewBottom - bottom)
-    const hiddenWidth = Math.max(0, left - currentWidth) + Math.max(0, viewRight - right)
+    const minY = Math.max(0, top - currentHeight)
+    const minX = Math.max(0, left - currentWidth)
+
+    const hiddenHeight = minY + Math.max(0, viewBottom - bottom)
+    const hiddenWidth = minX + Math.max(0, viewRight - right)
+
     const fractionHeight = (viewHeight - hiddenHeight) / viewHeight
     const fractionWidth = (viewWidth - hiddenWidth) / viewWidth
     const percent = (fractionHeight * fractionWidth * 100) | 0
@@ -133,6 +147,18 @@ export function getVisibleElements(
       id: view.id,
       x: currentWidth,
       y: currentHeight,
+      visibleArea:
+        // We only specify which part of the page is visible when it's not
+        // the full page, as there is no point in handling a partial page
+        // rendering otherwise.
+        percent === 100
+          ? undefined
+          : {
+              minX,
+              minY,
+              maxX: Math.min(viewRight, right) - currentWidth,
+              maxY: Math.min(viewBottom, bottom) - currentHeight,
+            },
       view,
       percent,
       widthPercent: (fractionWidth * 100) | 0,

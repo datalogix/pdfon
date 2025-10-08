@@ -14,3 +14,6 @@ export const PAUSE_EAGER_PAGE_INIT = 250
 export const WAIT_LOAD_DOCUMENT = 250
 export const ZOOM_DELAY = 400
 export const MAX_CANVAS_PIXELS = /Android|webOS|iPhone|iPad|iPod|Opera Mini/i.test(navigator.userAgent) ? 5242880 : 2 ** 25
+export const MAX_CANVAS_DIM = 32767
+export const CAP_CANVAS_AREA_FACTOR = 200
+export const MIN_DURATION_TO_UPDATE_CANVAS = 500

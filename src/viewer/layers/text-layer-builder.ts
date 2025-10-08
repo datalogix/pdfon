@@ -234,21 +234,30 @@ export class TextLayerBuilder extends LayerBuilder {
           prevRange,
         ) === 0)
 
-        let anchor = modifyStart
+        let anchor: Node | null | undefined = modifyStart
           ? range.startContainer
           : range.endContainer
 
         if (anchor.nodeType === Node.TEXT_NODE) {
-          anchor = anchor.parentNode!
+          anchor = anchor.parentNode
         }
 
-        const parentTextLayer = anchor.parentElement?.closest('.textLayer') as HTMLElement
+        if (!modifyStart && range.endOffset === 0) {
+          do {
+            while (!anchor?.previousSibling) {
+              anchor = anchor?.parentNode
+            }
+            anchor = anchor.previousSibling
+          } while (!anchor.childNodes.length)
+        }
+
+        const parentTextLayer = anchor?.parentElement?.closest('.textLayer') as HTMLElement
         const endDiv = this.textLayers.get(parentTextLayer)
 
         if (endDiv) {
           endDiv.style.width = parentTextLayer.style.width
           endDiv.style.height = parentTextLayer.style.height
-          anchor.parentElement?.insertBefore(
+          anchor?.parentElement?.insertBefore(
             endDiv,
             modifyStart
               ? anchor

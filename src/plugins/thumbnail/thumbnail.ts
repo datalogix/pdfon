@@ -1,9 +1,9 @@
 import type { EventBus } from '@/bus'
 import type { Translator } from '@/l10n'
-import type { OptionalContentConfig, PageViewport } from '@/pdfjs'
+import { type OptionalContentConfig, type PageViewport, type RenderParameters } from '@/pdfjs'
 import { createElement } from '@/utils'
 import { type LayerPropertiesManager, type Page, type PageColors, type RenderingQueue, RenderView } from '@/viewer'
-import { createScaledCanvasContext, reduceImage } from './helpers'
+import { getPageDrawContext, reduceImage } from './helpers'
 import type { ThumbnailLayerBuilder } from './thumbnail-layer-builder'
 
 const DRAW_UPSCALE_FACTOR = 2
@@ -34,6 +34,8 @@ export class Thumbnail extends RenderView {
     optionalContentConfigPromise?: Promise<OptionalContentConfig>
     enableHWA?: boolean
     pageColors?: PageColors
+    maxCanvasPixels?: number
+    maxCanvasDim?: number
   }) {
     super(options)
 
@@ -99,8 +101,14 @@ export class Thumbnail extends RenderView {
       throw new Error('convertCanvasToImage: Rendering has not finished.')
     }
 
-    const { ctx, canvas: pageDrawCanvas } = createScaledCanvasContext(this.canvasWidth, this.canvasHeight, 1, true)
-    const reducedCanvas = reduceImage(canvas, ctx, pageDrawCanvas, MAX_NUM_SCALING_STEPS)
+    const reducedCanvas = reduceImage(
+      canvas,
+      this.canvasWidth,
+      this.canvasHeight,
+      MAX_NUM_SCALING_STEPS,
+      this.options.maxCanvasPixels,
+      this.options.maxCanvasDim,
+    )
 
     this.image = createElement('img', 'thumbnail-image', {
       'src': reducedCanvas.toDataURL(),
@@ -114,31 +122,42 @@ export class Thumbnail extends RenderView {
     reducedCanvas.height = 0
   }
 
-  markAsRenderingFinished(dispatchEvent = true) {
-    super.markAsRenderingFinished(dispatchEvent)
+  protected onRenderingCancelled() {
+    if (this.canvas) {
+      this.canvas.width = 0
+      this.canvas.height = 0
+    }
+  }
+
+  protected markAsRenderingFinished() {
+    super.markAsRenderingFinished()
 
     if (this.canvas) {
       this.convertCanvasToImage(this.canvas)
+      this.canvas.width = 0
+      this.canvas.height = 0
     }
   }
 
   protected async render() {
-    const { ctx, canvas, transform } = createScaledCanvasContext(
+    const { ctx, canvas, transform } = getPageDrawContext(
       this.canvasWidth,
       this.canvasHeight,
       DRAW_UPSCALE_FACTOR,
       this.options.enableHWA,
+      this.options.maxCanvasPixels,
+      this.options.maxCanvasDim,
     )
 
     this.canvas = canvas
 
     return this.pdfPage!.render({
-      canvasContext: ctx!,
+      canvasContext: ctx,
       transform,
       viewport: this.viewport.clone({ scale: DRAW_UPSCALE_FACTOR * this.scale }),
       optionalContentConfigPromise: this.options.optionalContentConfigPromise,
       pageColors: this.options.pageColors,
-    })
+    } as RenderParameters)
   }
 
   setImage(page: Page) {
@@ -160,7 +179,7 @@ export class Thumbnail extends RenderView {
       return
     }
 
-    this.markAsRenderingFinished(false)
+    this.markAsRenderingFinished()
     this.convertCanvasToImage(canvas)
   }
 

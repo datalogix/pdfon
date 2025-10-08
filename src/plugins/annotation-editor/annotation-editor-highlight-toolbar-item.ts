@@ -29,20 +29,25 @@ export class AnnotationEditorHighlightToolbarItem extends AnnotationEditorBaseTo
       showAllField.container,
     )
 
+    let colorPicker: ColorPicker | null = null
+
+    this.on('AnnotationEditorUIManager', ({ uiManager }) => {
+      colorPicker = new ColorPicker({ uiManager })
+      uiManager.setMainHighlightColorPicker(colorPicker)
+      colorField.field.append(colorPicker.renderMainDropdown())
+    })
+
     this.on('AnnotationEditorParamsChanged', (event) => {
       for (const [type, value] of event.details) {
         switch (type) {
           case AnnotationEditorParamsType.HIGHLIGHT_FREE:
             thicknessField.field.disabled = !value
             break
+          case AnnotationEditorParamsType.HIGHLIGHT_DEFAULT_COLOR:
+            colorPicker?.updateColor(value)
+            break
         }
       }
     })
-
-    this.on('AnnotationEditorUIManager', ({ uiManager }) => {
-      const cp = new ColorPicker({ uiManager })
-      uiManager.setMainHighlightColorPicker(cp)
-      colorField.field.append(cp.renderMainDropdown())
-    }, { once: true })
   }
 }

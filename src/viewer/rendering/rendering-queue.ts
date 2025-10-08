@@ -70,6 +70,7 @@ export class RenderingQueue {
     views: IRenderableView[],
     scrolledDown: boolean,
     preRenderExtra = false,
+    ignoreDetailViews = false,
   ) {
     if (!visible.views.length) {
       return null
@@ -80,6 +81,16 @@ export class RenderingQueue {
 
       if (!view.isRenderingFinished) {
         return view
+      }
+    }
+
+    if (!ignoreDetailViews) {
+      for (let i = 0; i < visible.views.length; i++) {
+        const { detailView } = visible.views[i].view
+
+        if (detailView && !detailView.isRenderingFinished) {
+          return detailView
+        }
       }
     }
 

@@ -8,8 +8,8 @@
   ;
 
   .interaction {
-    width: calc(1.5rem * var(--scale-factor));
-    height: calc(1.5rem * var(--scale-factor));
+    width: calc(1.5rem * var(--total-scale-factor));
+    height: calc(1.5rem * var(--total-scale-factor));
 
     @apply
       pointer-events-auto
@@ -32,7 +32,7 @@
 
     &:before {
       content: '';
-      font-size: calc(1rem * var(--scale-factor));
+      font-size: calc(1rem * var(--total-scale-factor));
 
       @apply
         block
@@ -116,10 +116,10 @@
     }
 
     .interaction-animation {
-      width: calc(0.7rem * var(--scale-factor));
-      height: calc(0.7rem * var(--scale-factor));
-      top: calc(-0.2rem * var(--scale-factor));
-      right: calc(-0.2rem * var(--scale-factor));
+      width: calc(0.7rem * var(--total-scale-factor));
+      height: calc(0.7rem * var(--total-scale-factor));
+      top: calc(-0.2rem * var(--total-scale-factor));
+      right: calc(-0.2rem * var(--total-scale-factor));
 
       @apply
         absolute
@@ -141,8 +141,8 @@
 
       &:after {
         content: '';
-        width: calc(0.7rem * var(--scale-factor));
-        height: calc(0.7rem * var(--scale-factor));
+        width: calc(0.7rem * var(--total-scale-factor));
+        height: calc(0.7rem * var(--total-scale-factor));
 
         @apply
           relative

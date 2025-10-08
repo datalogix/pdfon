@@ -39,6 +39,11 @@ export class ScrollManager extends Manager {
   private _scrollMode = ScrollMode.VERTICAL
   private previousScrollMode = ScrollMode.UNKNOWN
   private scroll = { right: true, down: true }
+  private _scrollTimeoutId?: NodeJS.Timeout
+
+  get scrollTimeoutId() {
+    return this._scrollTimeoutId
+  }
 
   init() {
     this.scroll = watchScroll(
@@ -58,6 +63,18 @@ export class ScrollManager extends Manager {
     }
 
     this.updateScrollMode()
+    this.clearScrollTimeout()
+  }
+
+  refresh() {
+    this.clearScrollTimeout()
+  }
+
+  private clearScrollTimeout() {
+    if (this._scrollTimeoutId) {
+      clearTimeout(this._scrollTimeoutId)
+      this._scrollTimeoutId = undefined
+    }
   }
 
   ensurePageVisible() {
@@ -120,6 +137,15 @@ export class ScrollManager extends Manager {
 
   private onScrollUpdate() {
     if (!this.pagesCount) return
+
+    if (this._scrollTimeoutId) {
+      clearTimeout(this._scrollTimeoutId)
+    }
+
+    this._scrollTimeoutId = setTimeout(() => {
+      this._scrollTimeoutId = undefined
+      this.viewer.update()
+    }, 100)
 
     this.viewer.update()
   }

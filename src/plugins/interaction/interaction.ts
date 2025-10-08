@@ -24,8 +24,8 @@ export function createInteractionButton(interaction: Interaction, positions: boo
   ], { type: 'button', id: `interaction-${interaction.id}` })
 
   if (positions) {
-    button.style.left = `calc(${interaction.x}px * var(--scale-factor))`
-    button.style.top = `calc(${interaction.y}px * var(--scale-factor))`
+    button.style.left = `calc(${interaction.x}px * var(--total-scale-factor))`
+    button.style.top = `calc(${interaction.y}px * var(--total-scale-factor))`
   }
 
   return button

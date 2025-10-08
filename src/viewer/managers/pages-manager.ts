@@ -350,8 +350,8 @@ export class PagesManager extends Manager {
       this.renderManager.buffer.push(page)
     }
 
-    const onAfterDraw = (evt: { cssTransform: boolean, timestamp: number }) => {
-      if (evt.cssTransform) return
+    const onAfterDraw = (evt: { cssTransform: boolean, isDetailView: boolean, timestamp: number }) => {
+      if (evt.cssTransform || evt.isDetailView) return
       this.onePageRenderedCapability.resolve({ timestamp: evt.timestamp })
       this.off('PageRendered', onAfterDraw)
     }
@@ -388,12 +388,17 @@ export class PagesManager extends Manager {
           optionalContentConfigPromise,
           renderingQueue: this.renderingQueue,
           maxCanvasPixels: this.options.maxCanvasPixels,
+          maxCanvasDim: this.options.maxCanvasDim,
+          capCanvasAreaFactor: this.options.capCanvasAreaFactor,
+          enableDetailCanvas: this.options.enableDetailCanvas ?? true,
           textLayerMode: params.textLayerMode,
           imageResourcesPath: this.options.imageResourcesPath,
           annotationMode: params.annotationMode,
           layerBuilders,
           layerProperties: this.viewer.layerPropertiesManager,
           enableHWA: this.options.enableHWA,
+          enableAutoLinking: this.options.enableAutoLinking ?? true,
+          minDurationToUpdateCanvas: this.options.minDurationToUpdateCanvas,
           pageColors: this.viewer.pageColors,
         }))
       }

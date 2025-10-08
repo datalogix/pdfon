@@ -122,14 +122,15 @@ export abstract class RenderView extends Dispatcher implements pdfjs.IRenderable
     return this._rotation
   }
 
-  markAsRenderingFinished(dispatchEvent = true) {
+  protected markAsRenderingFinished() {
     this.renderingState = RenderingStates.FINISHED
+  }
 
-    if (!dispatchEvent) return
-
+  protected dispatchViewRendered(cssTransform?: boolean, isDetailView?: boolean) {
     this.dispatch(`${this.name}Rendered`, {
       pageNumber: this.id,
-      cssTransform: false,
+      cssTransform,
+      isDetailView,
       timestamp: performance.now(),
       error: this.renderError,
     })
@@ -212,12 +213,10 @@ export abstract class RenderView extends Dispatcher implements pdfjs.IRenderable
         }
       }
 
-      const resultPromise = renderTask.promise.then(
+      return renderTask.promise.then(
         async () => await this.finishRenderTask(renderTask),
         async error => await this.finishRenderTask(renderTask, error),
-      )
-
-      return resultPromise.finally(() => {
+      ).finally(() => {
         this.dispatch(`${this.name}Render`, {
           pageNumber: this.id,
         })
@@ -236,12 +235,18 @@ export abstract class RenderView extends Dispatcher implements pdfjs.IRenderable
 
     if (error instanceof pdfjs.RenderingCancelledException) {
       this.renderError = null
+      this.onRenderingCancelled()
       return
     }
 
     this.renderError = error
     this.markAsRenderingFinished()
+    this.dispatchViewRendered(false, false)
 
     return error
+  }
+
+  protected onRenderingCancelled() {
+    //
   }
 }

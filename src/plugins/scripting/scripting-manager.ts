@@ -136,7 +136,7 @@ export class ScriptingManager extends Dispatcher {
           filesize: this.viewer.documentFilesize,
           filename: this.viewer.documentFilename,
           metadata: this.viewer.documentMetadata?.getRaw(),
-          authors: this.viewer.documentMetadata?.get('dc:creator'),
+          authors: this.viewer.documentAuthor,
           numPages: this.viewer.pagesCount,
           URL: this.viewer.documentUrl,
           actions: docActions,

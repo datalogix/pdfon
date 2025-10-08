@@ -1,4 +1,4 @@
-import { MAX_CANVAS_PIXELS } from '@/config'
+import { CAP_CANVAS_AREA_FACTOR, MAX_CANVAS_DIM, MAX_CANVAS_PIXELS } from '@/config'
 import { OutputScale, type PageViewport } from '@/pdfjs'
 import { createElement, approximateFraction, floorToDivide } from '@/utils'
 import type { Page } from './page'
@@ -7,17 +7,15 @@ export class CanvasPage {
   private _canvasWrapper?: HTMLDivElement
   private _canvas?: HTMLCanvasElement
   private prevCanvas?: HTMLCanvasElement
-  private hasRestrictedScaling = false
-  private outputScale?: { sx: number, sy: number }
+  private _hasRestrictedScaling = false
+  private _needsRestrictedScaling = false
+  private outputScale?: OutputScale
   private scaleRoundX = 1
   private scaleRoundY = 1
   private hidden?: boolean
   private _originalViewport?: PageViewport
 
-  constructor(
-    private readonly page: Page,
-    private readonly maxCanvasPixels = MAX_CANVAS_PIXELS,
-  ) {}
+  constructor(private readonly page: Page) { }
 
   get canvasWrapper() {
     return this._canvasWrapper
@@ -31,10 +29,21 @@ export class CanvasPage {
     return this._originalViewport
   }
 
+  get maxCanvasPixels() {
+    return this.page.options.maxCanvasPixels ?? MAX_CANVAS_PIXELS
+  }
+
+  get needsRestrictedScaling() {
+    return this._needsRestrictedScaling
+  }
+
+  get hasRestrictedScaling() {
+    return this._hasRestrictedScaling
+  }
+
   render() {
-    // Wrap the canvas so that if it has a CSS transform for high DPI the
-    // overflow will be hidden in Firefox.
     let canvasWrapper = this._canvasWrapper
+
     if (!canvasWrapper) {
       canvasWrapper = this._canvasWrapper = createElement('div', 'canvasWrapper')
       this.page.layersPage.add(canvasWrapper, 0)
@@ -49,27 +58,8 @@ export class CanvasPage {
     this.hidden = false
 
     const { width, height } = this.page.viewport
-    const outputScale = this.outputScale = new OutputScale()
-
-    if (this.maxCanvasPixels === 0) {
-      const invScale = 1 / this.page.scale
-      // Use a scale that makes the canvas have the originally intended size
-      // of the page.
-      outputScale.sx *= invScale
-      outputScale.sy *= invScale
-      this.hasRestrictedScaling = true
-    } else if (this.maxCanvasPixels > 0) {
-      const pixelsInViewport = width * height
-      const maxScale = Math.sqrt(this.maxCanvasPixels / pixelsInViewport)
-
-      if (outputScale.sx > maxScale || outputScale.sy > maxScale) {
-        outputScale.sx = maxScale
-        outputScale.sy = maxScale
-        this.hasRestrictedScaling = true
-      } else {
-        this.hasRestrictedScaling = false
-      }
-    }
+    const outputScale = this.computeScale()
+    this._hasRestrictedScaling = this._needsRestrictedScaling
 
     const sfx = approximateFraction(outputScale.sx)
     const sfy = approximateFraction(outputScale.sy)
@@ -95,8 +85,35 @@ export class CanvasPage {
       : undefined
   }
 
+  private computeScale() {
+    if (this.outputScale) {
+      return this.outputScale
+    }
+
+    const outputScale = this.outputScale = new OutputScale()
+
+    if (this.maxCanvasPixels === 0) {
+      const invScale = 1 / this.page.scale
+      // Use a scale that makes the canvas have the originally intended size
+      // of the page.
+      outputScale.sx *= invScale
+      outputScale.sy *= invScale
+      this._needsRestrictedScaling = true
+    } else if (this.maxCanvasPixels > 0) {
+      this._needsRestrictedScaling = outputScale.limitCanvas(
+        this.page.viewport.width,
+        this.page.viewport.height,
+        this.maxCanvasPixels,
+        this.page.options.maxCanvasDim ?? MAX_CANVAS_DIM,
+        this.page.options.capCanvasAreaFactor ?? CAP_CANVAS_AREA_FACTOR,
+      )
+    }
+
+    return outputScale
+  }
+
   isOnlyCssZoom(viewport: PageViewport) {
-    if (!this.hasRestrictedScaling) {
+    if (!(this._hasRestrictedScaling && this._needsRestrictedScaling)) {
       return false
     }
 

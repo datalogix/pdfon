@@ -61,6 +61,7 @@ export class AnnotationManager extends Manager {
       this.container,
       this.viewerContainer,
       null, // altTextManager
+      null, // signatureManager
       this.eventBus,
       this.pdfDocument,
       this.viewer.pageColors,
@@ -79,6 +80,7 @@ export class AnnotationManager extends Manager {
       return
     }
 
+    this.preloadEditingData(mode)
     this._annotationEditorUIManager?.updateMode(mode)
   }
 
@@ -120,10 +122,18 @@ export class AnnotationManager extends Manager {
       return
     }
 
-    const updater = () => {
+    this.preloadEditingData(mode)
+
+    const pdfDocument = this.pdfDocument
+    const updater = async () => {
       this.cleanupSwitchAnnotationEditorMode()
       this._annotationEditorMode = mode
-      this._annotationEditorUIManager?.updateMode(mode, editId, isFromKeyboard)
+      await this._annotationEditorUIManager?.updateMode(mode, editId, isFromKeyboard)
+
+      if (mode !== this.annotationMode || pdfDocument !== this.pdfDocument) {
+        return
+      }
+
       this.dispatch('AnnotationEditorModeChanged', { mode })
     }
 
@@ -165,6 +175,15 @@ export class AnnotationManager extends Manager {
     }
 
     updater()
+  }
+
+  private preloadEditingData(mode: number) {
+    switch (mode) {
+      case AnnotationEditorType.STAMP:
+        break
+      case AnnotationEditorType.SIGNATURE:
+        break
+    }
   }
 
   private cleanupSwitchAnnotationEditorMode() {

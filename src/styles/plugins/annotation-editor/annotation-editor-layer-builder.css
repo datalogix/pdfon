@@ -22,12 +22,8 @@
    );
    --editorFreeText-editing-cursor: text;
    --editorInk-editing-cursor: url(./images/cursor-editorInk.svg) 0 16, pointer;
-   --editorHighlight-editing-cursor: url(./images/cursor-editorTextHighlight.svg)
-       24 24,
-     text;
-   --editorFreeHighlight-editing-cursor: url(./images/cursor-editorFreeHighlight.svg)
-       1 18,
-     pointer;
+   --editorHighlight-editing-cursor: url(./images/cursor-editorTextHighlight.svg) 24 24, text;
+   --editorFreeHighlight-editing-cursor: url(./images/cursor-editorFreeHighlight.svg) 1 18, pointer;
 
    --new-alt-text-warning-image: url(./images/altText_warning.svg);
  }
@@ -75,8 +71,7 @@
 
 @media (min-resolution: 1.1dppx) {
   :root {
-    --editorFreeText-editing-cursor: url(./images/cursor-editorFreeText.svg) 0 16,
-      text;
+    --editorFreeText-editing-cursor: url(./images/cursor-editorFreeText.svg) 0 16, text;
   }
  }
 
@@ -106,7 +101,7 @@
    background: transparent;
    position: absolute;
    inset: 0;
-   font-size: calc(100px * var(--scale-factor));
+   font-size: calc(100px * var(--total-scale-factor));
    transform-origin: 0 0;
    cursor: auto;
 
@@ -128,9 +123,13 @@
    height: 100%;
  }
 
- .annotationEditorLayer.disabled {
+.annotationEditorLayer.disabled {
    pointer-events: none;
- }
+
+  &.highlightEditing :is(.freeTextEditor, .inkEditor, .stampEditor, .signatureEditor) {
+    pointer-events: auto;
+  }
+}
 
  .annotationEditorLayer.freetextEditing {
    cursor: var(--editorFreeText-editing-cursor);
@@ -144,7 +143,7 @@
   box-sizing: border-box;
   }
 
- .annotationEditorLayer :is(.freeTextEditor, .inkEditor, .stampEditor) {
+ .annotationEditorLayer :is(.freeTextEditor, .inkEditor, .stampEditor, .signatureEditor) {
    position: absolute;
    background: transparent;
    z-index: 1;
@@ -206,25 +205,25 @@
  }
 
  .annotationEditorLayer
-   :is(.freeTextEditor, .inkEditor, .stampEditor, .highlightEditor),
+   :is(.freeTextEditor, .inkEditor, .stampEditor, .highlightEditor, .signatureEditor),
  .textLayer {
    .editToolbar {
      --editor-toolbar-delete-image: url(./images/editor-toolbar-delete.svg);
-     --editor-toolbar-bg-color: #f0f0f4;
+     --editor-toolbar-bg-color: light-dark(#f0f0f4, #2b2a33);
      --editor-toolbar-highlight-image: url(./images/toolbarButton-editorHighlight.svg);
-     --editor-toolbar-fg-color: #2e2e56;
+     --editor-toolbar-fg-color: light-dark(#2e2e56, #fbfbfe);
      --editor-toolbar-border-color: #8f8f9d;
      --editor-toolbar-hover-border-color: var(--editor-toolbar-border-color);
-     --editor-toolbar-hover-bg-color: #e0e0e6;
+     --editor-toolbar-hover-bg-color: light-dark(#e0e0e6, #52525e);
      --editor-toolbar-hover-fg-color: var(--editor-toolbar-fg-color);
      --editor-toolbar-hover-outline: none;
-     --editor-toolbar-focus-outline-color: #0060df;
+     --editor-toolbar-focus-outline-color: light-dark(#0060df, #0df);
      --editor-toolbar-shadow: 0 2px 6px 0 rgb(58 57 68 / 0.2);
      --editor-toolbar-vert-offset: 6px;
      --editor-toolbar-height: 28px;
      --editor-toolbar-padding: 2px;
-     --alt-text-done-color: #2ac3a2;
-     --alt-text-warning-color: #0090ed;
+     --alt-text-done-color: light-dark(#2ac3a2, #54ffbd);
+     --alt-text-warning-color: light-dark(#0090ed, #80ebff);
      --alt-text-hover-done-color: var(--alt-text-done-color);
      --alt-text-hover-warning-color: var(--alt-text-warning-color);
 
@@ -449,10 +448,10 @@
            word-wrap: anywhere;
 
            &.show {
-             --alt-text-tooltip-bg: #f0f0f4;
-             --alt-text-tooltip-fg: #15141a;
+             --alt-text-tooltip-bg: light-dark(#f0f0f4, #1c1b22);
+             --alt-text-tooltip-fg: light-dark(#15141a, #fbfbfe);
              --alt-text-tooltip-border: #8f8f9d;
-             --alt-text-tooltip-shadow: 0px 2px 6px 0px rgb(58 57 68 / 0.2);
+             --alt-text-tooltip-shadow: 0px 2px 6px 0px light-dark(rgb(58 57 68 / 0.2), #15141a);
 
              @media (prefers-color-scheme: dark) {
                --alt-text-tooltip-bg: #1c1b22;
@@ -495,7 +494,7 @@
  }
 
  .annotationEditorLayer .freeTextEditor {
-   padding: calc(var(--freetext-padding) * var(--scale-factor));
+   padding: calc(var(--freetext-padding) * var(--total-scale-factor));
    width: auto;
    height: auto;
    touch-action: none;
@@ -566,9 +565,9 @@
    }
 
    .noAltTextBadge {
-     --no-alt-text-badge-border-color: #f0f0f4;
-     --no-alt-text-badge-bg-color: #cfcfd8;
-     --no-alt-text-badge-fg-color: #5b5b66;
+     --no-alt-text-badge-border-color: light-dark(#f0f0f4, #52525e);
+     --no-alt-text-badge-bg-color: light-dark(#cfcfd8, #fbfbfe);
+     --no-alt-text-badge-fg-color: light-dark(#5b5b66, #15141a);
 
      @media (prefers-color-scheme: dark) {
        --no-alt-text-badge-border-color: #52525e;
@@ -611,7 +610,7 @@
  }
 
  .annotationEditorLayer {
-   :is(.freeTextEditor, .inkEditor, .stampEditor) {
+   :is(.freeTextEditor, .inkEditor, .stampEditor, .signatureEditor) {
      & > .resizers {
        position: absolute;
        inset: 0;
@@ -859,7 +858,7 @@
  .dialog.newAltText {
    --new-alt-text-ai-disclaimer-icon: url(./images/altText_disclaimer.svg);
    --new-alt-text-spinner-icon: url(./images/altText_spinner.svg);
-   --preview-image-bg-color: #f0f0f4;
+   --preview-image-bg-color: light-dark(#f0f0f4, #2b2a33);
    --preview-image-border: none;
 
    @media (prefers-color-scheme: dark) {
@@ -1042,9 +1041,9 @@
  }
 
  .colorPicker {
-   --hover-outline-color: #0250bb;
-   --selected-outline-color: #0060df;
-   --swatch-border-color: #cfcfd8;
+   --hover-outline-color: light-dark(#0250bb, #80ebff);
+   --selected-outline-color: light-dark(#0060df, #aaf2ff);
+   --swatch-border-color: light-dark(#cfcfd8, #52525e);
 
    @media (prefers-color-scheme: dark) {
      --hover-outline-color: #80ebff;
@@ -1291,11 +1290,7 @@
        align-items: center;
        align-self: stretch;
 
-       --example-color: #bfbfc9;
-
-       @media (prefers-color-scheme: dark) {
-         --example-color: #80808e;
-       }
+       --example-color: light-dark(#bfbfc9, #80808e);
 
        @media screen and (forced-colors: active) {
          --example-color: CanvasText;
@@ -1333,11 +1328,7 @@
      align-self: stretch;
 
      .divider {
-       --divider-color: #d7d7db;
-
-       @media (prefers-color-scheme: dark) {
-         --divider-color: #8f8f9d;
-       }
+       --divider-color: light-dark(#d7d7db, #8f8f9d);
 
        @media screen and (forced-colors: active) {
          --divider-color: CanvasText;

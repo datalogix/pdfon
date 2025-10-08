@@ -190,6 +190,8 @@ export class ThumbnailViewer extends Dispatcher implements Renderable {
             optionalContentConfigPromise,
             enableHWA: this.viewer.options.enableHWA,
             pageColors: this.viewer.pageColors,
+            maxCanvasPixels: this.viewer.options.maxCanvasPixels,
+            maxCanvasDim: this.viewer.options.maxCanvasDim,
           })
 
           this.thumbnails.push(thumbnail)
@@ -274,6 +276,8 @@ export class ThumbnailViewer extends Dispatcher implements Renderable {
       visibleThumbs,
       this.thumbnails,
       scrollAhead,
+      false,
+      true,
     )
 
     if (thumbnail) {

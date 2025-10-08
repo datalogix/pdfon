@@ -51,7 +51,7 @@ export class AnnotationEditorStorage extends Dispatcher {
     const editors = this.pdfDocument.annotationStorage.serializable.map ?? new Map()
 
     // Fix annotation editor position
-    Object.entries(this.pdfDocument.annotationStorage.getAll() ?? {}).forEach(([name, annotation]) => {
+    for (const [name, annotation] of this.pdfDocument.annotationStorage) {
       if (!editors.has(name)) return
 
       const serialized = editors.get(name)
@@ -59,7 +59,7 @@ export class AnnotationEditorStorage extends Dispatcher {
       serialized.y = annotation.y
 
       editors.set(name, serialized)
-    })
+    }
 
     this.storage?.set('annotation-editors', editors)
   }

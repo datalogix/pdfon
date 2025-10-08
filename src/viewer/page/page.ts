@@ -1,5 +1,5 @@
 import { RenderingCancelledException, type OptionalContentConfig, type RenderTask, type PDFPageProxy } from '@/pdfjs'
-import { applyHighlightHCMFilter, updateLayerDimensions } from '@/utils'
+import { applyHighlightHCMFilter, updateLayerDimensions, VisibleArea } from '@/utils'
 import { AnnotationLayerBuilder } from '../layers'
 import { RenderView } from '../rendering'
 import { CanvasPage } from './canvas-page'
@@ -11,6 +11,7 @@ export class Page extends RenderView {
   private optionalContentConfigPromise?: Promise<OptionalContentConfig>
   private pageLabel?: string
   private isEditing = false
+  private userUnit = 1
 
   readonly annotationCanvasMap?: Map<string, HTMLCanvasElement>
   readonly canvasPage
@@ -19,8 +20,8 @@ export class Page extends RenderView {
   constructor(readonly options: PageOptions) {
     super(options)
 
-    this.canvasPage = new CanvasPage(this, this.options.maxCanvasPixels)
-    this.layersPage = new LayersPage(this, this.options.layerBuilders)
+    this.canvasPage = new CanvasPage(this)
+    this.layersPage = new LayersPage(this)
 
     this.div.setAttribute('role', 'region')
     this.div.setAttribute('aria-label', this.options.l10n.get('page.title', { page: this.id }))
@@ -60,6 +61,16 @@ export class Page extends RenderView {
       this.options.container?.style.setProperty('--scale-factor', this.viewport.scale.toString())
     }
 
+    if (this.viewport.userUnit !== this.userUnit) {
+      if (this.viewport.userUnit !== 1) {
+        this.div.style.setProperty('--user-unit', this.viewport.userUnit.toString())
+      } else {
+        this.div.style.removeProperty('--user-unit')
+      }
+
+      this.userUnit = this.viewport.userUnit
+    }
+
     if (this.pdfPage) {
       if (this.previousRotation === this.viewport.rotation) {
         return
@@ -82,11 +93,28 @@ export class Page extends RenderView {
   }
 
   toggleEditingMode(isEditing: boolean) {
-    if (!this.hasEditableAnnotations()) return
-
     this.isEditing = isEditing
 
+    if (!this.hasEditableAnnotations()) return
+
     this.reset(true)
+  }
+
+  updateVisibleArea(visibleArea?: VisibleArea) {
+    if (!this.options.enableDetailCanvas) return
+
+    // TODO:
+    // if (
+    //  this.canvasPage.needsRestrictedScaling
+    //  && this.canvasPage.maxCanvasPixels > 0
+    //  && visibleArea
+    // ) {
+    //  this.detailView ??= new PDFPageDetailView({ pageView: this })
+    //  this.detailView.update({ visibleArea })
+    // } else if (this.detailView) {
+    //  this.detailView.reset()
+    //  this.detailView = null
+    // }
   }
 
   private updateOptionalContentConfigPromise(optionalContentConfigPromise?: Promise<OptionalContentConfig>) {
@@ -119,6 +147,7 @@ export class Page extends RenderView {
     }
 
     this.layersPage.update(params)
+    // this.detailView?.update({ underlyingViewUpdated: true })
     this.reset(true)
   }
 
@@ -136,13 +165,15 @@ export class Page extends RenderView {
 
     if (postponeDrawing && !onlyCssZoom && !this.isRenderingFinished) {
       this.cancelRendering(true, drawingDelay)
-      this.markAsRenderingFinished(false)
+      this.markAsRenderingFinished()
     }
 
     this.layersPage.render(postponeDrawing)
 
     if (!postponeDrawing) {
-      this.markAsRenderingFinished()
+      // this.detailView?.update({ underlyingViewUpdated: true })
+
+      this.dispatchViewRendered(true, false)
     }
 
     return false

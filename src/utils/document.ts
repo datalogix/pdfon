@@ -23,8 +23,8 @@ export function updateLayerDimensions(
   const { pageWidth, pageHeight } = viewport.rawDims as { pageWidth: number, pageHeight: number }
   const { style } = div
 
-  const w = `var(--scale-factor) * ${pageWidth}px`
-  const h = `var(--scale-factor) * ${pageHeight}px`
+  const w = `var(--total-scale-factor) * ${pageWidth}px`
+  const h = `var(--total-scale-factor) * ${pageHeight}px`
   const widthStr = `round(down, ${w}, var(--scale-round-x, 1px))`
   const heightStr = `round(down, ${h}, var(--scale-round-y, 1px))`
 

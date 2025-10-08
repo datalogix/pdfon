@@ -30,27 +30,27 @@
   },
   "dependencies": {
     "@sjmc11/tourguidejs": "^0.0.27",
-    "@unocss/reset": "^66.1.1",
-    "i18next": "^25.1.2",
-    "i18next-browser-languagedetector": "^8.1.0",
+    "@unocss/reset": "^66.2.0",
+    "i18next": "^25.2.1",
+    "i18next-browser-languagedetector": "^8.2.0",
     "idb-keyval": "^6.2.2",
     "ofetch": "^1.4.1",
-    "pdfjs-dist": "4.10.38"
+    "pdfjs-dist": "^5.3.31"
   },
   "devDependencies": {
-    "@eslint/js": "^9.26.0",
-    "@iconify/json": "^2.2.337",
-    "@stylistic/eslint-plugin": "^4.2.0",
-    "@types/node": "^22.15.17",
+    "@eslint/js": "^9.28.0",
+    "@iconify/json": "^2.2.348",
+    "@stylistic/eslint-plugin": "^4.4.1",
+    "@types/node": "^24.0.1",
     "changelogen": "^0.6.1",
-    "eslint": "^9.26.0",
-    "globals": "^16.1.0",
-    "sass": "^1.88.0",
+    "eslint": "^9.28.0",
+    "globals": "^16.2.0",
+    "sass": "^1.89.2",
     "typescript": "^5.8.3",
-    "typescript-eslint": "^8.32.1",
-    "unocss": "^66.1.1",
+    "typescript-eslint": "^8.34.0",
+    "unocss": "^66.2.0",
     "vite": "^6.3.5",
-    "vite-plugin-dts": "^4.5.3",
+    "vite-plugin-dts": "^4.5.4",
     "vite-plugin-eslint2": "^5.0.3"
   }
 }

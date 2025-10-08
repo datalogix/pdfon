@@ -1,3 +1,4 @@
+import { updateUrlHash } from '@/pdfjs'
 import { VisibleElement, VisibleElements } from '@/utils'
 import { Manager } from './'
 
@@ -18,7 +19,7 @@ export class LocationManager extends Manager {
   }
 
   get baseUrl() {
-    return location.href.split('#', 1)[0]
+    return updateUrlHash(location.href, '')
   }
 
   reset() {

@@ -14,6 +14,9 @@ export type ViewerOptions = {
   removePageBorders?: boolean
   imageResourcesPath?: string
   maxCanvasPixels?: number
+  maxCanvasDim?: number
+  capCanvasAreaFactor?: number
+  enableDetailCanvas?: boolean
   annotationMode?: number
   annotationEditorMode?: number
   annotationEditorHighlightColors?: string
@@ -23,6 +26,8 @@ export type ViewerOptions = {
   pageColors?: PageColors
   enableTitleUpdate?: boolean
   supportsPinchToZoom?: boolean
+  enableAutoLinking?: boolean
+  minDurationToUpdateCanvas?: number
 }
 
 export type ViewerType = Viewer &

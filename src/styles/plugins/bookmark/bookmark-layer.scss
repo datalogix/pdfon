@@ -8,8 +8,8 @@
   ;
 
   .bookmark {
-    width: calc(1.5rem * var(--scale-factor));
-    height: calc(1.5rem * var(--scale-factor));
+    width: calc(1.5rem * var(--total-scale-factor));
+    height: calc(1.5rem * var(--total-scale-factor));
 
     @apply
       pointer-events-auto
