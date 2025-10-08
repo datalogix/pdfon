@@ -1,5 +1,3 @@
-import 'trix'
-import 'trix/dist/trix.css'
 import { $fetch, createElement, type FetchOptions } from '@/utils'
 
 export type FormPrepareData = (formData: FormData) => Promise<void> | void
@@ -154,7 +152,7 @@ export type Field = (HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement)
 
 export type CreateFieldProps = {
   name: string
-  field?: 'input' | 'select' | 'textarea' | 'trix'
+  field?: 'input' | 'select' | 'textarea'
   label?: string | boolean
   [key: string]: any
 }
@@ -168,7 +166,7 @@ export function createField(props: CreateFieldProps): Field {
   }
 
   let options = props.options
-  let tag = props.field ?? (options ? 'select' : 'input')
+  const tag = props.field ?? (options ? 'select' : 'input')
 
   const fieldProps = { ...props }
   delete fieldProps.label
@@ -181,17 +179,6 @@ export function createField(props: CreateFieldProps): Field {
     const placeholder = fieldProps.placeholder
     delete fieldProps.placeholder
     options = [{ value: '', text: placeholder }, ...options]
-  } else if (tag === 'trix') {
-    tag = 'input'
-
-    fieldProps.type = 'hidden'
-    fieldProps.id = `trix-editor-${crypto.randomUUID()}`
-
-    const editor = document.createElement('trix-editor')
-    editor.classList.add('trix-content')
-    editor.setAttribute('input', fieldProps.id)
-
-    container.append(editor)
   }
 
   const field = container.appendChild(createElement(tag, fieldProps))

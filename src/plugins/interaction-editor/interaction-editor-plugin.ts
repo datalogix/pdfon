@@ -5,7 +5,7 @@ import type { Interaction } from '../interaction'
 import { InteractionEditorInitializer } from './interaction-editor-initializer'
 import { InteractionEditorLayerBuilder } from './interaction-editor-layer-builder'
 import { InteractionEditorManager } from './interaction-editor-manager'
-import { InteractionTypeField } from './interaction-type'
+import { InteractionTypeField, InteractionTypeFieldTrix } from './interaction-type'
 
 export type InteractionEditorPluginParams = {
   api: FetchOptions | ((options: InitializerOptions) => FetchOptions)
@@ -24,7 +24,7 @@ export class InteractionEditorPlugin extends Plugin<InteractionEditorPluginParam
     ['link', new InteractionTypeField({ type: 'url' })],
     ['iframe', new InteractionTypeField({ type: 'url' })],
     ['text', new InteractionTypeField({ field: 'textarea', rows: 4 })],
-    ['correct-answer', new InteractionTypeField({ field: 'trix' })],
+    ['correct-answer', new InteractionTypeFieldTrix()],
   ])
 
   get interactionEditorManager() {
