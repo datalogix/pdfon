@@ -1,6 +1,18 @@
 # Changelog
 
 
+## v0.2.1
+
+[compare changes](https://github.com/datalogix/pdfon/compare/v0.2.0...v0.2.1)
+
+### 🔥 Performance
+
+- Load `trix` when need ([acfc4a2](https://github.com/datalogix/pdfon/commit/acfc4a2))
+
+### ❤️ Contributors
+
+- Ricardo Gobbo De Souza ([@ricardogobbosouza](https://github.com/ricardogobbosouza))
+
 ## v0.2.0
 
 [compare changes](https://github.com/datalogix/pdfon/compare/v0.1.16...v0.2.0)
