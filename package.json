@@ -35,7 +35,8 @@
     "i18next-browser-languagedetector": "^8.1.0",
     "idb-keyval": "^6.2.2",
     "ofetch": "^1.4.1",
-    "pdfjs-dist": "4.10.38"
+    "pdfjs-dist": "4.10.38",
+    "trix": "^2.1.15"
   },
   "devDependencies": {
     "@eslint/js": "^9.26.0",

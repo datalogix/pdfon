@@ -273,6 +273,9 @@
           "option" : "Texto",
           "placeholder": "Digite o texto..."
         },
+        "correct-answer": {
+          "option" : "Resposta Correta"
+        },
         "activity": {
           "option" : "Atividade",
           "placeholder": "Selecione a atividade"

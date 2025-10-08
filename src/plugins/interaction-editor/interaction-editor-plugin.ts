@@ -24,6 +24,7 @@ export class InteractionEditorPlugin extends Plugin<InteractionEditorPluginParam
     ['link', new InteractionTypeField({ type: 'url' })],
     ['iframe', new InteractionTypeField({ type: 'url' })],
     ['text', new InteractionTypeField({ field: 'textarea', rows: 4 })],
+    ['correct-answer', new InteractionTypeField({ field: 'trix' })],
   ])
 
   get interactionEditorManager() {

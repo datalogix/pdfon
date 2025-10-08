@@ -153,6 +153,10 @@
         @apply i-ph:text;
       }
 
+      &.interaction-correct-answer .interaction-icon:before {
+        @apply i-ph:check;
+      }
+
       .interaction-page {
         @apply font-semibold flex items-center gap-2;
       }

@@ -83,6 +83,12 @@
       }
     }
 
+    &.interaction-correct-answer {
+      &:before {
+        @apply i-ph:check;
+      }
+    }
+
     &.interaction-uncompleted {
       .interaction-animation {
         &:before {
