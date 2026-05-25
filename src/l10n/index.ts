@@ -1,5 +1,4 @@
-import i18next, { type TOptionsBase } from 'i18next'
-import { $Dictionary } from 'i18next/typescript/helpers'
+import i18next, { type TOptions } from 'i18next'
 import LanguageDetector from 'i18next-browser-languagedetector'
 import ptBR from './locales/pt-BR.json'
 
@@ -32,8 +31,8 @@ export class L10n implements IL10n {
       })
   }
 
-  get(key: string | string[], options?: (TOptionsBase & $Dictionary)): string {
-    return i18next.t(key, options)
+  get(key: string | string[], options?: object): string {
+    return i18next.t(key, options as (Omit<TOptions, 'context'> & { context?: string | undefined }))
   }
 
   getLanguage() {
