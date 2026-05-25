@@ -5,7 +5,7 @@ export class DownloadManager implements IDownloadManager {
   private openBlobUrls = new WeakMap()
 
   downloadData(data: Uint8Array, filename: string, contentType: string) {
-    this.execute(URL.createObjectURL(new Blob([data], { type: contentType })), filename)
+    this.execute(URL.createObjectURL(new Blob([data.slice()], { type: contentType })), filename)
   }
 
   openOrDownloadData(data: Uint8Array, filename: string, dest?: string) {
@@ -16,7 +16,7 @@ export class DownloadManager implements IDownloadManager {
       let blobUrl = this.openBlobUrls.get(data)
 
       if (!blobUrl) {
-        blobUrl = URL.createObjectURL(new Blob([data], { type: contentType }))
+        blobUrl = URL.createObjectURL(new Blob([data.slice()], { type: contentType }))
         this.openBlobUrls.set(data, blobUrl)
       }
 
@@ -46,7 +46,7 @@ export class DownloadManager implements IDownloadManager {
     let blobUrl: string
 
     if (data) {
-      blobUrl = URL.createObjectURL(new Blob([data], { type: 'application/pdf' }))
+      blobUrl = URL.createObjectURL(new Blob([data.slice()], { type: 'application/pdf' }))
     } else {
       if (!createValidAbsoluteUrl(url, 'http://example.com')) {
         console.error('download - not a valid URL:', url)
