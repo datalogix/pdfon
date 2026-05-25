@@ -1,6 +1,19 @@
 # Changelog
 
 
+## v0.2.4
+
+[compare changes](https://github.com/datalogix/pdfon/compare/v0.2.3...v0.2.4)
+
+### 🩹 Fixes
+
+- Update type imports and adjust get method options in L10n class ([e77fa7b](https://github.com/datalogix/pdfon/commit/e77fa7b))
+- Use data.slice() when creating Blob objects in DownloadManager ([d27595a](https://github.com/datalogix/pdfon/commit/d27595a))
+
+### ❤️ Contributors
+
+- Ricardo Gobbo De Souza ([@ricardogobbosouza](https://github.com/ricardogobbosouza))
+
 ## v0.2.3
 
 [compare changes](https://github.com/datalogix/pdfon/compare/v0.2.2...v0.2.3)
