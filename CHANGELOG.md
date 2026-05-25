@@ -1,6 +1,18 @@
 # Changelog
 
 
+## v0.2.2
+
+[compare changes](https://github.com/datalogix/pdfon/compare/v0.2.1...v0.2.2)
+
+### 🩹 Fixes
+
+- Comment out InteractionClick event handler ([0018bf1](https://github.com/datalogix/pdfon/commit/0018bf1))
+
+### ❤️ Contributors
+
+- Ricardo Gobbo De Souza ([@ricardogobbosouza](https://github.com/ricardogobbosouza))
+
 ## v0.2.1
 
 [compare changes](https://github.com/datalogix/pdfon/compare/v0.2.0...v0.2.1)
