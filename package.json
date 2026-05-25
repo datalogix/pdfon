@@ -36,7 +36,8 @@
     "idb-keyval": "^6.2.2",
     "ofetch": "^1.4.1",
     "pdfjs-dist": "4.10.38",
-    "trix": "^2.1.15"
+    "trix": "^2.1.15",
+    "uuid": "^14.0.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.26.0",

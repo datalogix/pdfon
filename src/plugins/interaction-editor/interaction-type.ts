@@ -1,3 +1,4 @@
+import { v7 as uuid } from 'uuid'
 import { createField, type Field, type CreateFieldProps } from '@/tools'
 
 export type InteractionTypes = Map<string, InteractionTypeField>
@@ -31,7 +32,7 @@ export class InteractionTypeField {
 export class InteractionTypeFieldTrix extends InteractionTypeField {
   constructor() {
     super({
-      id: `trix-editor-${crypto.randomUUID()}`,
+      id: `trix-editor-${uuid()}`,
       type: 'hidden',
     })
   }
