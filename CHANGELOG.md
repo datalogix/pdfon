@@ -1,6 +1,18 @@
 # Changelog
 
 
+## v0.2.3
+
+[compare changes](https://github.com/datalogix/pdfon/compare/v0.2.2...v0.2.3)
+
+### 🩹 Fixes
+
+- Use 'uuid' package  instead of crypto.randomUUID() ([72bc3a8](https://github.com/datalogix/pdfon/commit/72bc3a8))
+
+### ❤️ Contributors
+
+- Ricardo Gobbo De Souza ([@ricardogobbosouza](https://github.com/ricardogobbosouza))
+
 ## v0.2.2
 
 [compare changes](https://github.com/datalogix/pdfon/compare/v0.2.1...v0.2.2)
